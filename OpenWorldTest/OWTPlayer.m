@@ -26,10 +26,23 @@
 	OWTPlayer * node = (OWTPlayer *)[super node];
 	[node setMass:70];
 
+    int hResolution = 1280;
+    int vResolution = 800;
+    float hScreenSizeMeters = 0.14976;
+    float vScreenSizeMeters = 0.0935;
+    float eyeToScreenDistanceMeters = 0.041;
+    float halfScreenAspectRatio = hResolution / (2.0 * vResolution);
+    float vFov = 2 * atan(vScreenSizeMeters / (2.0 * eyeToScreenDistanceMeters));
+    float hFov = 2 * atan(halfScreenAspectRatio * tan(vFov / 2.0));
+    float vFovDegrees = SKR_RADIANS_TO_DEGREES(vFov);
+    float hFovDegrees = SKR_RADIANS_TO_DEGREES(hFov);
+    
 	{
         SCNCamera * camera = [SCNCamera camera];
-        [camera setZNear:0.1];
+        camera.zNear = 0.1;
         camera.zFar = 64;
+        camera.xFov = hFovDegrees;
+        camera.yFov = vFovDegrees;
         
         SCNNode *leftEye = [SCNNode node];
         leftEye.position = SCNVector3Make(-1.0, 0.0, 0.0);
@@ -40,8 +53,10 @@
     }
     {
         SCNCamera * camera = [SCNCamera camera];
-        [camera setZNear:0.1];
+        camera.zNear = 0.1;
         camera.zFar = 64;
+        camera.xFov = hFovDegrees;
+        camera.yFov = vFovDegrees;
 
         SCNNode *rightEye = [SCNNode node];
         rightEye.position = SCNVector3Make(1.0, 0.0, 0.0);
