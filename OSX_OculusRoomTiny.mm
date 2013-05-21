@@ -416,11 +416,11 @@ void OculusRoomTinyApp::OnIdle()
     
     // Rotate and position View Camera, using YawPitchRoll in BodyFrame coordinates.
     //
-    Matrix4f rollPitchYaw = Matrix4f::RotationY(EyeYaw) * Matrix4f::RotationX(EyePitch) *
-    Matrix4f::RotationZ(EyeRoll);
+    Matrix4f rollPitchYaw = Matrix4f::RotationY(EyeYaw)
+                          * Matrix4f::RotationX(EyePitch)
+                          * Matrix4f::RotationZ(EyeRoll);
     Vector3f up      = rollPitchYaw.Transform(UpVector);
     Vector3f forward = rollPitchYaw.Transform(ForwardVector);
-    
     
     // Minimal head modelling.
     float headBaseToEyeHeight     = 0.15f;  // Vertical height of eye from base of head
