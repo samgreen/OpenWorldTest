@@ -95,27 +95,6 @@
 		C2982EC5174B359000B57B8A /* RenderTiny_Device.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderTiny_Device.cpp; sourceTree = "<group>"; };
 		C2982EC6174B359000B57B8A /* RenderTiny_Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderTiny_Device.h; sourceTree = "<group>"; };
 		C2982EC9174B37D500B57B8A /* OculusRoomModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OculusRoomModel.cpp; sourceTree = "<group>"; };
-		C2982ECC174B38AB00B57B8A /* OVR_Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_Device.h; path = LibOVR/Src/OVR_Device.h; sourceTree = "<group>"; };
-		C2982ECD174B38AB00B57B8A /* OVR_DeviceConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_DeviceConstants.h; path = LibOVR/Src/OVR_DeviceConstants.h; sourceTree = "<group>"; };
-		C2982ECE174B38AB00B57B8A /* OVR_DeviceHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_DeviceHandle.h; path = LibOVR/Src/OVR_DeviceHandle.h; sourceTree = "<group>"; };
-		C2982ECF174B38AB00B57B8A /* OVR_DeviceImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_DeviceImpl.h; path = LibOVR/Src/OVR_DeviceImpl.h; sourceTree = "<group>"; };
-		C2982ED0174B38AB00B57B8A /* OVR_DeviceMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_DeviceMessages.h; path = LibOVR/Src/OVR_DeviceMessages.h; sourceTree = "<group>"; };
-		C2982ED1174B38AB00B57B8A /* OVR_HIDDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_HIDDevice.h; path = LibOVR/Src/OVR_HIDDevice.h; sourceTree = "<group>"; };
-		C2982ED2174B38AB00B57B8A /* OVR_HIDDeviceBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_HIDDeviceBase.h; path = LibOVR/Src/OVR_HIDDeviceBase.h; sourceTree = "<group>"; };
-		C2982ED3174B38AB00B57B8A /* OVR_HIDDeviceImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_HIDDeviceImpl.h; path = LibOVR/Src/OVR_HIDDeviceImpl.h; sourceTree = "<group>"; };
-		C2982ED4174B38AB00B57B8A /* OVR_LatencyTestImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_LatencyTestImpl.h; path = LibOVR/Src/OVR_LatencyTestImpl.h; sourceTree = "<group>"; };
-		C2982ED5174B38AB00B57B8A /* OVR_OSX_DeviceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_OSX_DeviceManager.h; path = LibOVR/Src/OVR_OSX_DeviceManager.h; sourceTree = "<group>"; };
-		C2982ED6174B38AB00B57B8A /* OVR_OSX_HIDDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_OSX_HIDDevice.h; path = LibOVR/Src/OVR_OSX_HIDDevice.h; sourceTree = "<group>"; };
-		C2982ED7174B38AB00B57B8A /* OVR_OSX_HMDDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_OSX_HMDDevice.h; path = LibOVR/Src/OVR_OSX_HMDDevice.h; sourceTree = "<group>"; };
-		C2982ED8174B38AB00B57B8A /* OVR_SensorFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_SensorFilter.h; path = LibOVR/Src/OVR_SensorFilter.h; sourceTree = "<group>"; };
-		C2982ED9174B38AB00B57B8A /* OVR_SensorFusion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_SensorFusion.h; path = LibOVR/Src/OVR_SensorFusion.h; sourceTree = "<group>"; };
-		C2982EDA174B38AB00B57B8A /* OVR_SensorImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_SensorImpl.h; path = LibOVR/Src/OVR_SensorImpl.h; sourceTree = "<group>"; };
-		C2982EDB174B38AB00B57B8A /* OVR_ThreadCommandQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_ThreadCommandQueue.h; path = LibOVR/Src/OVR_ThreadCommandQueue.h; sourceTree = "<group>"; };
-		C2982EDC174B38AB00B57B8A /* OVR_Win32_DeviceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_Win32_DeviceManager.h; path = LibOVR/Src/OVR_Win32_DeviceManager.h; sourceTree = "<group>"; };
-		C2982EDD174B38AB00B57B8A /* OVR_Win32_DeviceStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_Win32_DeviceStatus.h; path = LibOVR/Src/OVR_Win32_DeviceStatus.h; sourceTree = "<group>"; };
-		C2982EDE174B38AB00B57B8A /* OVR_Win32_HIDDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_Win32_HIDDevice.h; path = LibOVR/Src/OVR_Win32_HIDDevice.h; sourceTree = "<group>"; };
-		C2982EDF174B38AB00B57B8A /* OVR_Win32_HMDDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_Win32_HMDDevice.h; path = LibOVR/Src/OVR_Win32_HMDDevice.h; sourceTree = "<group>"; };
-		C2982EE0174B38AB00B57B8A /* OVR_Win32_SensorDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OVR_Win32_SensorDevice.h; path = LibOVR/Src/OVR_Win32_SensorDevice.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -266,7 +245,6 @@
 		C2982EBF174B32AA00B57B8A /* Oculus Rift Support */ = {
 			isa = PBXGroup;
 			children = (
-				C2982ECB174B38A000B57B8A /* Headers */,
 				C2982EB8174B2F5800B57B8A /* libovr.a */,
 				C2982EC0174B353E00B57B8A /* OSX_OculusRoomTiny.h */,
 				C2982EC1174B353E00B57B8A /* OSX_OculusRoomTiny.mm */,
@@ -277,34 +255,6 @@
 				C2982EC9174B37D500B57B8A /* OculusRoomModel.cpp */,
 			);
 			name = "Oculus Rift Support";
-			sourceTree = "<group>";
-		};
-		C2982ECB174B38A000B57B8A /* Headers */ = {
-			isa = PBXGroup;
-			children = (
-				C2982ECC174B38AB00B57B8A /* OVR_Device.h */,
-				C2982ECD174B38AB00B57B8A /* OVR_DeviceConstants.h */,
-				C2982ECE174B38AB00B57B8A /* OVR_DeviceHandle.h */,
-				C2982ECF174B38AB00B57B8A /* OVR_DeviceImpl.h */,
-				C2982ED0174B38AB00B57B8A /* OVR_DeviceMessages.h */,
-				C2982ED1174B38AB00B57B8A /* OVR_HIDDevice.h */,
-				C2982ED2174B38AB00B57B8A /* OVR_HIDDeviceBase.h */,
-				C2982ED3174B38AB00B57B8A /* OVR_HIDDeviceImpl.h */,
-				C2982ED4174B38AB00B57B8A /* OVR_LatencyTestImpl.h */,
-				C2982ED5174B38AB00B57B8A /* OVR_OSX_DeviceManager.h */,
-				C2982ED6174B38AB00B57B8A /* OVR_OSX_HIDDevice.h */,
-				C2982ED7174B38AB00B57B8A /* OVR_OSX_HMDDevice.h */,
-				C2982ED8174B38AB00B57B8A /* OVR_SensorFilter.h */,
-				C2982ED9174B38AB00B57B8A /* OVR_SensorFusion.h */,
-				C2982EDA174B38AB00B57B8A /* OVR_SensorImpl.h */,
-				C2982EDB174B38AB00B57B8A /* OVR_ThreadCommandQueue.h */,
-				C2982EDC174B38AB00B57B8A /* OVR_Win32_DeviceManager.h */,
-				C2982EDD174B38AB00B57B8A /* OVR_Win32_DeviceStatus.h */,
-				C2982EDE174B38AB00B57B8A /* OVR_Win32_HIDDevice.h */,
-				C2982EDF174B38AB00B57B8A /* OVR_Win32_HMDDevice.h */,
-				C2982EE0174B38AB00B57B8A /* OVR_Win32_SensorDevice.h */,
-			);
-			name = Headers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -437,6 +387,8 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -468,6 +420,8 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -483,9 +437,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CXX0X_EXTENSIONS = YES;
+				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OpenWorldTest/OpenWorldTest-Prefix.pch";
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				INFOPLIST_FILE = "OpenWorldTest/OpenWorldTest-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/\"",
@@ -504,9 +462,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CXX0X_EXTENSIONS = YES;
+				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OpenWorldTest/OpenWorldTest-Prefix.pch";
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				INFOPLIST_FILE = "OpenWorldTest/OpenWorldTest-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/\"",
