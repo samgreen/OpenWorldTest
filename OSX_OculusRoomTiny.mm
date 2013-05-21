@@ -26,6 +26,10 @@
 
 #include "Kernel/OVR_KeyCodes.h"
 
+@implementation SKROculusInfo
+
+
+@end
 
 @implementation SKRDeviceBucket {
     OculusRoomTinyApp *app;
