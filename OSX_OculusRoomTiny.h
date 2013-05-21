@@ -35,8 +35,12 @@
 #include "RenderTiny_GL_Device.h"
 #include "OVR_Device.h"
 
-@interface SKRDeviceBucket : NSObject
+@interface SKROculusInfo : NSObject
 
+@end
+
+@interface SKRDeviceBucket : NSObject
+- (SKROculusInfo *)poll;
 @end
 
 using namespace OVR;
