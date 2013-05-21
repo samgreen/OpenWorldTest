@@ -27,6 +27,34 @@
 #include "Kernel/OVR_KeyCodes.h"
 
 
+@implementation SKRDeviceBucket {
+    OculusRoomTinyApp *app;
+}
+
+- (void)dealloc
+{
+    delete(app);
+}
+
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        // Initializes LibOVR. This LogMask_All enables maximum logging.
+        // Custom allocator can also be specified here.
+        OVR::System::Init(OVR::Log::ConfigureDefaultLog(OVR::LogMask_All));
+
+        app = new OculusRoomTinyApp();
+        
+        app->OnStartup();
+        // TODO: call OnStartup, and then OnIdle as fast as possible
+    }
+    return self;
+}
+
+@end
+
 using namespace OVR;
 
 //-------------------------------------------------------------------------------------
@@ -36,10 +64,9 @@ using namespace OVR;
 OculusRoomTinyApp* OculusRoomTinyApp::pApp = 0;
 
 
-OculusRoomTinyApp::OculusRoomTinyApp(OVRApp* nsapp)
+OculusRoomTinyApp::OculusRoomTinyApp()
 : pRender(0),
 LastUpdate(0),
-NsApp(nsapp),
 Quit(0),
 
 // Initial location
@@ -66,16 +93,12 @@ OculusRoomTinyApp::~OculusRoomTinyApp()
 	RemoveHandlerFromDevices();
     pSensor.Clear();
     pHMD.Clear();
-    destroyWindow();
     pApp = 0;
 }
 
 
-int OculusRoomTinyApp::OnStartup(const char* args)
+int OculusRoomTinyApp::OnStartup()
 {
-    OVR_UNUSED(args);
-    
-    
     // *** Oculus HMD & Sensor Initialization
     
     // Create DeviceManager and first available HMDDevice from it.
@@ -175,10 +198,6 @@ int OculusRoomTinyApp::OnStartup(const char* args)
         Height = HMDInfo.VResolution;
     }
     
-    
-    if (!setupWindow())
-        return 1;
-    
     if (pSensor)
     {
         // We need to attach sensor to SensorFusion object for it to receive
@@ -193,13 +212,13 @@ int OculusRoomTinyApp::OnStartup(const char* args)
     // *** Initialize Rendering
     
     // Enable multi-sampling by default.
-    RenderParams.Multisample = 4;
-    RenderParams.Fullscreen  = false;//true; //?
-    
-    // Setup Graphics.
-    pRender = *OSX::RenderDevice::CreateDevice(RenderParams, (__bridge void*)View);
-    if (!pRender)
-        return 1;
+//    RenderParams.Multisample = 4;
+//    RenderParams.Fullscreen  = false;//true; //?
+//    
+//    // Setup Graphics.
+//    pRender = *OSX::RenderDevice::CreateDevice(RenderParams, (__bridge void*)View);
+//    if (!pRender)
+//        return 1;
     
     
     // *** Configure Stereo settings.
@@ -219,16 +238,9 @@ int OculusRoomTinyApp::OnStartup(const char* args)
             SConfig.SetDistortionFitPointVP(0.0f, 1.0f);
     }
     
-    pRender->SetSceneRenderScale(SConfig.GetDistortionScale());
+//    pRender->SetSceneRenderScale(SConfig.GetDistortionScale());
     
     SConfig.Set2DAreaFov(DegreeToRad(85.0f));
-    
-    
-    // *** Populate Room Scene
-    
-    // This creates lights and models.
-    PopulateRoomScene(&Scene, pRender);
-    
     
     LastUpdate = GetAppTime();
     return 0;
@@ -254,145 +266,86 @@ void OculusRoomTinyApp::OnMessage(const Message& msg)
 	}
 }
 
-bool  OculusRoomTinyApp::setupWindow()
-{
-    NSRect winrect;
-    winrect.origin.x = 0;
-    winrect.origin.y = 1000;
-    winrect.size.width = Width;
-    winrect.size.height = Height;
-    NSWindow* win = [[NSWindow alloc] initWithContentRect:winrect styleMask:NSTitledWindowMask|NSClosableWindowMask backing:NSBackingStoreBuffered defer:NO];
-    
-    OVRView* view = [[OVRView alloc] initWithFrame:winrect];
-    [win setContentView:view];
-    [win setAcceptsMouseMovedEvents:YES];
-    [win setDelegate:view];
-    [view setApp:pApp];
-    Win = win;
-    View = view;
-    
-    const char* title = "OculusRoomTiny";
-    [((NSWindow*)Win) setTitle:[[NSString alloc] initWithBytes:title length:strlen(title) encoding:NSUTF8StringEncoding]];
-    
-    [NSCursor hide];
-    [view warpMouseToCenter];
-    CGAssociateMouseAndMouseCursorPosition(false);
-    
-    SetFullscreen(RenderParams, true);
-    return true;
-}
-
-void  OculusRoomTinyApp::destroyWindow()
-{
-    SetFullscreen(RenderParams, false);
-    [((NSWindow*)Win) close];
-}
-
-void OculusRoomTinyApp::OnMouseMove(int x, int y, int modifiers)
-{
-    OVR_UNUSED(modifiers);
-    
-    // Mouse motion here is always relative.
-    int         dx = x, dy = y;
-    const float maxPitch = ((3.1415f/2)*0.98f);
-    
-    // Apply to rotation. Subtract for right body frame rotation,
-    // since yaw rotation is positive CCW when looking down on XZ plane.
-    EyeYaw   -= (Sensitivity * dx)/ 360.0f;
-    
-    if (!pSensor)
-    {
-        EyePitch -= (Sensitivity * dy)/ 360.0f;
-        
-        if (EyePitch > maxPitch)
-            EyePitch = maxPitch;
-        if (EyePitch < -maxPitch)
-            EyePitch = -maxPitch;
-    }
-}
 
 
-void OculusRoomTinyApp::OnKey(unsigned vk, bool down)
-{
-    switch (vk)
-    {
-        case 'Q':
-            if (down && ControlDown)
-                Exit();;
-            break;
-        case Key_Escape:
-            if (!down)
-                Exit();
-            break;
-            
-            // Handle player movement keys.
-            // We just update movement state here, while the actual translation is done in OnIdle()
-            // based on time.
-        case 'W':      MoveForward = down ? (MoveForward | 1) : (MoveForward & ~1); break;
-        case 'S':      MoveBack    = down ? (MoveBack    | 1) : (MoveBack    & ~1); break;
-        case 'A':      MoveLeft    = down ? (MoveLeft    | 1) : (MoveLeft    & ~1); break;
-        case 'D':      MoveRight   = down ? (MoveRight   | 1) : (MoveRight   & ~1); break;
-        case Key_Up:    MoveForward = down ? (MoveForward | 2) : (MoveForward & ~2); break;
-        case Key_Down:  MoveBack    = down ? (MoveBack    | 2) : (MoveBack    & ~2); break;
-            
-        case 'R':
-            SFusion.Reset();
-            break;
-            
-        case 'P':
-            if (down)
-            {
-                // Toggle chromatic aberration correction on/off.
-                RenderDevice::PostProcessShader shader = pRender->GetPostProcessShader();
-                
-                if (shader == RenderDevice::PostProcessShader_Distortion)
-                {
-                    pRender->SetPostProcessShader(RenderDevice::PostProcessShader_DistortionAndChromAb);
-                }
-                else if (shader == RenderDevice::PostProcessShader_DistortionAndChromAb)
-                {
-                    pRender->SetPostProcessShader(RenderDevice::PostProcessShader_Distortion);
-                }
-                else
-                    OVR_ASSERT(false);
-            }
-            break;
-            
-            // Switch rendering modes/distortion.
-        case Key_F1:
-            SConfig.SetStereoMode(Stereo_None);
-            PostProcess = PostProcess_None;
-            break;
-        case Key_F2:
-            SConfig.SetStereoMode(Stereo_LeftRight_Multipass);
-            PostProcess = PostProcess_None;
-            break;
-        case Key_F3:
-            SConfig.SetStereoMode(Stereo_LeftRight_Multipass);
-            PostProcess = PostProcess_Distortion;
-            break;
-            
-            // Stereo IPD adjustments, in meter (default IPD is 64mm).
-        case '+':
-        case '=':
-            if (down)
-                SConfig.SetIPD(SConfig.GetIPD() + 0.0005f * (ShiftDown ? 5.0f : 1.0f));
-            break;
-        case '-':
-        case '_':
-            if (down)
-                SConfig.SetIPD(SConfig.GetIPD() - 0.0005f * (ShiftDown ? 5.0f : 1.0f));
-            break;
-            
-            // Holding down Shift key accelerates adjustment velocity.
-        case Key_Shift:
-            ShiftDown = down;
-            break;
-        case Key_Meta:
-            ControlDown = down;
-            break;
-    }
-}
+//void OculusRoomTinyApp::OnMouseMove(int x, int y, int modifiers)
+//{
+//    OVR_UNUSED(modifiers);
+//    
+//    // Mouse motion here is always relative.
+//    int         dx = x, dy = y;
+//    const float maxPitch = ((3.1415f/2)*0.98f);
+//    
+//    // Apply to rotation. Subtract for right body frame rotation,
+//    // since yaw rotation is positive CCW when looking down on XZ plane.
+//    EyeYaw   -= (Sensitivity * dx)/ 360.0f;
+//    
+//    if (!pSensor)
+//    {
+//        EyePitch -= (Sensitivity * dy)/ 360.0f;
+//        
+//        if (EyePitch > maxPitch)
+//            EyePitch = maxPitch;
+//        if (EyePitch < -maxPitch)
+//            EyePitch = -maxPitch;
+//    }
+//}
+
+
+//void OculusRoomTinyApp::OnKey(unsigned vk, bool down)
+//{
+//    switch (vk)
+//    {
+//        case 'R':
+//            SFusion.Reset();
+//            break;
+//            
+//        case 'P':
+//            if (down)
+//            {
+//                // Toggle chromatic aberration correction on/off.
+//                RenderDevice::PostProcessShader shader = pRender->GetPostProcessShader();
+//                
+//                if (shader == RenderDevice::PostProcessShader_Distortion)
+//                {
+//                    pRender->SetPostProcessShader(RenderDevice::PostProcessShader_DistortionAndChromAb);
+//                }
+//                else if (shader == RenderDevice::PostProcessShader_DistortionAndChromAb)
+//                {
+//                    pRender->SetPostProcessShader(RenderDevice::PostProcessShader_Distortion);
+//                }
+//                else
+//                    OVR_ASSERT(false);
+//            }
+//            break;
+//            
+//            // Switch rendering modes/distortion.
+//        case Key_F1:
+//            SConfig.SetStereoMode(Stereo_None);
+//            PostProcess = PostProcess_None;
+//            break;
+//        case Key_F2:
+//            SConfig.SetStereoMode(Stereo_LeftRight_Multipass);
+//            PostProcess = PostProcess_None;
+//            break;
+//        case Key_F3:
+//            SConfig.SetStereoMode(Stereo_LeftRight_Multipass);
+//            PostProcess = PostProcess_Distortion;
+//            break;
+//            
+//            // Stereo IPD adjustments, in meter (default IPD is 64mm).
+//        case '+':
+//        case '=':
+//            if (down)
+//                SConfig.SetIPD(SConfig.GetIPD() + 0.0005f * (ShiftDown ? 5.0f : 1.0f));
+//            break;
+//        case '-':
+//        case '_':
+//            if (down)
+//                SConfig.SetIPD(SConfig.GetIPD() - 0.0005f * (ShiftDown ? 5.0f : 1.0f));
+//            break;
+//    }
+//}
 
 
 void OculusRoomTinyApp::OnIdle()
@@ -476,382 +429,34 @@ void OculusRoomTinyApp::OnIdle()
     switch(SConfig.GetStereoMode())
     {
         case Stereo_None:
-            Render(SConfig.GetEyeRenderParams(StereoEye_Center));
+//            Render(SConfig.GetEyeRenderParams(StereoEye_Center));
             break;
             
         case Stereo_LeftRight_Multipass:
-            Render(SConfig.GetEyeRenderParams(StereoEye_Left));
-            Render(SConfig.GetEyeRenderParams(StereoEye_Right));
+//            Render(SConfig.GetEyeRenderParams(StereoEye_Left));
+//            Render(SConfig.GetEyeRenderParams(StereoEye_Right));
             break;
     }
     
-    pRender->Present();
+//    pRender->Present();
     // Force GPU to flush the scene, resulting in the lowest possible latency.
-    pRender->ForceFlushGPU();
+//    pRender->ForceFlushGPU();
 }
 
 
-// Render the scene for one eye.
-void OculusRoomTinyApp::Render(const StereoEyeParams& stereo)
-{
-    pRender->BeginScene(PostProcess);
-    
-    // Apply Viewport/Projection for the eye.
-    pRender->ApplyStereoParams(stereo);
-    pRender->Clear();
-    pRender->SetDepthMode(true, true);
-    
-    Scene.Render(pRender, stereo.ViewAdjust * ViewMat);
-    
-    pRender->FinishScene();
-}
+//// Render the scene for one eye.
+//void OculusRoomTinyApp::Render(const StereoEyeParams& stereo)
+//{
+//    pRender->BeginScene(PostProcess);
+//    
+//    // Apply Viewport/Projection for the eye.
+//    pRender->ApplyStereoParams(stereo);
+//    pRender->Clear();
+//    pRender->SetDepthMode(true, true);
+//    
+//    Scene.Render(pRender, stereo.ViewAdjust * ViewMat);
+//    
+//    pRender->FinishScene();
+//}
 
-void OculusRoomTinyApp::Exit()
-{
-    [NsApp stop:nil];
-    Quit = true;
-}
-
-bool OculusRoomTinyApp::SetFullscreen(const RenderTiny::RendererParams& rp, int fullscreen)
-{
-    if (fullscreen == RenderTiny::Display_Window)
-        [(OVRView*)View exitFullScreenModeWithOptions:nil];
-    else
-    {
-        NSScreen* usescreen = [NSScreen mainScreen];
-        NSArray* screens = [NSScreen screens];
-        for (int i = 0; i < [screens count]; i++)
-        {
-            NSScreen* s = (NSScreen*)[screens objectAtIndex:i];
-            CGDirectDisplayID disp = [OVRView displayFromScreen:s];
-            
-            if (disp == rp.DisplayId)
-                usescreen = s;
-        }
-        
-        [(OVRView*)View enterFullScreenMode:usescreen withOptions:nil];
-    }
-    
-    if (pRender)
-        pRender->SetFullscreen((RenderTiny::DisplayMode)fullscreen);
-    return 1;
-}
-
-//-------------------------------------------------------------------------------------
-// ***** OS X-Specific Logic
-
-@implementation OVRApp
-
-- (void)run
-{
-    _running = YES;
-    OculusRoomTinyApp* app;
-    
-    // Initializes LibOVR. This LogMask_All enables maximum logging.
-    // Custom allocator can also be specified here.
-    OVR::System::Init(OVR::Log::ConfigureDefaultLog(OVR::LogMask_All));
-    
-    int exitCode = 0;
-    do
-    {
-        @autoreleasepool {
-            {
-                using namespace OVR;
-                
-                // CreateApplication must be the first call since it does OVR::System::Initialize.
-                app = new OculusRoomTinyApp(self);
-                // The platform attached to an app will be deleted by DestroyApplication.
-                
-                [self setApp:app];
-                
-                const char* argv[] = {"OVRApp"};
-                exitCode = app->OnStartup(argv[0]);
-                if (exitCode)
-                    break;
-            }
-            [self finishLaunching];
-            
-            while ([self isRunning])
-            {
-                @autoreleasepool {
-                    NSEvent* event = [self nextEventMatchingMask:NSAnyEventMask untilDate:nil inMode:NSDefaultRunLoopMode dequeue:YES];
-                    if (event)
-                    {
-                        [self sendEvent:event];
-                    }
-                    _App->OnIdle();
-                }
-            }
-        }
-    } while(0);
-    
-    delete app;
-    
-    // No OVR functions involving memory are allowed after this.
-    OVR::System::Destroy();
-}
-
-@end
-
-static int KeyMap[][2] =
-{
-    { NSDeleteFunctionKey,      OVR::Key_Delete },
-    { '\t',       OVR::Key_Tab },
-    { '\n',    OVR::Key_Return },
-    { NSPauseFunctionKey,     OVR::Key_Pause },
-    { 27,      OVR::Key_Escape },
-    { 127,     OVR::Key_Backspace },
-    { ' ',     OVR::Key_Space },
-    { NSPageUpFunctionKey,     OVR::Key_PageUp },
-    { NSPageDownFunctionKey,      OVR::Key_PageDown },
-    { NSNextFunctionKey,      OVR::Key_PageDown },
-    { NSEndFunctionKey,       OVR::Key_End },
-    { NSHomeFunctionKey,      OVR::Key_Home },
-    { NSLeftArrowFunctionKey,      OVR::Key_Left },
-    { NSUpArrowFunctionKey,        OVR::Key_Up },
-    { NSRightArrowFunctionKey,     OVR::Key_Right },
-    { NSDownArrowFunctionKey,      OVR::Key_Down },
-    { NSInsertFunctionKey,    OVR::Key_Insert },
-    { NSDeleteFunctionKey,    OVR::Key_Delete },
-    { NSHelpFunctionKey,      OVR::Key_Insert },
-};
-
-
-static KeyCode MapToKeyCode(wchar_t vk)
-{
-    unsigned key = Key_None;
-    
-    if ((vk >= 'a') && (vk <= 'z'))
-    {
-        key = vk - 'a' + Key_A;
-    }
-    else if ((vk >= ' ') && (vk <= '~'))
-    {
-        key = vk;
-    }
-    else if ((vk >= '0') && (vk <= '9'))
-    {
-        key = vk - '0' + Key_Num0;
-    }
-    else if ((vk >= NSF1FunctionKey) && (vk <= NSF15FunctionKey))
-    {
-        key = vk - NSF1FunctionKey + Key_F1;
-    }
-    else
-    {
-        for (unsigned i = 0; i< (sizeof(KeyMap) / sizeof(KeyMap[1])); i++)
-        {
-            if (vk == KeyMap[i][0])
-            {
-                key = KeyMap[i][1];
-                break;
-            }
-        }
-    }
-    
-    return (KeyCode)key;
-}
-
-@implementation OVRView
-
--(BOOL) acceptsFirstResponder
-{
-    return YES;
-}
--(BOOL) acceptsFirstMouse:(NSEvent *)ev
-{
-    return YES;
-}
-
-+(CGDirectDisplayID) displayFromScreen:(NSScreen *)s
-{
-    NSNumber* didref = (NSNumber*)[[s deviceDescription] objectForKey:@"NSScreenNumber"];
-    CGDirectDisplayID disp = (CGDirectDisplayID)[didref longValue];
-    return disp;
-}
-
--(void) warpMouseToCenter
-{
-    NSPoint w;
-    w.x = _App->GetWidth()/2.0f;
-    w.y = _App->GetHeight()/2.0f;
-    w = [[self window] convertBaseToScreen:w];
-    CGDirectDisplayID disp = [OVRView displayFromScreen:[[self window] screen]];
-    CGPoint p = {w.x, CGDisplayPixelsHigh(disp)-w.y};
-    CGDisplayMoveCursorToPoint(disp, p);
-}
-
--(void) keyDown:(NSEvent*)ev
-{
-    NSString* chars = [ev charactersIgnoringModifiers];
-    if ([chars length])
-    {
-        wchar_t ch = [chars characterAtIndex:0];
-        OVR::KeyCode key = MapToKeyCode(ch);
-        _App->OnKey(key, true);
-    }
-}
--(void) keyUp:(NSEvent*)ev
-{
-    NSString* chars = [ev charactersIgnoringModifiers];
-    if ([chars length])
-    {
-        wchar_t ch = [chars characterAtIndex:0];
-        OVR::KeyCode key = MapToKeyCode(ch);
-        _App->OnKey(key, false);
-        
-    }
-}
-
-
--(void)flagsChanged:(NSEvent *)ev
-{
-    static const OVR::KeyCode ModifierKeys[] = {OVR::Key_None, OVR::Key_Shift, OVR::Key_Control, OVR::Key_Alt, OVR::Key_Meta};
-    
-    unsigned long cmods = [ev modifierFlags];
-    if ((cmods & 0xffff0000) != _Modifiers)
-    {
-        uint32_t mods = 0;
-        if (cmods & NSShiftKeyMask)
-            mods |= 0x01;
-        if (cmods & NSControlKeyMask)
-            mods |= 0x02;
-        if (cmods & NSAlternateKeyMask)
-            mods |= 0x04;
-        if (cmods & NSCommandKeyMask)
-            mods |= 0x08;
-        
-        for (int i = 1; i <= 4; i++)
-        {
-            unsigned long m = (1 << (16+i));
-            if ((cmods & m) != (_Modifiers & m))
-            {
-                if (cmods & m)
-                    _App->OnKey(ModifierKeys[i], true);
-                else
-                    _App->OnKey(ModifierKeys[i], false);
-            }
-        }
-        _Modifiers = cmods & 0xffff0000;
-    }
-}
-
--(void)ProcessMouse:(NSEvent*)ev
-{
-    switch ([ev type])
-    {
-        case NSLeftMouseDragged:
-        case NSRightMouseDragged:
-        case NSOtherMouseDragged:
-        case NSMouseMoved:
-        {
-            int dx = [ev deltaX];
-            int dy = [ev deltaY];
-            
-            if (dx != 0 || dy != 0)
-            {
-                _App->OnMouseMove(dx, dy, 0);
-                [self warpMouseToCenter];
-            }
-        }
-            break;
-        case NSLeftMouseDown:
-        case NSRightMouseDown:
-        case NSOtherMouseDown:
-            break;
-    }
-}
-
--(void) mouseMoved:(NSEvent*)ev
-{
-    [self ProcessMouse:ev];
-}
--(void) mouseDragged:(NSEvent*)ev
-{
-    [self ProcessMouse:ev];
-}
-
--(void) mouseDown:(NSEvent*)ev
-{
-    [self warpMouseToCenter];
-    CGAssociateMouseAndMouseCursorPosition(false);
-    [NSCursor hide];
-}
-
-//-(void)
-
--(id) initWithFrame:(NSRect)frameRect
-{
-    NSOpenGLPixelFormatAttribute attr[] =
-    {NSOpenGLPFAWindow, NSOpenGLPFADoubleBuffer, NSOpenGLPFADepthSize, 24, nil};
-    
-    NSOpenGLPixelFormat *pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:attr];
-    
-    self = [super initWithFrame:frameRect pixelFormat:pf];
-    GLint swap = 0;
-    [[self openGLContext] setValues:&swap forParameter:NSOpenGLCPSwapInterval];
-    //[self setWantsBestResolutionOpenGLSurface:YES];
-    return self;
-}
-
--(BOOL)windowShouldClose:(id)sender
-{
-    _App->Exit();
-    return 1;
-}
-
-@end
-
-// GL OSX-specific logic
-namespace OSX {
-    
-    RenderDevice::RenderDevice(const RendererParams& p, void* osview, void* context)
-    : GL::RenderDevice(p), Context(context)
-    {
-        OVRView* view = (__bridge OVRView*)osview;
-        NSRect bounds = [view bounds];
-        WindowWidth = bounds.size.width;
-        WindowHeight= bounds.size.height;
-        
-    }
-    
-    RenderDevice* RenderDevice::CreateDevice(const RendererParams& rp, void* osview)
-    {
-        OVRView* view = (__bridge OVRView*)osview;
-        NSOpenGLContext *context = [view openGLContext];
-        if (!context)
-            return NULL;
-        
-        [context makeCurrentContext];
-        [[view window] makeKeyAndOrderFront:nil];
-        
-        return new OSX::RenderDevice(rp, osview, (__bridge void*)context);
-    }
-    
-    void RenderDevice::Present()
-    {
-        NSOpenGLContext *context = (__bridge NSOpenGLContext*)Context;
-        [context flushBuffer];
-    }
-    
-    void RenderDevice::Shutdown()
-    {
-        Context = NULL;
-    }
-    
-    bool RenderDevice::SetFullscreen(DisplayMode fullscreen)
-    {
-        Params.Fullscreen = fullscreen;
-        return 1;
-    }
-    
-}
-
-
-int main(int argc, char *argv[])
-{
-    NSApplication* nsapp = [OVRApp sharedApplication];
-    [nsapp run];
-    return 0;
-}
 

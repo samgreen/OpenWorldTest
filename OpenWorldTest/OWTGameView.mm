@@ -15,6 +15,7 @@
 #import "OWTGameView.h"
 #import "DDHidLib.h"
 #import "OVR.h"
+#import "OSX_OculusRoomTiny.h"
 
 // Standard units.
 CGFloat const kGravityAcceleration = 0;//-9.80665;
@@ -25,6 +26,13 @@ SCNGeometry *dirtGeometry;
 SCNGeometry *grassGeometry;
 SCNGeometry *waterGeometry;
 SCNGeometry *treeGeometry;
+
+@interface OWTGameView ()
+{
+    SKRDeviceBucket *bucket;
+}
+
+@end
 
 @implementation OWTGameView
 
@@ -202,6 +210,8 @@ CVTimeStamp lastChunkTick;
 	SCNLight *sunlight = [SCNLight light];
 	sunlight.type = SCNLightTypeDirectional;
 	scene.rootNode.light = sunlight;
+    
+    bucket = [[SKRDeviceBucket alloc] init];
 }
 
 -(void)setFrame:(NSRect)frameRect

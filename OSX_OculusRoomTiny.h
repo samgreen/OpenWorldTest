@@ -35,32 +35,14 @@
 #include "RenderTiny_GL_Device.h"
 #include "OVR_Device.h"
 
+@interface SKRDeviceBucket : NSObject
+
+@end
+
 using namespace OVR;
 using namespace OVR::RenderTiny;
 
 class OculusRoomTinyApp;
-
-@interface OVRApp : NSApplication
-
-@property (weak) IBOutlet NSWindow* win;
-@property (assign) OculusRoomTinyApp* App;
-
--(void) run;
-
-@end
-
-@interface OVRView : NSOpenGLView <NSWindowDelegate>
-
-//@property (assign) OVR::Platform::OSX::PlatformCore* Platform;
-@property (assign) OculusRoomTinyApp* App;
-@property unsigned long Modifiers;
-
--(void)ProcessMouse:(NSEvent*)event;
--(void)warpMouseToCenter;
-
-+(CGDirectDisplayID) displayFromScreen:(NSScreen*)s;
-
-@end
 
 //-------------------------------------------------------------------------------------
 // ***** OculusRoomTiny Description
@@ -129,27 +111,19 @@ class OculusRoomTinyApp : public MessageHandler
 {
     friend class OSX::RenderDevice;
 public:
-    OculusRoomTinyApp(OVRApp* nsapp);
+    OculusRoomTinyApp();
     ~OculusRoomTinyApp();
     
     // Initializes graphics, Rift input and creates world model.
-    virtual int  OnStartup(const char* args);
+    virtual int  OnStartup();
     // Called per frame to sample SensorFucion and render the world.
     virtual void OnIdle();
     
     // Installed for Oculus device messages. Optional.
     virtual void OnMessage(const Message& msg);
     
-    // Handle input events for movement.
-    virtual void OnMouseMove(int x, int y, int modifiers);
-    virtual void OnKey(unsigned vk, bool down);
-    
     // Render the view for one eye.
-    void         Render(const StereoEyeParams& stereo);
-    
-    // Main application loop.
-    int          Run();
-    void         Exit();
+//    void         Render(const StereoEyeParams& stereo);
     
     // Return amount of time passed since application started in seconds.
     double       GetAppTime() const
@@ -164,13 +138,6 @@ public:
     bool        SetFullscreen(const RendererParams& rp, int fullscreen);
     
 protected:
-    bool        setupWindow();
-    void        destroyWindow();
-
-    NSView*         View;
-    NSWindow*       Win;
-    OVRApp*         NsApp;
-
     static OculusRoomTinyApp*   pApp;
     
     // *** Rendering Variables
@@ -216,9 +183,5 @@ protected:
     bool                ShiftDown;
     bool                ControlDown;
 };
-
-// Adds sample models and lights to the argument scene.
-void PopulateRoomScene(Scene* scene, RenderDevice* render);
-
 
 #endif
