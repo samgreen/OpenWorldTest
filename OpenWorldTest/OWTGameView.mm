@@ -14,6 +14,7 @@
 
 #import "OWTGameView.h"
 #import "DDHidLib.h"
+#import "OVR.h"
 
 // Standard units.
 CGFloat const kGravityAcceleration = 0;//-9.80665;

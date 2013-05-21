@@ -30,9 +30,10 @@
 		B0AC59E916A346E300E90A1A /* OWTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59D116A346E300E90A1A /* OWTAppDelegate.m */; };
 		B0AC59EA16A346E300E90A1A /* OWTChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59D316A346E300E90A1A /* OWTChunk.m */; };
 		B0AC59EB16A346E300E90A1A /* OWTEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59D516A346E300E90A1A /* OWTEntity.m */; };
-		B0AC59EC16A346E300E90A1A /* OWTGameView.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59D716A346E300E90A1A /* OWTGameView.m */; };
+		B0AC59EC16A346E300E90A1A /* OWTGameView.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59D716A346E300E90A1A /* OWTGameView.mm */; };
 		B0AC59ED16A346E300E90A1A /* OWTLevelGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59D916A346E300E90A1A /* OWTLevelGenerator.m */; };
 		B0AC59EE16A346E300E90A1A /* OWTPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59DB16A346E300E90A1A /* OWTPlayer.m */; };
+		C2982EB9174B2F5800B57B8A /* libovr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2982EB8174B2F5800B57B8A /* libovr.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,11 +80,12 @@
 		B0AC59D416A346E300E90A1A /* OWTEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTEntity.h; sourceTree = "<group>"; };
 		B0AC59D516A346E300E90A1A /* OWTEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTEntity.m; sourceTree = "<group>"; };
 		B0AC59D616A346E300E90A1A /* OWTGameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTGameView.h; sourceTree = "<group>"; };
-		B0AC59D716A346E300E90A1A /* OWTGameView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTGameView.m; sourceTree = "<group>"; };
+		B0AC59D716A346E300E90A1A /* OWTGameView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OWTGameView.mm; sourceTree = "<group>"; };
 		B0AC59D816A346E300E90A1A /* OWTLevelGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTLevelGenerator.h; sourceTree = "<group>"; };
 		B0AC59D916A346E300E90A1A /* OWTLevelGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTLevelGenerator.m; sourceTree = "<group>"; };
 		B0AC59DA16A346E300E90A1A /* OWTPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTPlayer.h; sourceTree = "<group>"; };
 		B0AC59DB16A346E300E90A1A /* OWTPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTPlayer.m; sourceTree = "<group>"; };
+		C2982EB8174B2F5800B57B8A /* libovr.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libovr.a; path = LibOVR/Lib/MacOS/Debug/libovr.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +99,7 @@
 				B02C450E1686B39E0050BD75 /* SceneKit.framework in Frameworks */,
 				B02C44F11686B37E0050BD75 /* Cocoa.framework in Frameworks */,
 				B03D9A8F1686CD340013F526 /* libddhid.a in Frameworks */,
+				C2982EB9174B2F5800B57B8A /* libovr.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,6 +127,7 @@
 		B02C44EF1686B37E0050BD75 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C2982EB8174B2F5800B57B8A /* libovr.a */,
 				B03D9AA21686CDD90013F526 /* IOKit.framework */,
 				B03D9A8B1686C4D60013F526 /* OpenGL.framework */,
 				B02C45121686B5610050BD75 /* QuartzCore.framework */,
@@ -199,7 +203,7 @@
 				B0AC59D016A346E300E90A1A /* OWTAppDelegate.h */,
 				B0AC59D116A346E300E90A1A /* OWTAppDelegate.m */,
 				B0AC59D616A346E300E90A1A /* OWTGameView.h */,
-				B0AC59D716A346E300E90A1A /* OWTGameView.m */,
+				B0AC59D716A346E300E90A1A /* OWTGameView.mm */,
 				B0AC59D816A346E300E90A1A /* OWTLevelGenerator.h */,
 				B0AC59D916A346E300E90A1A /* OWTLevelGenerator.m */,
 				B0429D1516A3505F00331EDE /* Game Logic */,
@@ -308,7 +312,7 @@
 				B0AC59E916A346E300E90A1A /* OWTAppDelegate.m in Sources */,
 				B0AC59EA16A346E300E90A1A /* OWTChunk.m in Sources */,
 				B0AC59EB16A346E300E90A1A /* OWTEntity.m in Sources */,
-				B0AC59EC16A346E300E90A1A /* OWTGameView.m in Sources */,
+				B0AC59EC16A346E300E90A1A /* OWTGameView.mm in Sources */,
 				B0AC59ED16A346E300E90A1A /* OWTLevelGenerator.m in Sources */,
 				B0AC59EE16A346E300E90A1A /* OWTPlayer.m in Sources */,
 			);
@@ -368,6 +372,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = LibOVR/Include;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -392,6 +397,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = LibOVR/Include;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
 			};
@@ -404,7 +410,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OpenWorldTest/OpenWorldTest-Prefix.pch";
 				INFOPLIST_FILE = "OpenWorldTest/OpenWorldTest-Info.plist";
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/\"";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)/\"",
+					"\"$(SRCROOT)/LibOVR/Lib/MacOS/Debug\"",
+				);
 				OTHER_LDFLAGS = (
 					"-all_load",
 					"-ObjC",
@@ -421,7 +430,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OpenWorldTest/OpenWorldTest-Prefix.pch";
 				INFOPLIST_FILE = "OpenWorldTest/OpenWorldTest-Info.plist";
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/\"";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)/\"",
+					"\"$(SRCROOT)/LibOVR/Lib/MacOS/Debug\"",
+				);
 				OTHER_LDFLAGS = (
 					"-all_load",
 					"-ObjC",
