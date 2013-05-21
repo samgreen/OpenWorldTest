@@ -19,6 +19,8 @@
 @property (nonatomic, assign) SCNVector4 movement;
 @property (nonatomic, assign, readonly) CGFloat rotationUpDown;
 @property (nonatomic, assign, readonly) CGFloat rotationLeftRight;
+@property (nonatomic, retain) SCNNode *leftEye;
+@property (nonatomic, retain) SCNNode *rightEye;
 
 + (OWTPlayer *)node;
 - (void)rotateByAmount:(CGSize)amount;

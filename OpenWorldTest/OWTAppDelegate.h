@@ -10,10 +10,11 @@
 #import <SceneKit/SceneKit.h>
 #import <OpenGL/gl.h>
 
+@class OWTGameView;
 
 @interface OWTAppDelegate : NSObject <NSApplicationDelegate,SCNSceneRendererDelegate>
 {
-	IBOutlet SCNView *_view;
+	IBOutlet OWTGameView *_view;
     GLuint _colorTexture, _depthTexture;
     GLuint _fbo; //offscreen framebuffer
     GLuint _program;

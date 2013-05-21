@@ -14,6 +14,7 @@
  */
 
 #import "OWTAppDelegate.h"
+#import "OWTGameView.h"
 
 @implementation OWTAppDelegate
 
@@ -24,13 +25,14 @@
 
 -(void)awakeFromNib
 {
-	[self performSelector:@selector(beginFog) withObject:nil afterDelay:1.0]; // lazy, making sure the shader inits with right size
+	[self performSelector:@selector(beginFog) withObject:nil afterDelay:4.0]; // lazy, making sure the shader inits with right size
 }
 
 -(void)beginFog
 {
-	_view.delegate = self;
-	
+	_view.leftEyeView.delegate = self;
+    _view.rightEyeView.delegate = self;
+    
 	//setup offscreen buffer
     NSSize viewportSize = [_view convertRectToBase:[_view bounds]].size; //HiDPI
 	
@@ -50,9 +52,9 @@
     }
 	
     //start GL stuffs
-    if([_view openGLContext]==nil) return;
+    if([_view.leftEyeView openGLContext]==nil || [_view.rightEyeView openGLContext] == nil) return;
     
-    [[_view openGLContext] makeCurrentContext];
+    [[_view.leftEyeView openGLContext] makeCurrentContext];
     
     //create a fbo
     glGenFramebuffersEXT (1, &_fbo);
@@ -261,7 +263,12 @@
 {
     //setup offscreen buffer
     if(_fbo==0){
-        NSSize viewportSize = [_view convertRectToBase:[_view bounds]].size; //HiDPI
+        CGRect viewBounds = [_view bounds];
+//        CGSize eyeViewportSize = CGSizeMake(viewBounds.size.width / 2.0, viewBounds.size.height);
+//        CGRect leftEyeBounds = (CGRect){CGPointZero, eyeViewportSize};
+////        CGRect rightEyeBounds = (CGRect){CGPointMake(eyeViewportSize.width, 0), eyeViewportSize};
+//        NSSize viewportSize = [_view convertRectToBase:leftEyeBounds].size; //HiDPI
+        NSSize viewportSize = [_view convertRectToBase:viewBounds].size; //HiDPI
         [self setupOffscreenFramebuffer:viewportSize];
     }
     

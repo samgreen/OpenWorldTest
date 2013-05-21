@@ -25,11 +25,31 @@
 + (OWTPlayer *)node {
 	OWTPlayer * node = (OWTPlayer *)[super node];
 	[node setMass:70];
-	
-	SCNCamera * camera = [SCNCamera camera];
-	[camera setZNear:0.1];
-	camera.zFar = 64;
-	[node setCamera:camera];
+
+	{
+        SCNCamera * camera = [SCNCamera camera];
+        [camera setZNear:0.1];
+        camera.zFar = 64;
+        
+        SCNNode *leftEye = [SCNNode node];
+        leftEye.position = SCNVector3Make(-1.0, 0.0, 0.0);
+        [leftEye setCamera:camera];
+        node.leftEye = leftEye;
+        
+        [node addChildNode:leftEye];
+    }
+    {
+        SCNCamera * camera = [SCNCamera camera];
+        [camera setZNear:0.1];
+        camera.zFar = 64;
+
+        SCNNode *rightEye = [SCNNode node];
+        rightEye.position = SCNVector3Make(1.0, 0.0, 0.0);
+        [rightEye setCamera:camera];
+        node.rightEye = rightEye;
+        
+        [node addChildNode:rightEye];
+    }
 	
 	SCNLight * light = [SCNLight light];
 	[light setType:SCNLightTypeOmni];

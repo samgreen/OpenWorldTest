@@ -43,8 +43,10 @@ SCNGeometry *treeGeometry;
 		NSOpenGLPFAMPSafe,
 		0
 	};
-	self.pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
-	
+    NSOpenGLPixelFormat *pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+	self.leftEyeView.pixelFormat = pixelFormat;
+    self.rightEyeView.pixelFormat = pixelFormat;
+    
 	return self;
 }
 
@@ -176,14 +178,18 @@ CVTimeStamp lastChunkTick;
 	[self initCrosshairs];
 
 	SCNScene *scene = [SCNScene scene];
-	self.scene = scene;
-	
+    self.scene = scene;
+	self.leftEyeView.scene = scene;
+    self.rightEyeView.scene = scene;
+    
 	playerNode = [OWTPlayer node];
 	playerNode.position = SCNVector3Make(MAP_BOUNDS/2, MAP_BOUNDS/2, 5);
 	[playerNode rotateByAmount:CGSizeMake(0, 0)];
 	
 	[scene.rootNode addChildNode:playerNode];
-	
+    [self.leftEyeView setPointOfView:playerNode.leftEye];
+    [self.rightEyeView setPointOfView:playerNode.rightEye];
+    
 	[self reload:self];
 	[self resetMouse];
 

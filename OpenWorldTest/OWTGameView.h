@@ -44,7 +44,7 @@ typedef enum _SKRBlockType
 } SKRBlockType;
 
 
-@interface OWTGameView : SCNView <SCNSceneRendererDelegate, SCNProgramDelegate>
+@interface OWTGameView : NSView <SCNSceneRendererDelegate, SCNProgramDelegate>
 {
 	
 	NSMutableDictionary *chunkCache;
@@ -67,6 +67,10 @@ typedef enum _SKRBlockType
 	
 	CALayer *crosshairLayer;
 }
+
+@property (nonatomic, strong) SCNScene *scene;
+@property (nonatomic, strong) IBOutlet SCNView *leftEyeView;
+@property (nonatomic, strong) IBOutlet SCNView *rightEyeView;
 
 -(IBAction)reload:(id)sender;
 - (CVReturn)gameLoopAtTime:(CVTimeStamp)time;
