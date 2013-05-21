@@ -16,8 +16,6 @@
 		B0429D1316A3501500331EDE /* shader.frag in Resources */ = {isa = PBXBuildFile; fileRef = B0AC59BF16A346E300E90A1A /* shader.frag */; };
 		B0429D1416A3501700331EDE /* shader.vert in Resources */ = {isa = PBXBuildFile; fileRef = B0AC59C016A346E300E90A1A /* shader.vert */; };
 		B0AC59DC16A346E300E90A1A /* cube.dae in Resources */ = {isa = PBXBuildFile; fileRef = B0AC59BE16A346E300E90A1A /* cube.dae */; };
-		B0AC59DD16A346E300E90A1A /* shader.frag in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59BF16A346E300E90A1A /* shader.frag */; };
-		B0AC59DE16A346E300E90A1A /* shader.vert in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59C016A346E300E90A1A /* shader.vert */; };
 		B0AC59DF16A346E300E90A1A /* tree.dae in Resources */ = {isa = PBXBuildFile; fileRef = B0AC59C116A346E300E90A1A /* tree.dae */; };
 		B0AC59E016A346E300E90A1A /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = B0AC59C216A346E300E90A1A /* Credits.rtf */; };
 		B0AC59E116A346E300E90A1A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B0AC59C416A346E300E90A1A /* InfoPlist.strings */; };
@@ -382,8 +380,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B0AC59DD16A346E300E90A1A /* shader.frag in Sources */,
-				B0AC59DE16A346E300E90A1A /* shader.vert in Sources */,
 				B0AC59E716A346E300E90A1A /* main.m in Sources */,
 				B0AC59E916A346E300E90A1A /* OWTAppDelegate.m in Sources */,
 				B0AC59EA16A346E300E90A1A /* OWTChunk.m in Sources */,
