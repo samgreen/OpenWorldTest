@@ -53,6 +53,15 @@
     return self;
 }
 
+- (SKROculusInfo *)poll
+{
+    app->OnIdle();
+    
+    SKROculusInfo *info = [SKROculusInfo new];
+    
+    return info;
+}
+
 @end
 
 using namespace OVR;
