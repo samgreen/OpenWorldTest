@@ -1313,8 +1313,8 @@
 			<object class="NSWindowTemplate" id="972006081">
 				<int key="NSWindowStyleMask">7</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{999, 390}, {750, 520}}</string>
-				<int key="NSWTFlags">1954021376</int>
+				<string key="NSWindowRect">{{100, 100}, {1280, 800}}</string>
+				<int key="NSWTFlags">1948778496</int>
 				<string key="NSWindowTitle">OpenWorldTest</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
@@ -1330,9 +1330,10 @@
 								<object class="SCNViewTemplate" id="769108266">
 									<reference key="NSNextResponder" ref="807249305"/>
 									<int key="NSvFlags">275</int>
-									<string key="NSFrame">{{375, 0}, {375, 520}}</string>
+									<string key="NSFrame">{{640, 0}, {640, 800}}</string>
 									<reference key="NSSuperview" ref="807249305"/>
 									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView"/>
 									<string key="NSReuseIdentifierKey">_NS:22</string>
 									<bool key="loops">NO</bool>
 									<bool key="playing">NO</bool>
@@ -1349,7 +1350,7 @@
 								<object class="SCNViewTemplate" id="57243709">
 									<reference key="NSNextResponder" ref="807249305"/>
 									<int key="NSvFlags">278</int>
-									<string key="NSFrameSize">{375, 520}</string>
+									<string key="NSFrameSize">{640, 800}</string>
 									<reference key="NSSuperview" ref="807249305"/>
 									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="769108266"/>
@@ -1364,7 +1365,7 @@
 									<reference key="backgroundColor" ref="154540837"/>
 								</object>
 							</array>
-							<string key="NSFrameSize">{750, 520}</string>
+							<string key="NSFrameSize">{1280, 800}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="57243709"/>
@@ -1372,9 +1373,10 @@
 							<string key="NSClassName">OWTGameView</string>
 						</object>
 					</array>
-					<string key="NSFrameSize">{750, 520}</string>
+					<string key="NSFrameSize">{1280, 800}</string>
 					<reference key="NSSuperview"/>
 					<reference key="NSWindow"/>
+					<reference key="NSNextKeyView" ref="807249305"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1680, 1028}}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
@@ -3207,8 +3209,8 @@
 				<string key="350.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="351.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="354.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<boolean value="YES" key="371.IBNSWindowAutoPositionCentersHorizontal"/>
-				<boolean value="YES" key="371.IBNSWindowAutoPositionCentersVertical"/>
+				<boolean value="NO" key="371.IBNSWindowAutoPositionCentersHorizontal"/>
+				<boolean value="NO" key="371.IBNSWindowAutoPositionCentersVertical"/>
 				<string key="371.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="371.IBWindowTemplateEditedContentRect">{{380, 496}, {480, 360}}</string>
 				<integer value="1" key="371.NSWindowTemplate.visibleAtLaunch"/>
