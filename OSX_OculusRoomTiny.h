@@ -35,16 +35,23 @@
 #include "RenderTiny_GL_Device.h"
 #include "OVR_Device.h"
 
-@interface SKROculusInfo : NSObject
-
-@end
-
-@interface SKRDeviceBucket : NSObject
-- (SKROculusInfo *)poll;
-@end
-
 using namespace OVR;
 using namespace OVR::RenderTiny;
+
+struct SKROculusInfo {
+    Vector3f            EyePos;
+    float               EyeYaw;         // Rotation around Y, CCW positive when looking at RHS (X,Z) plane.
+    float               EyePitch;       // Pitch. If sensor is plugged in, only read from sensor.
+    float               EyeRoll;        // Roll, only accessible from Sensor.
+    float               LastSensorYaw;  // Stores previous Yaw value from to support computing delta.
+};
+typedef struct SKROculusInfo SKROculusInfo;
+
+@interface SKRDeviceBucket : NSObject
+
+- (SKROculusInfo)poll;
+
+@end
 
 class OculusRoomTinyApp;
 

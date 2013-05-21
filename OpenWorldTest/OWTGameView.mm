@@ -133,9 +133,8 @@ CVTimeStamp oldTime;
 
 CVTimeStamp lastChunkTick;
 
-- (CVReturn)gameLoopAtTime:(CVTimeStamp)time {
-	
-    SKROculusInfo *info = [bucket poll];
+- (CVReturn)gameLoopAtTime:(CVTimeStamp)time {    
+    SKROculusInfo info = [bucket poll];
     
 	if (time.hostTime-oldTime.hostTime < (NSEC_PER_MSEC))
 		return kCVReturnSuccess;
@@ -172,7 +171,7 @@ CVTimeStamp lastChunkTick;
 			[self loadChunksAroundPlayerPosition];
 		}
 	});
-	
+    
 	return kCVReturnSuccess;
 }
 

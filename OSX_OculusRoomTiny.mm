@@ -26,11 +26,6 @@
 
 #include "Kernel/OVR_KeyCodes.h"
 
-@implementation SKROculusInfo
-
-
-@end
-
 @implementation SKRDeviceBucket {
     OculusRoomTinyApp *app;
 }
@@ -57,11 +52,11 @@
     return self;
 }
 
-- (SKROculusInfo *)poll
+- (SKROculusInfo)poll
 {
     app->OnIdle();
     
-    SKROculusInfo *info = [SKROculusInfo new];
+    SKROculusInfo info;
     
     return info;
 }
