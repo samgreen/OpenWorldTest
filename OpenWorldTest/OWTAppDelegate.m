@@ -25,7 +25,7 @@
 
 -(void)awakeFromNib
 {
-	[self performSelector:@selector(beginFog) withObject:nil afterDelay:4.0]; // lazy, making sure the shader inits with right size
+//	[self performSelector:@selector(beginFog) withObject:nil afterDelay:1.0]; // lazy, making sure the shader inits with right size
 }
 
 -(void)beginFog
