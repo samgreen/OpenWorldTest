@@ -24,7 +24,6 @@
 #define INC_OSX_OculusRoomTiny_h
 
 #import <Cocoa/Cocoa.h>
-
 #import <CoreGraphics/CoreGraphics.h>
 #import <CoreGraphics/CGDirectDisplay.h>
 
@@ -39,13 +38,11 @@ using namespace OVR;
 using namespace OVR::RenderTiny;
 
 struct SKROculusInfo {
-    Vector3f            EyePos;
-    float               EyeYaw;         // Rotation around Y, CCW positive when looking at RHS (X,Z) plane.
-    float               EyePitch;       // Pitch. If sensor is plugged in, only read from sensor.
-    float               EyeRoll;        // Roll, only accessible from Sensor.
-    float               LastSensorYaw;  // Stores previous Yaw value from to support computing delta.
+    Quatf orientation;
 };
 typedef struct SKROculusInfo SKROculusInfo;
+
+NSString *NSStringFromSKROculusInfo(SKROculusInfo info);
 
 @interface SKRDeviceBucket : NSObject
 
@@ -128,7 +125,7 @@ public:
     // Initializes graphics, Rift input and creates world model.
     virtual int  OnStartup();
     // Called per frame to sample SensorFucion and render the world.
-    virtual void OnIdle();
+    virtual Quatf OnIdle();
     
     // Installed for Oculus device messages. Optional.
     virtual void OnMessage(const Message& msg);
@@ -148,7 +145,7 @@ public:
     
     bool        SetFullscreen(const RendererParams& rp, int fullscreen);
     
-protected:
+//protected:
     static OculusRoomTinyApp*   pApp;
     
     // *** Rendering Variables

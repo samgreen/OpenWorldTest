@@ -31,6 +31,7 @@
 		B0AC59EC16A346E300E90A1A /* OWTGameView.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59D716A346E300E90A1A /* OWTGameView.mm */; };
 		B0AC59ED16A346E300E90A1A /* OWTLevelGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59D916A346E300E90A1A /* OWTLevelGenerator.m */; };
 		B0AC59EE16A346E300E90A1A /* OWTPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59DB16A346E300E90A1A /* OWTPlayer.m */; };
+		C27C5F9E174B5D0800BEA5C1 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C27C5F9D174B5D0700BEA5C1 /* GLKit.framework */; };
 		C2982EB9174B2F5800B57B8A /* libovr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2982EB8174B2F5800B57B8A /* libovr.a */; };
 		C2982EC2174B353E00B57B8A /* OSX_OculusRoomTiny.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC1174B353E00B57B8A /* OSX_OculusRoomTiny.mm */; };
 		C2982EC7174B359000B57B8A /* RenderTiny_GL_Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC3174B359000B57B8A /* RenderTiny_GL_Device.cpp */; };
@@ -87,6 +88,7 @@
 		B0AC59D916A346E300E90A1A /* OWTLevelGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTLevelGenerator.m; sourceTree = "<group>"; };
 		B0AC59DA16A346E300E90A1A /* OWTPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTPlayer.h; sourceTree = "<group>"; };
 		B0AC59DB16A346E300E90A1A /* OWTPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTPlayer.m; sourceTree = "<group>"; };
+		C27C5F9D174B5D0700BEA5C1 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		C2982EB8174B2F5800B57B8A /* libovr.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libovr.a; path = LibOVR/Lib/MacOS/Debug/libovr.a; sourceTree = "<group>"; };
 		C2982EC0174B353E00B57B8A /* OSX_OculusRoomTiny.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSX_OculusRoomTiny.h; sourceTree = "<group>"; };
 		C2982EC1174B353E00B57B8A /* OSX_OculusRoomTiny.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSX_OculusRoomTiny.mm; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C27C5F9E174B5D0800BEA5C1 /* GLKit.framework in Frameworks */,
 				B03D9AA31686CDD90013F526 /* IOKit.framework in Frameworks */,
 				B03D9A8C1686C4D60013F526 /* OpenGL.framework in Frameworks */,
 				B02C45131686B5610050BD75 /* QuartzCore.framework in Frameworks */,
@@ -118,6 +121,7 @@
 		B02C44E11686B37E0050BD75 = {
 			isa = PBXGroup;
 			children = (
+				C27C5F9D174B5D0700BEA5C1 /* GLKit.framework */,
 				C2982EBF174B32AA00B57B8A /* Oculus Rift Support */,
 				B0AC59BB16A3467C00E90A1A /* Controller Support */,
 				B0AC59BC16A346E300E90A1A /* OpenWorldTest */,

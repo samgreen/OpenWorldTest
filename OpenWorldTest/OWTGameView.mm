@@ -16,6 +16,7 @@
 #import "DDHidLib.h"
 #import "OVR.h"
 #import "OSX_OculusRoomTiny.h"
+#import <GLKit/GLKMath.h>
 
 // Standard units.
 CGFloat const kGravityAcceleration = 0;//-9.80665;
@@ -147,6 +148,8 @@ CVTimeStamp lastChunkTick;
 	previousActive = [NSApplication sharedApplication].isActive;
 	
 	dispatch_async(dispatch_get_main_queue(), ^{
+        
+//        NSLog(@"%@", NSStringFromSKROculusInfo(info));
 		
 		CGFloat refreshPeriod = CVDisplayLinkGetActualOutputVideoRefreshPeriod(displayLinkRef);
 		
@@ -160,9 +163,14 @@ CVTimeStamp lastChunkTick;
 		if (playerNodePosition.z < 0) playerNodePosition.z = 0;
 		[playerNode setPosition:playerNodePosition];
 		
-		[playerNode rotateByAmount:CGSizeMake(MCP_DEGREES_TO_RADIANS(-input.look.x / 10000), MCP_DEGREES_TO_RADIANS(-input.look.y / 10000))];
-		
-		
+        GLKQuaternion orientation = GLKQuaternionMake(info.orientation.x,
+                                                      info.orientation.y,
+                                                      info.orientation.z,
+                                                      info.orientation.w);
+        GLKVector3 axis = GLKQuaternionAxis(orientation);
+        float angle = GLKQuaternionAngle(orientation);
+        
+        playerNode.rotation = SCNVector4Make(axis.x, axis.y, axis.z, angle);
 		oldTime = time;
 		
 		if (time.hostTime-lastChunkTick.hostTime > (NSEC_PER_SEC*1))
@@ -194,7 +202,6 @@ CVTimeStamp lastChunkTick;
     
 	playerNode = [OWTPlayer node];
 	playerNode.position = SCNVector3Make(MAP_BOUNDS/2, MAP_BOUNDS/2, 5);
-	[playerNode rotateByAmount:CGSizeMake(0, 0)];
 	
 	[scene.rootNode addChildNode:playerNode];
     [self.leftEyeView setPointOfView:playerNode.leftEye];
@@ -481,21 +488,34 @@ BOOL canReload = YES;
 
 - (void)mouseMoved:(NSEvent *)theEvent {
 	
-	[playerNode rotateByAmount:CGSizeMake(MCP_DEGREES_TO_RADIANS(-theEvent.deltaX / 10000), MCP_DEGREES_TO_RADIANS(-theEvent.deltaY / 10000))];
+//	[playerNode rotateByAmount:CGPointMake(MCP_DEGREES_TO_RADIANS(-theEvent.deltaX / 10000), MCP_DEGREES_TO_RADIANS(-theEvent.deltaY / 10000))];
 }
 
 -(void)keyDown:(NSEvent *)theEvent
 {
-	CGFloat delta = 4;
-	
-	SCNVector4 movement = playerNode.movement;
-	if (theEvent.keyCode == 126 || theEvent.keyCode == 13) movement.x = delta;
-	if (theEvent.keyCode == 123 || theEvent.keyCode == 0) movement.y = delta;
-	if (theEvent.keyCode == 125 || theEvent.keyCode == 1) movement.z = delta;
-	if (theEvent.keyCode == 124 || theEvent.keyCode == 2) movement.w = delta;
-	[playerNode setMovement:movement];
-	
-	
+    GLKQuaternion orientation = GLKQuaternionMakeWithAngleAndAxis(playerNode.rotation.w,
+                                                                  playerNode.rotation.x,
+                                                                  playerNode.rotation.y,
+                                                                  playerNode.rotation.z);
+    GLKVector3 position = GLKVector3Make(playerNode.position.x,
+                                         playerNode.position.y,
+                                         playerNode.position.z);
+    float speed = 1.0;
+	if (theEvent.keyCode == 126 || theEvent.keyCode == 13)
+    {
+        GLKVector3 forwardVector = GLKVector3Make(0.0, 0.0, -1.0);
+        GLKVector3 rotatedVector = GLKQuaternionRotateVector3(orientation, forwardVector);
+        GLKVector3 translation = GLKVector3MultiplyScalar(rotatedVector, speed);
+        GLKVector3 newPosition = GLKVector3Add(position, translation);
+        playerNode.position = SCNVector3Make(newPosition.x,
+                                             newPosition.y,
+                                             newPosition.z);
+    }
+    
+	else if (theEvent.keyCode == 123 || theEvent.keyCode == 0) {}
+	else if (theEvent.keyCode == 125 || theEvent.keyCode == 1) {}
+	else if (theEvent.keyCode == 124 || theEvent.keyCode == 2) {}
+    
 	if (theEvent.keyCode == 49 && playerNode.touchingGround)
 	{
 		
@@ -514,18 +534,6 @@ BOOL canReload = YES;
 	SCNVector3 playerNodeVelocity = playerNode.velocity;
 	playerNodeVelocity.z = sqrtf(-2 * kGravityAcceleration * kJumpHeight);
 	[playerNode setVelocity:playerNodeVelocity];
-}
-
-
--(void)keyUp:(NSEvent *)theEvent
-{
-	SCNVector4 movement = playerNode.movement;
-	if (theEvent.keyCode == 126 || theEvent.keyCode == 13) movement.x = 0;
-	if (theEvent.keyCode == 123 || theEvent.keyCode == 0) movement.y = 0;
-	if (theEvent.keyCode == 125 || theEvent.keyCode == 1) movement.z = 0;
-	if (theEvent.keyCode == 124 || theEvent.keyCode == 2) movement.w = 0;
-	[playerNode setMovement:movement];
-	
 }
 
 #pragma mark - Joystick input
@@ -612,7 +620,7 @@ int lastStickY = 0;
 	if (abs(lastStickY) > abs(lastStickX))
 		return;
 	
-	SCNVector4 movement = playerNode.movement;
+	SCNVector4 movement;// = playerNode.movement;
 	CGFloat delta = 4.;
 	
 	
@@ -648,7 +656,7 @@ int lastStickY = 0;
 		player.moving =YES;
 	}
 	
-	[playerNode setMovement:movement];
+//	[playerNode setMovement:movement];
 	
 }
 
@@ -659,7 +667,7 @@ int lastStickY = 0;
 	value/=SHRT_MAX;
 	CGFloat delta = 4.;
 	
-	SCNVector4 movement = playerNode.movement;
+	SCNVector4 movement;// = playerNode.movement;
 	
 	lastStickY = value;
 	
@@ -699,7 +707,7 @@ int lastStickY = 0;
 		player.moving = YES;
 	}
 	
-	[playerNode setMovement:movement];
+//	[playerNode setMovement:movement];
 	
 }
 

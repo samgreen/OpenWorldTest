@@ -26,6 +26,11 @@
 
 #include "Kernel/OVR_KeyCodes.h"
 
+NSString *NSStringFromSKROculusInfo(SKROculusInfo info) {
+    return [NSString stringWithFormat:@"(%f, %f, %f, $f)",
+            info.orientation.x,info.orientation.y,info.orientation.z,info.orientation.w];
+}
+
 @implementation SKRDeviceBucket {
     OculusRoomTinyApp *app;
 }
@@ -47,16 +52,14 @@
         app = new OculusRoomTinyApp();
         
         app->OnStartup();
-        // TODO: call OnStartup, and then OnIdle as fast as possible
     }
     return self;
 }
 
 - (SKROculusInfo)poll
 {
-    app->OnIdle();
-    
     SKROculusInfo info;
+    info.orientation = app->OnIdle();
     
     return info;
 }
@@ -356,7 +359,7 @@ void OculusRoomTinyApp::OnMessage(const Message& msg)
 //}
 
 
-void OculusRoomTinyApp::OnIdle()
+Quatf OculusRoomTinyApp::OnIdle()
 {
     double curtime = GetAppTime();
     float  dt      = float(curtime - LastUpdate);
@@ -366,9 +369,10 @@ void OculusRoomTinyApp::OnIdle()
     // Handle Sensor motion.
     // We extract Yaw, Pitch, Roll instead of directly using the orientation
     // to allow "additional" yaw manipulation with mouse/controller.
+    Quatf    hmdOrient;
     if (pSensor)
     {
-        Quatf    hmdOrient = SFusion.GetOrientation();
+        hmdOrient = SFusion.GetOrientation();
         float    yaw = 0.0f;
         
         hmdOrient.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&yaw, &EyePitch, &EyeRoll);
@@ -449,6 +453,7 @@ void OculusRoomTinyApp::OnIdle()
 //    pRender->Present();
     // Force GPU to flush the scene, resulting in the lowest possible latency.
 //    pRender->ForceFlushGPU();
+    return hmdOrient;
 }
 
 
