@@ -32,6 +32,11 @@
 		B0AC59ED16A346E300E90A1A /* OWTLevelGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59D916A346E300E90A1A /* OWTLevelGenerator.m */; };
 		B0AC59EE16A346E300E90A1A /* OWTPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59DB16A346E300E90A1A /* OWTPlayer.m */; };
 		C27C5F9E174B5D0800BEA5C1 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C27C5F9D174B5D0700BEA5C1 /* GLKit.framework */; };
+		C296079E174DDDBB005ECCBE /* SKRHydra.mm in Sources */ = {isa = PBXBuildFile; fileRef = C296079D174DDDBB005ECCBE /* SKRHydra.mm */; };
+		C29607A9174DF857005ECCBE /* libsixense_utils_x64.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C29607A7174DF857005ECCBE /* libsixense_utils_x64.dylib */; };
+		C29607AA174DF857005ECCBE /* libsixense_x64.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C29607A8174DF857005ECCBE /* libsixense_x64.dylib */; };
+		C29607AB174DF863005ECCBE /* libsixense_utils_x64.dylib in Resources */ = {isa = PBXBuildFile; fileRef = C29607A7174DF857005ECCBE /* libsixense_utils_x64.dylib */; };
+		C29607AC174DF863005ECCBE /* libsixense_x64.dylib in Resources */ = {isa = PBXBuildFile; fileRef = C29607A8174DF857005ECCBE /* libsixense_x64.dylib */; };
 		C2982EB9174B2F5800B57B8A /* libovr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2982EB8174B2F5800B57B8A /* libovr.a */; };
 		C2982EC2174B353E00B57B8A /* OSX_OculusRoomTiny.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC1174B353E00B57B8A /* OSX_OculusRoomTiny.mm */; };
 		C2982EC7174B359000B57B8A /* RenderTiny_GL_Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC3174B359000B57B8A /* RenderTiny_GL_Device.cpp */; };
@@ -89,6 +94,10 @@
 		B0AC59DA16A346E300E90A1A /* OWTPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTPlayer.h; sourceTree = "<group>"; };
 		B0AC59DB16A346E300E90A1A /* OWTPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTPlayer.m; sourceTree = "<group>"; };
 		C27C5F9D174B5D0700BEA5C1 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		C296079C174DDDBB005ECCBE /* SKRHydra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKRHydra.h; sourceTree = "<group>"; };
+		C296079D174DDDBB005ECCBE /* SKRHydra.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SKRHydra.mm; sourceTree = "<group>"; };
+		C29607A7174DF857005ECCBE /* libsixense_utils_x64.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsixense_utils_x64.dylib; path = SixenseSDK/libsixense_utils_x64.dylib; sourceTree = "<group>"; };
+		C29607A8174DF857005ECCBE /* libsixense_x64.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsixense_x64.dylib; path = SixenseSDK/libsixense_x64.dylib; sourceTree = "<group>"; };
 		C2982EB8174B2F5800B57B8A /* libovr.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libovr.a; path = LibOVR/Lib/MacOS/Debug/libovr.a; sourceTree = "<group>"; };
 		C2982EC0174B353E00B57B8A /* OSX_OculusRoomTiny.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSX_OculusRoomTiny.h; sourceTree = "<group>"; };
 		C2982EC1174B353E00B57B8A /* OSX_OculusRoomTiny.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSX_OculusRoomTiny.mm; sourceTree = "<group>"; };
@@ -112,6 +121,8 @@
 				B02C44F11686B37E0050BD75 /* Cocoa.framework in Frameworks */,
 				B03D9A8F1686CD340013F526 /* libddhid.a in Frameworks */,
 				C2982EB9174B2F5800B57B8A /* libovr.a in Frameworks */,
+				C29607A9174DF857005ECCBE /* libsixense_utils_x64.dylib in Frameworks */,
+				C29607AA174DF857005ECCBE /* libsixense_x64.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,7 +132,7 @@
 		B02C44E11686B37E0050BD75 = {
 			isa = PBXGroup;
 			children = (
-				C27C5F9D174B5D0700BEA5C1 /* GLKit.framework */,
+				C2960797174DD9ED005ECCBE /* Razer Hydra Support */,
 				C2982EBF174B32AA00B57B8A /* Oculus Rift Support */,
 				B0AC59BB16A3467C00E90A1A /* Controller Support */,
 				B0AC59BC16A346E300E90A1A /* OpenWorldTest */,
@@ -141,6 +152,7 @@
 		B02C44EF1686B37E0050BD75 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C27C5F9D174B5D0700BEA5C1 /* GLKit.framework */,
 				B03D9AA21686CDD90013F526 /* IOKit.framework */,
 				B03D9A8B1686C4D60013F526 /* OpenGL.framework */,
 				B02C45121686B5610050BD75 /* QuartzCore.framework */,
@@ -246,6 +258,17 @@
 			path = Images;
 			sourceTree = "<group>";
 		};
+		C2960797174DD9ED005ECCBE /* Razer Hydra Support */ = {
+			isa = PBXGroup;
+			children = (
+				C29607A7174DF857005ECCBE /* libsixense_utils_x64.dylib */,
+				C29607A8174DF857005ECCBE /* libsixense_x64.dylib */,
+				C296079C174DDDBB005ECCBE /* SKRHydra.h */,
+				C296079D174DDDBB005ECCBE /* SKRHydra.mm */,
+			);
+			name = "Razer Hydra Support";
+			sourceTree = "<group>";
+		};
 		C2982EBF174B32AA00B57B8A /* Oculus Rift Support */ = {
 			isa = PBXGroup;
 			children = (
@@ -287,9 +310,9 @@
 		B02C44E31686B37E0050BD75 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				CLASSPREFIX = OWT;
+				CLASSPREFIX = SKR;
 				LastUpgradeCheck = 0450;
-				ORGANIZATIONNAME = "High Caffeine Content";
+				ORGANIZATIONNAME = "Taka Taka";
 			};
 			buildConfigurationList = B02C44E61686B37E0050BD75 /* Build configuration list for PBXProject "OpenWorldTest" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -313,6 +336,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C29607AB174DF863005ECCBE /* libsixense_utils_x64.dylib in Resources */,
+				C29607AC174DF863005ECCBE /* libsixense_x64.dylib in Resources */,
 				B0AC59DC16A346E300E90A1A /* cube.dae in Resources */,
 				B0AC59DF16A346E300E90A1A /* tree.dae in Resources */,
 				B0AC59E016A346E300E90A1A /* Credits.rtf in Resources */,
@@ -345,6 +370,7 @@
 				C2982EC7174B359000B57B8A /* RenderTiny_GL_Device.cpp in Sources */,
 				C2982EC8174B359000B57B8A /* RenderTiny_Device.cpp in Sources */,
 				C2982ECA174B37D500B57B8A /* OculusRoomModel.cpp in Sources */,
+				C296079E174DDDBB005ECCBE /* SKRHydra.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,7 +430,10 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "LibOVR/**";
+				HEADER_SEARCH_PATHS = (
+					"LibOVR/**",
+					"SixenseSDK/include/**",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -431,7 +460,10 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "LibOVR/**";
+				HEADER_SEARCH_PATHS = (
+					"LibOVR/**",
+					"SixenseSDK/include/**",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
 			};
@@ -452,6 +484,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/\"",
 					"\"$(SRCROOT)/LibOVR/Lib/MacOS/Debug\"",
+					"\"$(SRCROOT)/SixenseSDK/osx_x64/release_dll\"",
+					"\"$(SRCROOT)/SixenseSDK\"",
 				);
 				OTHER_LDFLAGS = (
 					"-all_load",
@@ -477,6 +511,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/\"",
 					"\"$(SRCROOT)/LibOVR/Lib/MacOS/Debug\"",
+					"\"$(SRCROOT)/SixenseSDK/osx_x64/release_dll\"",
+					"\"$(SRCROOT)/SixenseSDK\"",
 				);
 				OTHER_LDFLAGS = (
 					"-all_load",

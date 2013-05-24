@@ -40,7 +40,7 @@
         camera.yFov = vFovDegrees;
         
         SCNNode *leftEye = [SCNNode node];
-        leftEye.position = SCNVector3Make(-1.0, 0.0, 0.0);
+        leftEye.position = SCNVector3Make(-0.05, 0.0, 0.0);
         [leftEye setCamera:camera];
         node.leftEye = leftEye;
         
@@ -54,7 +54,7 @@
         camera.yFov = vFovDegrees;
 
         SCNNode *rightEye = [SCNNode node];
-        rightEye.position = SCNVector3Make(1.0, 0.0, 0.0);
+        rightEye.position = SCNVector3Make(0.05, 0.0, 0.0);
         [rightEye setCamera:camera];
         node.rightEye = rightEye;
         
