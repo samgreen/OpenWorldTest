@@ -33,7 +33,6 @@
     xFovDegrees = 84.8;
     yFovDegrees = 97.55;
     
-//    float halfIPD = hmdInfo.InterpupillaryDistance * 0.5f;
     node.interpupillaryDistance = hmdInfo.InterpupillaryDistance;
     
 	{

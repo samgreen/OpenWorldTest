@@ -192,7 +192,8 @@ CVTimeStamp lastChunkTick;
 #pragma mark -
 -(void)awakeFromNib
 {
-    bucket = [[SKRDeviceBucket alloc] init];
+    oculus = [[SKROculus alloc] init];
+    hydra = [[SKRHydra alloc] init];
 
     blocks = @[].mutableCopy;
 	chunkCache = @{}.mutableCopy;
@@ -208,7 +209,7 @@ CVTimeStamp lastChunkTick;
 	self.leftEyeView.scene = scene;
     self.rightEyeView.scene = scene;
     
-    playerNode = [OWTPlayer nodeWithHMDInfo:[bucket hmdInfo]];
+    playerNode = [OWTPlayer nodeWithHMDInfo:[oculus hmdInfo]];
 	playerNode.position = SCNVector3Make(MAP_BOUNDS/2, MAP_BOUNDS/2, 5);
     [scene.rootNode addChildNode:playerNode];
     [self.leftEyeView setPointOfView:playerNode.leftEye];
@@ -216,6 +217,8 @@ CVTimeStamp lastChunkTick;
     
     [self.leftEyeView.layer setValue:@"left" forKey:@"eye"];
     [self.rightEyeView.layer setValue:@"right" forKey:@"eye"];
+    
+    self.leftEyeView.delegate = self;
     
 	[self reload:self];
 	[self resetMouse];
@@ -228,9 +231,6 @@ CVTimeStamp lastChunkTick;
 	SCNLight *sunlight = [SCNLight light];
 	sunlight.type = SCNLightTypeDirectional;
 	scene.rootNode.light = sunlight;
-    
-    oculus = [[SKROculus alloc] init];
-    hydra = [[SKRHydra alloc] init];
 }
 
 -(void)setFrame:(NSRect)frameRect
@@ -505,10 +505,6 @@ BOOL canReload = YES;
 
 -(void)keyDown:(NSEvent *)theEvent
 {
-    
-    NSLog(@"Key down: %d", theEvent.keyCode);
-    
-
     if (theEvent.keyCode == 126)
     {
         playerNode.interpupillaryDistance += 0.01;
@@ -518,11 +514,8 @@ BOOL canReload = YES;
         playerNode.interpupillaryDistance -= 0.01;
     }
 
-    
     if (theEvent.isARepeat)
     {
-        NSLog(@"IS A REPEAT");
-        
         return;
     }
     
@@ -548,7 +541,6 @@ BOOL canReload = YES;
         GLKVector3 rightVector = GLKVector3Make(1.0, 0.0, 0.0);
         newMovementDirection = GLKVector3Add(newMovementDirection, rightVector);
     }
-    
     
     playerNode.movementDirection = newMovementDirection;
     
@@ -794,11 +786,6 @@ NSUInteger frameCount;
 
 - (void)renderer:(id<SCNSceneRenderer>)aRenderer willRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time
 {
-    GLenum err = glGetError();
-    if (err != GL_NO_ERROR)
-        NSLog(@"ERR0? %d", err);
-
-    
     GLKQuaternion orientation = GLKQuaternionMakeWithAngleAndAxis(playerNode.rotation.w,
                                                                   playerNode.rotation.x,
                                                                   playerNode.rotation.y,
