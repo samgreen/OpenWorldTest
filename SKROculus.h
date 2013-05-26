@@ -42,6 +42,7 @@ using namespace OVR::RenderTiny;
 @interface SKROculus : NSObject
 
 - (SCNVector4)poll;
+- (OVR::HMDInfo)hmdInfo;
 
 @end
 

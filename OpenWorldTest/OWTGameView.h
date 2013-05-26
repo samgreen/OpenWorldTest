@@ -10,10 +10,6 @@
 #import <SceneKit/SceneKit.h>
 #import <OpenGL/gl.h>
 
-#import "OWTLevelGenerator.h"
-#import "OWTChunk.h"
-#import "OWTPlayer.h"
-
 typedef struct _SKRInput
 {
 	BOOL up;
@@ -43,8 +39,10 @@ typedef enum _SKRBlockType
 	SKRBlockTypeTree
 } SKRBlockType;
 
+@class OWTPlayer;
+@class OWTLevelGenerator;
 
-@interface OWTGameView : NSView <SCNSceneRendererDelegate, SCNProgramDelegate>
+@interface OWTGameView : NSView <SCNSceneRendererDelegate, SCNProgramDelegate, SCNNodeRendererDelegate>
 {
 	
 	NSMutableDictionary *chunkCache;

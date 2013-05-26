@@ -63,6 +63,11 @@
                                     orientation.w);
 }
 
+- (OVR::HMDInfo)hmdInfo
+{
+    return app->HMDInfo;
+}
+
 @end
 
 using namespace OVR;

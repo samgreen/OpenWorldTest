@@ -14,6 +14,10 @@
 
 #import "OWTGameView.h"
 #import "DDHidLib.h"
+#import "OWTPlayer.h"
+#import "OWTChunk.h"
+#import "OWTLevelGenerator.h"
+
 #import "OVR.h"
 #import "SKROculus.h"
 #import <GLKit/GLKMath.h>
@@ -188,7 +192,10 @@ CVTimeStamp lastChunkTick;
 #pragma mark -
 -(void)awakeFromNib
 {
-	blocks = @[].mutableCopy;
+    oculus = [[SKROculus alloc] init];
+    hydra = [[SKRHydra alloc] init];
+
+    blocks = @[].mutableCopy;
 	chunkCache = @{}.mutableCopy;
 	
 	[self premakeMaterials];
@@ -202,12 +209,16 @@ CVTimeStamp lastChunkTick;
 	self.leftEyeView.scene = scene;
     self.rightEyeView.scene = scene;
     
-	playerNode = [OWTPlayer node];
+    playerNode = [OWTPlayer nodeWithHMDInfo:[oculus hmdInfo]];
 	playerNode.position = SCNVector3Make(MAP_BOUNDS/2, MAP_BOUNDS/2, 5);
-	
-	[scene.rootNode addChildNode:playerNode];
+    [scene.rootNode addChildNode:playerNode];
     [self.leftEyeView setPointOfView:playerNode.leftEye];
     [self.rightEyeView setPointOfView:playerNode.rightEye];
+    
+    [self.leftEyeView.layer setValue:@"left" forKey:@"eye"];
+    [self.rightEyeView.layer setValue:@"right" forKey:@"eye"];
+    
+    self.leftEyeView.delegate = self;
     
 	[self reload:self];
 	[self resetMouse];
@@ -220,9 +231,6 @@ CVTimeStamp lastChunkTick;
 	SCNLight *sunlight = [SCNLight light];
 	sunlight.type = SCNLightTypeDirectional;
 	scene.rootNode.light = sunlight;
-    
-    oculus = [[SKROculus alloc] init];
-    hydra = [[SKRHydra alloc] init];
 }
 
 -(void)setFrame:(NSRect)frameRect
@@ -478,6 +486,7 @@ BOOL canReload = YES;
 		SCNNode *boxNode = [SCNNode nodeWithGeometry:geometry];
 		boxNode.position = SCNVector3Make(location.x, location.y, location.z);
 		[node addChildNode:boxNode];
+        node.rendererDelegate = self;
 		[blocks addObject:boxNode];
 	});
 }
@@ -491,33 +500,89 @@ BOOL canReload = YES;
 
 - (void)mouseMoved:(NSEvent *)theEvent {
 	
-//	[playerNode rotateByAmount:CGPointMake(MCP_DEGREES_TO_RADIANS(-theEvent.deltaX / 10000), MCP_DEGREES_TO_RADIANS(-theEvent.deltaY / 10000))];
+    //	[playerNode rotateByAmount:CGPointMake(MCP_DEGREES_TO_RADIANS(-theEvent.deltaX / 10000), MCP_DEGREES_TO_RADIANS(-theEvent.deltaY / 10000))];
 }
 
 -(void)keyDown:(NSEvent *)theEvent
 {
-    GLKQuaternion orientation = GLKQuaternionMakeWithAngleAndAxis(playerNode.rotation.w,
-                                                                  playerNode.rotation.x,
-                                                                  playerNode.rotation.y,
-                                                                  playerNode.rotation.z);
-    GLKVector3 position = GLKVector3Make(playerNode.position.x,
-                                         playerNode.position.y,
-                                         playerNode.position.z);
-    float speed = 1.0;
-	if (theEvent.keyCode == 126 || theEvent.keyCode == 13)
+    if (theEvent.keyCode == 126)
     {
-        GLKVector3 forwardVector = GLKVector3Make(0.0, 0.0, -1.0);
-        GLKVector3 rotatedVector = GLKQuaternionRotateVector3(orientation, forwardVector);
-        GLKVector3 translation = GLKVector3MultiplyScalar(rotatedVector, speed);
-        GLKVector3 newPosition = GLKVector3Add(position, translation);
-        playerNode.position = SCNVector3Make(newPosition.x,
-                                             newPosition.y,
-                                             newPosition.z);
+        playerNode.interpupillaryDistance += 0.01;
+    }
+	else if (theEvent.keyCode == 125)
+    {
+        playerNode.interpupillaryDistance -= 0.01;
+    }
+
+    if (theEvent.isARepeat)
+    {
+        return;
     }
     
-	else if (theEvent.keyCode == 123 || theEvent.keyCode == 0) {}
-	else if (theEvent.keyCode == 125 || theEvent.keyCode == 1) {}
-	else if (theEvent.keyCode == 124 || theEvent.keyCode == 2) {}
+    GLKVector3 newMovementDirection = playerNode.movementDirection;
+    
+    if (theEvent.keyCode == 13)
+    {
+        GLKVector3 forwardVector = GLKVector3Make(0.0, 0.0, -1.0);
+        newMovementDirection = GLKVector3Add(newMovementDirection, forwardVector);
+    }
+	else if (theEvent.keyCode == 1)
+    {
+        GLKVector3 backwardVector = GLKVector3Make(0.0, 0.0, 1.0);
+        newMovementDirection = GLKVector3Add(newMovementDirection, backwardVector);
+    }
+	else if (theEvent.keyCode == 0)
+    {
+        GLKVector3 leftVector = GLKVector3Make(-1.0, 0.0, 0.0);
+        newMovementDirection = GLKVector3Add(newMovementDirection, leftVector);
+    }
+	else if (theEvent.keyCode == 2)
+    {
+        GLKVector3 rightVector = GLKVector3Make(1.0, 0.0, 0.0);
+        newMovementDirection = GLKVector3Add(newMovementDirection, rightVector);
+    }
+    
+    playerNode.movementDirection = newMovementDirection;
+    
+	if (theEvent.keyCode == 49 && playerNode.touchingGround)
+	{
+		
+		// v^2 = u^2 + 2as
+		// 0 = u^2 + 2as (v = 0 at top of jump)
+		// -u^2 = 2as;
+		// u^2 = -2as;
+		// u = sqrt(-2 * kGravityAcceleration * kJumpHeight)
+		
+		[self jump];
+	}
+}
+
+-(void)keyUp:(NSEvent *)theEvent
+{
+    GLKVector3 newMovementDirection = playerNode.movementDirection;
+    
+    if (theEvent.keyCode == 13)
+    {
+        GLKVector3 forwardVector = GLKVector3Make(0.0, 0.0, -1.0);
+        newMovementDirection = GLKVector3Subtract(newMovementDirection, forwardVector);
+    }
+	else if (theEvent.keyCode == 1)
+    {
+        GLKVector3 backwardVector = GLKVector3Make(0.0, 0.0, 1.0);
+        newMovementDirection = GLKVector3Subtract(newMovementDirection, backwardVector);
+    }
+	else if (theEvent.keyCode == 0)
+    {
+        GLKVector3 leftVector = GLKVector3Make(-1.0, 0.0, 0.0);
+        newMovementDirection = GLKVector3Subtract(newMovementDirection, leftVector);
+    }
+	else if (theEvent.keyCode == 2)
+    {
+        GLKVector3 rightVector = GLKVector3Make(1.0, 0.0, 0.0);
+        newMovementDirection = GLKVector3Subtract(newMovementDirection, rightVector);
+    }
+    
+    playerNode.movementDirection = newMovementDirection;
     
 	if (theEvent.keyCode == 49 && playerNode.touchingGround)
 	{
@@ -719,9 +784,26 @@ int lastStickY = 0;
 NSDate *nextFrameCounterReset;
 NSUInteger frameCount;
 
+- (void)renderer:(id<SCNSceneRenderer>)aRenderer willRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time
+{
+    GLKQuaternion orientation = GLKQuaternionMakeWithAngleAndAxis(playerNode.rotation.w,
+                                                                  playerNode.rotation.x,
+                                                                  playerNode.rotation.y,
+                                                                  playerNode.rotation.z);
+    GLKVector3 position = GLKVector3Make(playerNode.position.x,
+                                         playerNode.position.y,
+                                         playerNode.position.z);
+    float speed = 0.1;
+    GLKVector3 rotatedVector = GLKQuaternionRotateVector3(orientation, playerNode.movementDirection);
+    GLKVector3 translation = GLKVector3MultiplyScalar(rotatedVector, speed);
+    GLKVector3 newPosition = GLKVector3Add(position, translation);
+    playerNode.position = SCNVector3Make(newPosition.x,
+                                         newPosition.y,
+                                         newPosition.z);
+}
+
 - (void)renderer:(id <SCNSceneRenderer>)aRenderer didRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time
 {
-	
 	dispatch_async(dispatch_get_global_queue(0, 0), ^{
 		NSDate *now = [NSDate date];
 		

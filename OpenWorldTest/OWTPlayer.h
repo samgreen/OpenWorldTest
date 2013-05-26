@@ -7,7 +7,9 @@
 //
 
 #import <SceneKit/SceneKit.h>
+#import <GLKit/GLKMath.h>
 #import "OWTEntity.h"
+#import "OVR_Device.h"
 
 typedef NS_ENUM(NSUInteger, SKRRightLeft){
     SKRLeft,
@@ -23,7 +25,10 @@ typedef NS_ENUM(NSUInteger, SKRRightLeft){
 @property (nonatomic, strong) SCNNode *leftHand;
 @property (nonatomic, strong) SCNNode *rightHand;
 
-+ (OWTPlayer *)node;
+@property (nonatomic) GLKVector3 movementDirection;
+@property (nonatomic) float interpupillaryDistance;
+
++ (OWTPlayer *)nodeWithHMDInfo:(OVR::HMDInfo)hmdInfo;
 
 - (void)updateArm:(SKRRightLeft)rightLeft
          position:(SCNVector3)position

@@ -8,61 +8,72 @@
 
 #import "OWTPlayer.h"
 #import "SKRMath.h"
-@interface OWTPlayer ()
-@end
 
-@interface OWTPlayer (Private)
+@interface OWTPlayer ()
 - (void)buildPlayer;
 @end
 
 @implementation OWTPlayer
 
-+ (OWTPlayer *)node {
++ (OWTPlayer *)nodeWithHMDInfo:(OVR::HMDInfo)hmdInfo
+{
 	OWTPlayer * node = (OWTPlayer *)[super node];
 	[node setMass:70];
+    
+    node.interpupillaryDistance = hmdInfo.InterpupillaryDistance;
+    
+    [node createCamerasWithHMDInfo:hmdInfo];
+	[node buildPlayer];
+    [node createArms];    
 	
-	SCNLight *light = [SCNLight light];
+	SCNLight * light = [SCNLight light];
 	[light setType:SCNLightTypeOmni];
 	[node setLight:light];
 	
-    [node createCameras];
 	[node buildPlayer];
-    [node createArms];
 	
 	return node;
 }
 
-- (void)createCameras {
-    int hResolution = 1280;
-    int vResolution = 800;
-    __unused float hScreenSizeMeters = 0.14976;
-    float vScreenSizeMeters = 0.0935;
-    float eyeToScreenDistanceMeters = 0.041;
-    float halfScreenAspectRatio = hResolution / (2.0 * vResolution);
-    float vFov = 2 * atan(vScreenSizeMeters / (2.0 * eyeToScreenDistanceMeters));
-    float hFov = 2 * atan(halfScreenAspectRatio * tan(vFov / 2.0));
-    float vFovDegrees = SKR_RADIANS_TO_DEGREES(vFov);
-    float hFovDegrees = SKR_RADIANS_TO_DEGREES(hFov);
+- (void)createCamerasWithHMDInfo:(OVR::HMDInfo)hmdInfo {
+    float halfScreenAspectRatio = (hmdInfo.HResolution * 0.5) / hmdInfo.VResolution;
+    float halfScreenDistance = hmdInfo.VScreenSize * 0.5;
+    float yFov = 2.0 * atanf(halfScreenDistance / hmdInfo.EyeToScreenDistance);
+    float xFov = 2.0 * atanf(halfScreenAspectRatio * tanf(yFov / 2.0));
+    float yFovDegrees = SKR_RADIANS_TO_DEGREES(yFov);
+    float xFovDegrees = SKR_RADIANS_TO_DEGREES(xFov);
+    NSLog(@"yFov: %f, xFov: %f", yFovDegrees, xFovDegrees);
+    
+    xFovDegrees = 84.8;
+    yFovDegrees = 97.55;
+    
+    CGFloat eyeOffset = self.interpupillaryDistance * 0.5;
     
     for (NSUInteger i = 0; i < 2; i++) {
         SCNCamera *camera = [SCNCamera camera];
         camera.zNear = 0.1;
         camera.zFar = 64;
-        camera.xFov = hFovDegrees;
-        camera.yFov = vFovDegrees;
+        camera.xFov = xFovDegrees;
+        camera.yFov = yFovDegrees;
         
         SCNNode *eyeNode = [SCNNode node];
         [eyeNode setCamera:camera];
         
         [self addChildNode:eyeNode];
         if (i == 0) {
-            eyeNode.position = SCNVector3Make(-0.05, 0.0, 0.0);
+            eyeNode.position = SCNVector3Make(-eyeOffset, 0.0, 0.0);
             self.leftEye = eyeNode;
         } else if (i == 1) {
-            eyeNode.position = SCNVector3Make(0.05, 0.0, 0.0);
+            eyeNode.position = SCNVector3Make(eyeOffset, 0.0, 0.0);
             self.rightEye = eyeNode;
         }
     }
+}
+- (void)setInterpupillaryDistance:(float)interpupillaryDistance
+{
+    _interpupillaryDistance = interpupillaryDistance;
+    self.leftEye.position = SCNVector3Make(-self.interpupillaryDistance * 0.5, 0.0, 0.0);
+    self.rightEye.position = SCNVector3Make(self.interpupillaryDistance * 0.5, 0.0, 0.0);
 }
 
 - (void)buildPlayer {
