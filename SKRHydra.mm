@@ -7,6 +7,7 @@
 //
 
 #import "SKRHydra.h"
+#import "SKRMath.h"
 
 #include <sixense.h>
 #include <sixense_math.hpp>
@@ -51,31 +52,24 @@ void controller_manager_setup_callback( sixenseUtils::ControllerManager::setup_s
         // the hemisphere calibration is complete.
         sixenseUtils::getTheControllerManager()->setGameType( sixenseUtils::ControllerManager::ONE_PLAYER_TWO_CONTROLLER );
         sixenseUtils::getTheControllerManager()->registerSetupCallback( controller_manager_setup_callback );
-        
-        sixenseSetActiveBase(0);
-        sixenseAllControllerData acd;
-        sixenseGetAllNewestData( &acd );
-        sixenseUtils::getTheControllerManager()->update( &acd );
-        
-        static NSTimer *tempTimer;
-        tempTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(update) userInfo:nil repeats:YES];
     }
     return self;
 }
 
-- (void)update {
+- (SKRHydraControllerPair)poll {
     
     sixenseSetActiveBase(0);
 	sixenseAllControllerData acd;
 	sixenseGetAllNewestData( &acd );
 	sixenseUtils::getTheControllerManager()->update( &acd );
     
-    // Draw the two 3d objects representing the controllers
-    int base, cont, i, j;
-    float rot_mat[4][4];
+    int base, controller;
     
-    int left_index = sixenseUtils::getTheControllerManager()->getIndex( sixenseUtils::ControllerManager::P1L );
-    int right_index = sixenseUtils::getTheControllerManager()->getIndex( sixenseUtils::ControllerManager::P1R );
+    int leftIndex  = sixenseUtils::getTheControllerManager()->getIndex( sixenseUtils::ControllerManager::P1L );
+    int rightIndex = sixenseUtils::getTheControllerManager()->getIndex( sixenseUtils::ControllerManager::P1R );
+    
+    // We currently only return one pair of controllers, even if there are multiple base stations.
+    SKRHydraControllerPair pair;
     
     // Go through each of the connected systems
     for( base=0; base<sixenseGetMaxBases(); base++ ) {
@@ -85,40 +79,32 @@ void controller_manager_setup_callback( sixenseUtils::ControllerManager::setup_s
         sixenseGetAllNewestData( &acd );
         
         // For each possible controller
-        for( cont=0; cont<sixenseGetMaxControllers(); cont++ ) {
+        for( controller=0; controller<sixenseGetMaxControllers(); controller++ ) {
             
             // See if it's enabled
-            if( sixenseIsControllerEnabled( cont ) ) {
-					if( cont == left_index ) { // if this is the left controller
-                        NSLog(@"Left controller");
-					}
+            if( sixenseIsControllerEnabled( controller ) ) {
                 
-					if( cont == right_index ) { // if this is the right controller
-                        NSLog(@"Right controller");
-					}
+                SCNVector4 orientation = SKRVector4FromQuaternion(acd.controllers[controller].rot_quat[0],
+                                                                  acd.controllers[controller].rot_quat[1],
+                                                                  acd.controllers[controller].rot_quat[2],
+                                                                  acd.controllers[controller].rot_quat[3]);
                 
-                // draw one hand darker than the other one
-//					if( cont == 0 ) {
-//						glColor3d(colors[base][0]+flash_multiplier, colors[base][1]+flash_multiplier, colors[base][2]+flash_multiplier );
-//					} else {
-//						glColor3d(0.6f*colors[base][0]+flash_multiplier, 0.6f*colors[base][1]+flash_multiplier, 0.6f*colors[base][2]+flash_multiplier );
-//					}
+                SCNVector3 position = SCNVector3Make(acd.controllers[controller].pos[0]/500.0f,
+                                                     acd.controllers[controller].pos[1]/500.0f,
+                                                     acd.controllers[controller].pos[2]/500.0f);
+                SKRHydraController hydraController;
+                hydraController.orientation = orientation;
+                hydraController.position = position;
                 
-                for( i=0; i<3; i++ )
-                    for( j=0; j<3; j++ )
-                        rot_mat[i][j] = acd.controllers[cont].rot_mat[i][j];
-                
-                rot_mat[0][3] = 0.0f;
-                rot_mat[1][3] = 0.0f;
-                rot_mat[2][3] = 0.0f;
-                rot_mat[3][0] = acd.controllers[cont].pos[0]/500.0f;
-                rot_mat[3][1] = acd.controllers[cont].pos[1]/500.0f;
-                rot_mat[3][2] = acd.controllers[cont].pos[2]/500.0f;
-                rot_mat[3][3] = 1.0f;
-                
+                if( controller == leftIndex ) {
+                    pair.left = hydraController;
+                } else if ( controller == rightIndex ) {
+                    pair.right = hydraController;
+                }
             }
         }
     }
+    return pair;
 }
 
 

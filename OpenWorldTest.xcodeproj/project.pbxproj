@@ -30,15 +30,16 @@
 		B0AC59EB16A346E300E90A1A /* OWTEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59D516A346E300E90A1A /* OWTEntity.m */; };
 		B0AC59EC16A346E300E90A1A /* OWTGameView.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59D716A346E300E90A1A /* OWTGameView.mm */; };
 		B0AC59ED16A346E300E90A1A /* OWTLevelGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59D916A346E300E90A1A /* OWTLevelGenerator.m */; };
-		B0AC59EE16A346E300E90A1A /* OWTPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59DB16A346E300E90A1A /* OWTPlayer.m */; };
+		B0AC59EE16A346E300E90A1A /* OWTPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59DB16A346E300E90A1A /* OWTPlayer.mm */; };
 		C27C5F9E174B5D0800BEA5C1 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C27C5F9D174B5D0700BEA5C1 /* GLKit.framework */; };
+		C2884FC91752A4A4005D6B48 /* SKRMath.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2884FC81752A4A4005D6B48 /* SKRMath.mm */; };
 		C296079E174DDDBB005ECCBE /* SKRHydra.mm in Sources */ = {isa = PBXBuildFile; fileRef = C296079D174DDDBB005ECCBE /* SKRHydra.mm */; };
 		C29607A9174DF857005ECCBE /* libsixense_utils_x64.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C29607A7174DF857005ECCBE /* libsixense_utils_x64.dylib */; };
 		C29607AA174DF857005ECCBE /* libsixense_x64.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C29607A8174DF857005ECCBE /* libsixense_x64.dylib */; };
 		C29607AB174DF863005ECCBE /* libsixense_utils_x64.dylib in Resources */ = {isa = PBXBuildFile; fileRef = C29607A7174DF857005ECCBE /* libsixense_utils_x64.dylib */; };
 		C29607AC174DF863005ECCBE /* libsixense_x64.dylib in Resources */ = {isa = PBXBuildFile; fileRef = C29607A8174DF857005ECCBE /* libsixense_x64.dylib */; };
 		C2982EB9174B2F5800B57B8A /* libovr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2982EB8174B2F5800B57B8A /* libovr.a */; };
-		C2982EC2174B353E00B57B8A /* OSX_OculusRoomTiny.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC1174B353E00B57B8A /* OSX_OculusRoomTiny.mm */; };
+		C2982EC2174B353E00B57B8A /* SKROculus.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC1174B353E00B57B8A /* SKROculus.mm */; };
 		C2982EC7174B359000B57B8A /* RenderTiny_GL_Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC3174B359000B57B8A /* RenderTiny_GL_Device.cpp */; };
 		C2982EC8174B359000B57B8A /* RenderTiny_Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC5174B359000B57B8A /* RenderTiny_Device.cpp */; };
 		C2982ECA174B37D500B57B8A /* OculusRoomModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC9174B37D500B57B8A /* OculusRoomModel.cpp */; };
@@ -92,15 +93,17 @@
 		B0AC59D816A346E300E90A1A /* OWTLevelGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTLevelGenerator.h; sourceTree = "<group>"; };
 		B0AC59D916A346E300E90A1A /* OWTLevelGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTLevelGenerator.m; sourceTree = "<group>"; };
 		B0AC59DA16A346E300E90A1A /* OWTPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTPlayer.h; sourceTree = "<group>"; };
-		B0AC59DB16A346E300E90A1A /* OWTPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTPlayer.m; sourceTree = "<group>"; };
+		B0AC59DB16A346E300E90A1A /* OWTPlayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OWTPlayer.mm; sourceTree = "<group>"; };
 		C27C5F9D174B5D0700BEA5C1 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		C2884FC71752A4A4005D6B48 /* SKRMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKRMath.h; sourceTree = "<group>"; };
+		C2884FC81752A4A4005D6B48 /* SKRMath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SKRMath.mm; sourceTree = "<group>"; };
 		C296079C174DDDBB005ECCBE /* SKRHydra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKRHydra.h; sourceTree = "<group>"; };
 		C296079D174DDDBB005ECCBE /* SKRHydra.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SKRHydra.mm; sourceTree = "<group>"; };
 		C29607A7174DF857005ECCBE /* libsixense_utils_x64.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsixense_utils_x64.dylib; path = SixenseSDK/libsixense_utils_x64.dylib; sourceTree = "<group>"; };
 		C29607A8174DF857005ECCBE /* libsixense_x64.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsixense_x64.dylib; path = SixenseSDK/libsixense_x64.dylib; sourceTree = "<group>"; };
 		C2982EB8174B2F5800B57B8A /* libovr.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libovr.a; path = LibOVR/Lib/MacOS/Debug/libovr.a; sourceTree = "<group>"; };
-		C2982EC0174B353E00B57B8A /* OSX_OculusRoomTiny.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSX_OculusRoomTiny.h; sourceTree = "<group>"; };
-		C2982EC1174B353E00B57B8A /* OSX_OculusRoomTiny.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSX_OculusRoomTiny.mm; sourceTree = "<group>"; };
+		C2982EC0174B353E00B57B8A /* SKROculus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKROculus.h; sourceTree = "<group>"; };
+		C2982EC1174B353E00B57B8A /* SKROculus.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SKROculus.mm; sourceTree = "<group>"; };
 		C2982EC3174B359000B57B8A /* RenderTiny_GL_Device.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderTiny_GL_Device.cpp; sourceTree = "<group>"; };
 		C2982EC4174B359000B57B8A /* RenderTiny_GL_Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderTiny_GL_Device.h; sourceTree = "<group>"; };
 		C2982EC5174B359000B57B8A /* RenderTiny_Device.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderTiny_Device.cpp; sourceTree = "<group>"; };
@@ -132,6 +135,8 @@
 		B02C44E11686B37E0050BD75 = {
 			isa = PBXGroup;
 			children = (
+				C2884FC71752A4A4005D6B48 /* SKRMath.h */,
+				C2884FC81752A4A4005D6B48 /* SKRMath.mm */,
 				C2960797174DD9ED005ECCBE /* Razer Hydra Support */,
 				C2982EBF174B32AA00B57B8A /* Oculus Rift Support */,
 				B0AC59BB16A3467C00E90A1A /* Controller Support */,
@@ -200,7 +205,7 @@
 				B0AC59D416A346E300E90A1A /* OWTEntity.h */,
 				B0AC59D516A346E300E90A1A /* OWTEntity.m */,
 				B0AC59DA16A346E300E90A1A /* OWTPlayer.h */,
-				B0AC59DB16A346E300E90A1A /* OWTPlayer.m */,
+				B0AC59DB16A346E300E90A1A /* OWTPlayer.mm */,
 			);
 			name = "Game Logic";
 			sourceTree = "<group>";
@@ -273,8 +278,8 @@
 			isa = PBXGroup;
 			children = (
 				C2982EB8174B2F5800B57B8A /* libovr.a */,
-				C2982EC0174B353E00B57B8A /* OSX_OculusRoomTiny.h */,
-				C2982EC1174B353E00B57B8A /* OSX_OculusRoomTiny.mm */,
+				C2982EC0174B353E00B57B8A /* SKROculus.h */,
+				C2982EC1174B353E00B57B8A /* SKROculus.mm */,
 				C2982EC3174B359000B57B8A /* RenderTiny_GL_Device.cpp */,
 				C2982EC4174B359000B57B8A /* RenderTiny_GL_Device.h */,
 				C2982EC5174B359000B57B8A /* RenderTiny_Device.cpp */,
@@ -365,12 +370,13 @@
 				B0AC59EB16A346E300E90A1A /* OWTEntity.m in Sources */,
 				B0AC59EC16A346E300E90A1A /* OWTGameView.mm in Sources */,
 				B0AC59ED16A346E300E90A1A /* OWTLevelGenerator.m in Sources */,
-				B0AC59EE16A346E300E90A1A /* OWTPlayer.m in Sources */,
-				C2982EC2174B353E00B57B8A /* OSX_OculusRoomTiny.mm in Sources */,
+				B0AC59EE16A346E300E90A1A /* OWTPlayer.mm in Sources */,
+				C2982EC2174B353E00B57B8A /* SKROculus.mm in Sources */,
 				C2982EC7174B359000B57B8A /* RenderTiny_GL_Device.cpp in Sources */,
 				C2982EC8174B359000B57B8A /* RenderTiny_Device.cpp in Sources */,
 				C2982ECA174B37D500B57B8A /* OculusRoomModel.cpp in Sources */,
 				C296079E174DDDBB005ECCBE /* SKRHydra.mm in Sources */,
+				C2884FC91752A4A4005D6B48 /* SKRMath.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -484,13 +490,9 @@
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/\"",
 					"\"$(SRCROOT)/LibOVR/Lib/MacOS/Debug\"",
-					"\"$(SRCROOT)/SixenseSDK/osx_x64/release_dll\"",
 					"\"$(SRCROOT)/SixenseSDK\"",
 				);
-				OTHER_LDFLAGS = (
-					"-all_load",
-					"-ObjC",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = OpenWorldTest;
 				WRAPPER_EXTENSION = app;
 			};
@@ -511,13 +513,9 @@
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/\"",
 					"\"$(SRCROOT)/LibOVR/Lib/MacOS/Debug\"",
-					"\"$(SRCROOT)/SixenseSDK/osx_x64/release_dll\"",
 					"\"$(SRCROOT)/SixenseSDK\"",
 				);
-				OTHER_LDFLAGS = (
-					"-all_load",
-					"-ObjC",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = OpenWorldTest;
 				WRAPPER_EXTENSION = app;
 			};

@@ -15,7 +15,7 @@
 #import "OWTGameView.h"
 #import "DDHidLib.h"
 #import "OVR.h"
-#import "OSX_OculusRoomTiny.h"
+#import "SKROculus.h"
 #import <GLKit/GLKMath.h>
 #import "SKRHydra.h"
 
@@ -137,8 +137,6 @@ CVTimeStamp oldTime;
 CVTimeStamp lastChunkTick;
 
 - (CVReturn)gameLoopAtTime:(CVTimeStamp)time {    
-    SKROculusInfo info = [oculus poll];
-    
 	if (time.hostTime-oldTime.hostTime < (NSEC_PER_MSEC))
 		return kCVReturnSuccess;
 	
@@ -148,10 +146,11 @@ CVTimeStamp lastChunkTick;
 	}
 	
 	previousActive = [NSApplication sharedApplication].isActive;
+    
+    SCNVector4 oculusRotation = [oculus poll];
+    SKRHydraControllerPair controllers = [hydra poll];
 	
 	dispatch_async(dispatch_get_main_queue(), ^{
-        
-//        NSLog(@"%@", NSStringFromSKROculusInfo(info));
 		
 		CGFloat refreshPeriod = CVDisplayLinkGetActualOutputVideoRefreshPeriod(displayLinkRef);
 		
@@ -165,16 +164,17 @@ CVTimeStamp lastChunkTick;
 		if (playerNodePosition.z < 0) playerNodePosition.z = 0;
 		[playerNode setPosition:playerNodePosition];
 		
-        GLKQuaternion orientation = GLKQuaternionMake(info.orientation.x,
-                                                      info.orientation.y,
-                                                      info.orientation.z,
-                                                      info.orientation.w);
-        GLKVector3 axis = GLKQuaternionAxis(orientation);
-        float angle = GLKQuaternionAngle(orientation);
-        
-        playerNode.rotation = SCNVector4Make(axis.x, axis.y, axis.z, angle);
+        playerNode.rotation = oculusRotation;
 		oldTime = time;
 		
+        // Update arms with hydra controllers
+        [playerNode updateArm:SKRLeft
+                     position:controllers.left.position
+                  orientation:controllers.left.orientation];
+        [playerNode updateArm:SKRRight
+                     position:controllers.right.position
+                  orientation:controllers.right.orientation];
+        
 		if (time.hostTime-lastChunkTick.hostTime > (NSEC_PER_SEC*1))
 		{
 			lastChunkTick = time;
@@ -532,7 +532,7 @@ BOOL canReload = YES;
 	}
 }
 
--(void)jump
+- (void)jump
 {
 	SCNVector3 playerNodeVelocity = playerNode.velocity;
 	playerNodeVelocity.z = sqrtf(-2 * kGravityAcceleration * kJumpHeight);

@@ -1,6 +1,6 @@
 /************************************************************************************
  
- Filename    :   OSX_OculusRoomTiny.h
+ Filename    :   SKROculus.h
  Content     :   Simplest possible first-person view test application for Oculus Rift
  Created     :   May 7, 2013
  Authors     :   Michael Antonov, Andrew Reisse, Artem Bolgar
@@ -20,8 +20,8 @@
  limitations under the License.
  
  *************************************************************************************/
-#ifndef INC_OSX_OculusRoomTiny_h
-#define INC_OSX_OculusRoomTiny_h
+#ifndef INC_SKROculus_h
+#define INC_SKROculus_h
 
 #import <Cocoa/Cocoa.h>
 #import <CoreGraphics/CoreGraphics.h>
@@ -33,20 +33,15 @@
 #include "../../LibOVR/Src/Kernel/OVR_Timer.h"
 #include "RenderTiny_GL_Device.h"
 #include "OVR_Device.h"
+#import <SceneKit/SceneKit.h>
+#import <GLKit/GLKit.h>
 
 using namespace OVR;
 using namespace OVR::RenderTiny;
 
-struct SKROculusInfo {
-    Quatf orientation;
-};
-typedef struct SKROculusInfo SKROculusInfo;
-
-NSString *NSStringFromSKROculusInfo(SKROculusInfo info);
-
 @interface SKROculus : NSObject
 
-- (SKROculusInfo)poll;
+- (SCNVector4)poll;
 
 @end
 

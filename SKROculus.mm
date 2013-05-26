@@ -1,6 +1,6 @@
 /************************************************************************************
  
- Filename    :   OSX_OculusRoomTiny.mm
+ Filename    :   SKROculus.mm
  Content     :   Simplest possible first-person view test application for Oculus Rift
  Created     :   May 7, 2013
  Authors     :   Michael Antonov, Andrew Reisse, Artem Bolgar
@@ -21,15 +21,12 @@
  
  *************************************************************************************/
 
-#import "OSX_OculusRoomTiny.h"
+#import "SKROculus.h"
+#import "SKRMath.h"
+
 #include "RenderTiny_GL_Device.h"
 
 #include "Kernel/OVR_KeyCodes.h"
-
-NSString *NSStringFromSKROculusInfo(SKROculusInfo info) {
-    return [NSString stringWithFormat:@"(%f, %f, %f, %f)",
-            info.orientation.x,info.orientation.y,info.orientation.z,info.orientation.w];
-}
 
 @implementation SKROculus {
     OculusRoomTinyApp *app;
@@ -56,12 +53,14 @@ NSString *NSStringFromSKROculusInfo(SKROculusInfo info) {
     return self;
 }
 
-- (SKROculusInfo)poll
+- (SCNVector4)poll
 {
-    SKROculusInfo info;
-    info.orientation = app->OnIdle();
+    Quatf orientation = app->OnIdle();
     
-    return info;
+    return SKRVector4FromQuaternion(orientation.x,
+                                    orientation.y,
+                                    orientation.z,
+                                    orientation.w);
 }
 
 @end

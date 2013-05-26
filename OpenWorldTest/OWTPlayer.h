@@ -9,12 +9,24 @@
 #import <SceneKit/SceneKit.h>
 #import "OWTEntity.h"
 
+typedef NS_ENUM(NSUInteger, SKRRightLeft){
+    SKRLeft,
+    SKRRight
+};
+
 @interface OWTPlayer : OWTEntity {
 }
 
-@property (nonatomic, retain) SCNNode *leftEye;
-@property (nonatomic, retain) SCNNode *rightEye;
+@property (nonatomic, strong) SCNNode *leftEye;
+@property (nonatomic, strong) SCNNode *rightEye;
+
+@property (nonatomic, strong) SCNNode *leftHand;
+@property (nonatomic, strong) SCNNode *rightHand;
 
 + (OWTPlayer *)node;
+
+- (void)updateArm:(SKRRightLeft)rightLeft
+         position:(SCNVector3)position
+      orientation:(SCNVector4)orientation;
 
 @end

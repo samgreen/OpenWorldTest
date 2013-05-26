@@ -72,10 +72,4 @@ BOOL NodeCollision(SCNNode *node, SCNVector3 point)
 	point.z <= max.z && point.z >= min.z ;
 }
 
-
-NSString *NSStringFromSCNVector3(SCNVector3 vec)
-{
-	return [NSString stringWithFormat:@"(%f, %f, %f)", vec.x, vec.y, vec.z];
-}
-
 @end
