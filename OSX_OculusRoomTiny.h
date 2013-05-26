@@ -44,7 +44,7 @@ typedef struct SKROculusInfo SKROculusInfo;
 
 NSString *NSStringFromSKROculusInfo(SKROculusInfo info);
 
-@interface SKRDeviceBucket : NSObject
+@interface SKROculus : NSObject
 
 - (SKROculusInfo)poll;
 - (OVR::HMDInfo)hmdInfo;

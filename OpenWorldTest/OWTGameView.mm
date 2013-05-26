@@ -21,6 +21,7 @@
 #import "OVR.h"
 #import "OSX_OculusRoomTiny.h"
 #import <GLKit/GLKMath.h>
+#import "SKRHydra.h"
 
 // Standard units.
 CGFloat const kGravityAcceleration = 0;//-9.80665;
@@ -34,7 +35,8 @@ SCNGeometry *treeGeometry;
 
 @interface OWTGameView ()
 {
-    SKRDeviceBucket *bucket;
+    SKROculus *oculus;
+    SKRHydra *hydra;
 }
 
 @end
@@ -139,7 +141,7 @@ CVTimeStamp oldTime;
 CVTimeStamp lastChunkTick;
 
 - (CVReturn)gameLoopAtTime:(CVTimeStamp)time {    
-    SKROculusInfo info = [bucket poll];
+    SKROculusInfo info = [oculus poll];
     
 	if (time.hostTime-oldTime.hostTime < (NSEC_PER_MSEC))
 		return kCVReturnSuccess;
@@ -227,7 +229,8 @@ CVTimeStamp lastChunkTick;
 	sunlight.type = SCNLightTypeDirectional;
 	scene.rootNode.light = sunlight;
     
-    bucket = [[SKRDeviceBucket alloc] init];
+    oculus = [[SKROculus alloc] init];
+    hydra = [[SKRHydra alloc] init];
 }
 
 -(void)setFrame:(NSRect)frameRect

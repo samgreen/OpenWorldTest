@@ -31,7 +31,7 @@ NSString *NSStringFromSKROculusInfo(SKROculusInfo info) {
             info.orientation.x,info.orientation.y,info.orientation.z,info.orientation.w];
 }
 
-@implementation SKRDeviceBucket {
+@implementation SKROculus {
     OculusRoomTinyApp *app;
 }
 
