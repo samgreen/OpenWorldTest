@@ -47,6 +47,7 @@ NSString *NSStringFromSKROculusInfo(SKROculusInfo info);
 @interface SKRDeviceBucket : NSObject
 
 - (SKROculusInfo)poll;
+- (OVR::HMDInfo)hmdInfo;
 
 @end
 

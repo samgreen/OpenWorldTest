@@ -7,14 +7,18 @@
 //
 
 #import <SceneKit/SceneKit.h>
+#import <GLKit/GLKMath.h>
 #import "OWTEntity.h"
+#import "OVR_Device.h"
 
 @interface OWTPlayer : OWTEntity {
 }
 
 @property (nonatomic, retain) SCNNode *leftEye;
 @property (nonatomic, retain) SCNNode *rightEye;
+@property (nonatomic) GLKVector3 movementDirection;
+@property (nonatomic) float interpupillaryDistance;
 
-+ (OWTPlayer *)node;
++ (OWTPlayer *)nodeWithHMDInfo:(OVR::HMDInfo)hmdInfo;
 
 @end

@@ -27,7 +27,7 @@
 #include "Kernel/OVR_KeyCodes.h"
 
 NSString *NSStringFromSKROculusInfo(SKROculusInfo info) {
-    return [NSString stringWithFormat:@"(%f, %f, %f, $f)",
+    return [NSString stringWithFormat:@"(%f, %f, %f, %f)",
             info.orientation.x,info.orientation.y,info.orientation.z,info.orientation.w];
 }
 
@@ -62,6 +62,11 @@ NSString *NSStringFromSKROculusInfo(SKROculusInfo info) {
     info.orientation = app->OnIdle();
     
     return info;
+}
+
+- (OVR::HMDInfo)hmdInfo
+{
+    return app->HMDInfo;
 }
 
 @end
