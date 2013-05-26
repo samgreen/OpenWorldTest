@@ -26,6 +26,8 @@
 	[node buildPlayer];
     [node createArms];    
 	
+    
+    
 	SCNLight * light = [SCNLight light];
 	[light setType:SCNLightTypeOmni];
 	[node setLight:light];
@@ -83,7 +85,7 @@
 - (void)createArms {
     SCNCapsule *capsule = [SCNCapsule capsuleWithCapRadius:0.2 height:1];
     SCNMaterial *material = [SCNMaterial material];
-    material.diffuse.contents = [NSColor blackColor];
+    material.diffuse.contents = [NSColor colorWithCalibratedWhite:0.1 alpha:1.0];
     capsule.materials = @[material];
     for (NSUInteger i = 0; i < 2; i++) {
         
