@@ -192,8 +192,6 @@
         exit(0);
     }
     
-//    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, currentFramebuffer);
-    
     _program = prgName;
 }
 

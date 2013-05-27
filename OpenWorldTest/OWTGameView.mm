@@ -49,29 +49,6 @@ SCNGeometry *treeGeometry;
 
 @implementation OWTGameView
 
-- (id)initWithCoder:(NSCoder *)decoder;
-{
-	if (!(self = [super initWithCoder:decoder]))
-		return nil;
-	
-	/*
-	 Turning off Antialiasing here for perf
-	 */
-	
-//	NSOpenGLPixelFormatAttribute attrs[] = {
-//		NSOpenGLPFADepthSize, 24,
-//		NSOpenGLPFAAccelerated,
-//		NSOpenGLPFACompliant,
-//		NSOpenGLPFAMPSafe,
-//		0
-//	};
-//    NSOpenGLPixelFormat *pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
-//	self.leftEyeView.pixelFormat = pixelFormat;
-//    self.rightEyeView.pixelFormat = pixelFormat;
-    
-	return self;
-}
-
 -(void)initCrosshairs
 {
 	crosshairLayer = [CALayer layer];
