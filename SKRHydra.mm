@@ -97,7 +97,7 @@ void controller_manager_setup_callback( sixenseUtils::ControllerManager::setup_s
                                                        controller.rot_quat[2],
                                                        controller.rot_quat[3]);
                 
-                // Arrrrgh Sixense quats have z & y flipped!
+                // WARNING Arrrrgh Sixense quats have z & y flipped!
                 SCNVector4 rotation = SKRVector4FromQuaternion(quat.x,
                                                                quat.z,
                                                                quat.y,
