@@ -9,9 +9,32 @@
 #import <Foundation/Foundation.h>
 #import <SceneKit/SceneKit.h>
 
+@protocol SKRHydraDelegate <NSObject>
+@optional
+- (void)leftButton1Pressed:(BOOL)pressed;
+- (void)leftButton2Pressed:(BOOL)pressed;
+- (void)leftButton3Pressed:(BOOL)pressed;
+- (void)leftButton4Pressed:(BOOL)pressed;
+- (void)leftBumperPressed:(BOOL)pressed;
+- (void)leftJoystickPressed:(BOOL)pressed;
+- (void)leftStartPressed:(BOOL)pressed;
+- (void)leftTriggerPressed:(BOOL)pressed;
+
+- (void)rightButton1Pressed:(BOOL)pressed;
+- (void)rightButton2Pressed:(BOOL)pressed;
+- (void)rightButton3Pressed:(BOOL)pressed;
+- (void)rightButton4Pressed:(BOOL)pressed;
+- (void)rightBumperPressed:(BOOL)pressed;
+- (void)rightJoystickPressed:(BOOL)pressed;
+- (void)rightStartPressed:(BOOL)pressed;
+- (void)rightTriggerPressed:(BOOL)pressed;
+
+@end
+
 typedef struct _SKRHydraController {
     SCNVector4 orientation;
     SCNVector3 position;
+    CGPoint joystick;
 } SKRHydraController;
 
 typedef struct _SKRHydraControllerPair {
@@ -23,5 +46,7 @@ typedef struct _SKRHydraControllerPair {
 @interface SKRHydra : NSObject
 
 - (SKRHydraControllerPair)poll;
+
+@property (nonatomic, weak) id delegate;
 
 @end

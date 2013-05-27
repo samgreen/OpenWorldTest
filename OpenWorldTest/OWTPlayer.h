@@ -10,11 +10,7 @@
 #import <GLKit/GLKMath.h>
 #import "OWTEntity.h"
 #import "OVR_Device.h"
-
-typedef NS_ENUM(NSUInteger, SKRRightLeft){
-    SKRLeft,
-    SKRRight
-};
+#import "SKRMath.h"
 
 @interface OWTPlayer : OWTEntity {
 }
@@ -30,7 +26,7 @@ typedef NS_ENUM(NSUInteger, SKRRightLeft){
 
 + (OWTPlayer *)nodeWithHMDInfo:(OVR::HMDInfo)hmdInfo;
 
-- (void)updateArm:(SKRRightLeft)rightLeft
+- (void)updateArm:(SKRSide)side
          position:(SCNVector3)position
       orientation:(SCNVector4)orientation;
 

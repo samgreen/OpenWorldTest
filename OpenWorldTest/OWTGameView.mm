@@ -33,7 +33,7 @@ SCNGeometry *grassGeometry;
 SCNGeometry *waterGeometry;
 SCNGeometry *treeGeometry;
 
-@interface OWTGameView ()
+@interface OWTGameView () <SKRHydraDelegate>
 {
     SKROculus *oculus;
     SKRHydra *hydra;
@@ -194,6 +194,7 @@ CVTimeStamp lastChunkTick;
 {
     oculus = [[SKROculus alloc] init];
     hydra = [[SKRHydra alloc] init];
+    hydra.delegate = self;
 
     blocks = @[].mutableCopy;
 	chunkCache = @{}.mutableCopy;
@@ -602,6 +603,15 @@ BOOL canReload = YES;
 	SCNVector3 playerNodeVelocity = playerNode.velocity;
 	playerNodeVelocity.z = sqrtf(-2 * kGravityAcceleration * kJumpHeight);
 	[playerNode setVelocity:playerNodeVelocity];
+}
+
+#pragma mark - Hydra input
+-(void)leftButton1Pressed:(BOOL)pressed {
+    NSLog(@"Left button 1! %i", pressed);
+}
+
+-(void)rightButton4Pressed:(BOOL)pressed {
+    NSLog(@"Right button 4! %i", pressed);
 }
 
 #pragma mark - Joystick input

@@ -13,3 +13,8 @@
 extern SCNVector4 SKRVector4FromQuaternion(float x, float y, float z, float w);
 extern NSString *NSStringFromSCNVector3(SCNVector3 vector);
 extern NSString *NSStringFromSCNVector4(SCNVector4 vector);
+
+typedef NS_ENUM(NSUInteger, SKRSide){
+    SKRLeft,
+    SKRRight
+};

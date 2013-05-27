@@ -108,13 +108,13 @@
     }
 }
 
-- (void)updateArm:(SKRRightLeft)rightLeft
+- (void)updateArm:(SKRSide)side
          position:(SCNVector3)position
       orientation:(SCNVector4)orientation {
     SCNNode *hand;
-    if (rightLeft == SKRLeft) {
+    if (side == SKRLeft) {
         hand = self.leftHand;
-    } else if (rightLeft == SKRRight) {
+    } else if (side == SKRRight) {
         hand = self.rightHand;
     }
     hand.position = position;

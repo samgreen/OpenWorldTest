@@ -9,6 +9,8 @@
 #import "SKRHydra.h"
 #import "SKRMath.h"
 
+#import <objc/message.h>
+
 #include <sixense.h>
 #include <sixense_math.hpp>
 #include <sixense_utils/derivatives.hpp>
@@ -38,6 +40,10 @@ void controller_manager_setup_callback( sixenseUtils::ControllerManager::setup_s
 }
 
 @implementation SKRHydra
+{
+    sixenseUtils::ButtonStates leftButtonStates;
+    sixenseUtils::ButtonStates rightButtonStates;
+}
 
 + (void)load {
     // This fails when called at the same time as oculus init, so I moved it here.
@@ -63,7 +69,7 @@ void controller_manager_setup_callback( sixenseUtils::ControllerManager::setup_s
 	sixenseGetAllNewestData( &acd );
 	sixenseUtils::getTheControllerManager()->update( &acd );
     
-    int base, controller;
+    int base, controllerIndex;
     
     int leftIndex  = sixenseUtils::getTheControllerManager()->getIndex( sixenseUtils::ControllerManager::P1L );
     int rightIndex = sixenseUtils::getTheControllerManager()->getIndex( sixenseUtils::ControllerManager::P1R );
@@ -79,32 +85,153 @@ void controller_manager_setup_callback( sixenseUtils::ControllerManager::setup_s
         sixenseGetAllNewestData( &acd );
         
         // For each possible controller
-        for( controller=0; controller<sixenseGetMaxControllers(); controller++ ) {
-            
+        for( controllerIndex=0; controllerIndex<sixenseGetMaxControllers(); controllerIndex++ ) {
+            sixenseControllerData controller = acd.controllers[controllerIndex];
             // See if it's enabled
-            if( sixenseIsControllerEnabled( controller ) ) {
+            if( sixenseIsControllerEnabled( controllerIndex ) ) {
                 
-                SCNVector4 orientation = SKRVector4FromQuaternion(acd.controllers[controller].rot_quat[0],
-                                                                  acd.controllers[controller].rot_quat[1],
-                                                                  acd.controllers[controller].rot_quat[2],
-                                                                  acd.controllers[controller].rot_quat[3]);
+                SCNVector4 orientation = SKRVector4FromQuaternion(controller.rot_quat[0],
+                                                                  controller.rot_quat[1],
+                                                                  controller.rot_quat[2],
+                                                                  controller.rot_quat[3]);
                 
-                SCNVector3 position = SCNVector3Make(acd.controllers[controller].pos[0]/500.0f,
-                                                     acd.controllers[controller].pos[1]/500.0f,
-                                                     acd.controllers[controller].pos[2]/500.0f);
+                SCNVector3 position = SCNVector3Make(controller.pos[0]/500.0f,
+                                                     controller.pos[1]/500.0f,
+                                                     controller.pos[2]/500.0f);
                 SKRHydraController hydraController;
                 hydraController.orientation = orientation;
                 hydraController.position = position;
+                hydraController.joystick = CGPointMake(controller.joystick_x,
+                                                       controller.joystick_y);
                 
-                if( controller == leftIndex ) {
+                if( controllerIndex == leftIndex ) {
+                    leftButtonStates.update(&controller);
+                    [self handleLeftSideButtonStates:leftButtonStates];
                     pair.left = hydraController;
-                } else if ( controller == rightIndex ) {
+                } else if ( controllerIndex == rightIndex ) {
+                    rightButtonStates.update(&controller);
+                    [self handleRightSideButtonStates:rightButtonStates];
                     pair.right = hydraController;
                 }
             }
         }
     }
     return pair;
+}
+
+- (void)handleButtonDelegationForStates:(sixenseUtils::ButtonStates)buttonStates
+                                   side:(SKRSide)side {
+    if (side == SKRLeft) {
+        
+    } else if (side == SKRRight) {
+        
+    }
+}
+
+- (void)callSelector:(SEL)selector ifImplementedWithBool:(BOOL)value {
+    if ([self.delegate respondsToSelector:selector]) {
+        objc_msgSend(self.delegate, selector, value);
+    }
+}
+
+- (void)handleLeftSideButtonStates:(sixenseUtils::ButtonStates)buttonStates {
+    if (buttonStates.buttonJustPressed(SIXENSE_BUTTON_BUMPER)) {
+        [self callSelector:@selector(leftBumperPressed:) ifImplementedWithBool:YES];
+    } else if (buttonStates.buttonJustReleased(SIXENSE_BUTTON_BUMPER)) {
+        [self callSelector:@selector(leftBumperPressed:) ifImplementedWithBool:NO];
+    }
+    
+    if (buttonStates.buttonJustPressed(SIXENSE_BUTTON_JOYSTICK)) {
+        [self callSelector:@selector(leftJoystickPressed:) ifImplementedWithBool:YES];
+    } else if (buttonStates.buttonJustReleased(SIXENSE_BUTTON_JOYSTICK)) {
+        [self callSelector:@selector(leftJoystickPressed:) ifImplementedWithBool:NO];
+    }
+    
+    if (buttonStates.buttonJustPressed(SIXENSE_BUTTON_1)) {
+        [self callSelector:@selector(leftButton1Pressed:) ifImplementedWithBool:YES];
+    } else if (buttonStates.buttonJustReleased(SIXENSE_BUTTON_1)) {
+        [self callSelector:@selector(leftButton1Pressed:) ifImplementedWithBool:NO];
+    }
+    
+    if (buttonStates.buttonJustPressed(SIXENSE_BUTTON_2)) {
+        [self callSelector:@selector(leftButton2Pressed:) ifImplementedWithBool:YES];
+    } else if (buttonStates.buttonJustReleased(SIXENSE_BUTTON_2)) {
+        [self callSelector:@selector(leftButton2Pressed:) ifImplementedWithBool:NO];
+    }
+    
+    if (buttonStates.buttonJustPressed(SIXENSE_BUTTON_3)) {
+        [self callSelector:@selector(leftButton3Pressed:) ifImplementedWithBool:YES];
+    } else if (buttonStates.buttonJustReleased(SIXENSE_BUTTON_3)) {
+        [self callSelector:@selector(leftButton3Pressed:) ifImplementedWithBool:NO];
+    }
+    
+    if (buttonStates.buttonJustPressed(SIXENSE_BUTTON_4)) {
+        [self callSelector:@selector(leftButton4Pressed:) ifImplementedWithBool:YES];
+    } else if (buttonStates.buttonJustReleased(SIXENSE_BUTTON_4)) {
+        [self callSelector:@selector(leftButton4Pressed:) ifImplementedWithBool:NO];
+    }
+    
+    if (buttonStates.buttonJustPressed(SIXENSE_BUTTON_START)) {
+        [self callSelector:@selector(leftStartPressed:) ifImplementedWithBool:YES];
+    } else if (buttonStates.buttonJustReleased(SIXENSE_BUTTON_START)) {
+        [self callSelector:@selector(leftStartPressed:) ifImplementedWithBool:NO];
+    }
+    
+    if (buttonStates.triggerJustPressed()) {
+        [self callSelector:@selector(leftTriggerPressed:) ifImplementedWithBool:YES];
+    } else if (buttonStates.triggerJustReleased()) {
+        [self callSelector:@selector(leftTriggerPressed:) ifImplementedWithBool:NO];
+    }
+}
+
+- (void)handleRightSideButtonStates:(sixenseUtils::ButtonStates)buttonStates {
+    if (buttonStates.buttonJustPressed(SIXENSE_BUTTON_BUMPER)) {
+        [self callSelector:@selector(rightBumperPressed:) ifImplementedWithBool:YES];
+    } else if (buttonStates.buttonJustReleased(SIXENSE_BUTTON_BUMPER)) {
+        [self callSelector:@selector(rightBumperPressed:) ifImplementedWithBool:NO];
+    }
+    
+    if (buttonStates.buttonJustPressed(SIXENSE_BUTTON_JOYSTICK)) {
+        [self callSelector:@selector(rightJoystickPressed:) ifImplementedWithBool:YES];
+    } else if (buttonStates.buttonJustReleased(SIXENSE_BUTTON_JOYSTICK)) {
+        [self callSelector:@selector(rightJoystickPressed:) ifImplementedWithBool:NO];
+    }
+    
+    if (buttonStates.buttonJustPressed(SIXENSE_BUTTON_1)) {
+        [self callSelector:@selector(rightButton1Pressed:) ifImplementedWithBool:YES];
+    } else if (buttonStates.buttonJustReleased(SIXENSE_BUTTON_1)) {
+        [self callSelector:@selector(rightButton1Pressed:) ifImplementedWithBool:NO];
+    }
+    
+    if (buttonStates.buttonJustPressed(SIXENSE_BUTTON_2)) {
+        [self callSelector:@selector(rightButton2Pressed:) ifImplementedWithBool:YES];
+    } else if (buttonStates.buttonJustReleased(SIXENSE_BUTTON_2)) {
+        [self callSelector:@selector(rightButton2Pressed:) ifImplementedWithBool:NO];
+    }
+    
+    if (buttonStates.buttonJustPressed(SIXENSE_BUTTON_3)) {
+        [self callSelector:@selector(rightButton3Pressed:) ifImplementedWithBool:YES];
+    } else if (buttonStates.buttonJustReleased(SIXENSE_BUTTON_3)) {
+        [self callSelector:@selector(rightButton3Pressed:) ifImplementedWithBool:NO];
+    }
+    
+    if (buttonStates.buttonJustPressed(SIXENSE_BUTTON_4)) {
+        [self callSelector:@selector(rightButton4Pressed:) ifImplementedWithBool:YES];
+    } else if (buttonStates.buttonJustReleased(SIXENSE_BUTTON_4)) {
+        [self callSelector:@selector(rightButton4Pressed:) ifImplementedWithBool:NO];
+    }
+    
+    if (buttonStates.buttonJustPressed(SIXENSE_BUTTON_START)) {
+        [self callSelector:@selector(rightStartPressed:) ifImplementedWithBool:YES];
+    } else if (buttonStates.buttonJustReleased(SIXENSE_BUTTON_START)) {
+        [self callSelector:@selector(rightStartPressed:) ifImplementedWithBool:NO];
+    }
+    
+    if (buttonStates.triggerJustPressed()) {
+        [self callSelector:@selector(rightTriggerPressed:) ifImplementedWithBool:YES];
+    } else if (buttonStates.triggerJustReleased()) {
+        [self callSelector:@selector(rightTriggerPressed:) ifImplementedWithBool:NO];
+    }
 }
 
 
