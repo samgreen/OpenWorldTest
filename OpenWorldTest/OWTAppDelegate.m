@@ -16,47 +16,39 @@
 #import "OWTAppDelegate.h"
 #import "OWTGameView.h"
 
-typedef struct {
-    GLuint fbo;
-    GLuint colorTexture;
-    GLuint depthTexture;
-} FBOAndTextures;
-
 @implementation OWTAppDelegate
 {
     GLuint _program;
 	GLint _cafbo;
-    NSMutableDictionary *_fbos;
+    GLuint _fbo;
+    GLuint _colorTexture;
+    GLuint _depthTexture;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     _view.leftEyeView.delegate = self;
     _view.rightEyeView.delegate = self;
-    
-    _fbos = [NSMutableDictionary dictionaryWithCapacity:2];
 }
 
-- (FBOAndTextures)setupOffscreenFramebuffer:(NSSize)size withContext:(NSOpenGLContext *)context
+- (void)setupOffscreenFramebuffer:(NSSize)size withContext:(NSOpenGLContext *)context
 {
-    FBOAndTextures fboAndTextures;
-    
     //start GL stuffs
     assert(context != nil);
 
     [context makeCurrentContext];
     
     //create a fbo
-    glGenFramebuffersEXT (1, &fboAndTextures.fbo);
+    glGenFramebuffersEXT (1, &_fbo);
     
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fboAndTextures.fbo);
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _fbo);
     
     //create a texture to render into
-    glGenTextures(1, &fboAndTextures.colorTexture);
-    glGenTextures(1, &fboAndTextures.depthTexture);
+    glGenTextures(1, &_colorTexture);
+    glGenTextures(1, &_depthTexture);
     
     //setup and attach color
-    glBindTexture(GL_TEXTURE_2D, fboAndTextures.colorTexture);
+    glBindTexture(GL_TEXTURE_2D, _colorTexture);
     
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -64,10 +56,10 @@ typedef struct {
                  GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     
     glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
-                              GL_TEXTURE_2D, fboAndTextures.colorTexture, 0);
+                              GL_TEXTURE_2D, _colorTexture, 0);
 	
     //setup and attach depth
-    glBindTexture(GL_TEXTURE_2D, fboAndTextures.depthTexture);
+    glBindTexture(GL_TEXTURE_2D, _depthTexture);
     
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -75,7 +67,7 @@ typedef struct {
                  GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
     
     glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,
-                              GL_TEXTURE_2D, fboAndTextures.depthTexture, 0);
+                              GL_TEXTURE_2D, _depthTexture, 0);
 	
     
     GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
@@ -84,8 +76,6 @@ typedef struct {
     
     //unbind for now
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
-    return fboAndTextures;
 }
 
 - (void) loadFogShader
@@ -255,30 +245,19 @@ typedef struct {
 {
     SCNView *view = (SCNView *)aRenderer;
     [view.openGLContext makeCurrentContext];
-    NSString *eye = [view.layer valueForKey:@"eye"];
-    eye = @"FOO";
-    NSValue *fboAndTexturesValue = [_fbos objectForKey:eye];
-    FBOAndTextures fboAndTextures;
-    if(fboAndTexturesValue)
-    {
-        [fboAndTexturesValue getValue:&fboAndTextures];
-    }
-    else
+    if (_fbo == 0)
     {
         CGRect viewBounds = [view bounds];
         NSSize viewportSize = [view convertRectToBase:viewBounds].size; //HiDPI
-        fboAndTextures = [self setupOffscreenFramebuffer:viewportSize withContext:view.openGLContext];
-        fboAndTexturesValue = [NSValue valueWithBytes:&fboAndTextures objCType:@encode(FBOAndTextures)];
-        [_fbos setObject:fboAndTexturesValue forKey:eye];
+        [self setupOffscreenFramebuffer:viewportSize withContext:view.openGLContext];
     }
-    
-    if (fboAndTextures.fbo > 0)
+    else
     {
         //save fbo
         glGetIntegerv(GL_FRAMEBUFFER_BINDING_EXT, &_cafbo);
         
         //bind our fbo so that scenekit renders into it
-        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fboAndTextures.fbo);
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _fbo);
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
@@ -290,15 +269,7 @@ typedef struct {
 {
     SCNView *view = (SCNView *)aRenderer;
     [view.openGLContext makeCurrentContext];
-    NSString *eye = [view.layer valueForKey:@"eye"];
-    eye = @"FOO";
-    NSValue *fboAndTexturesValue = [_fbos objectForKey:eye];
-    FBOAndTextures fboAndTextures;
-    if(fboAndTexturesValue)
-    {
-        [fboAndTexturesValue getValue:&fboAndTextures];
-    }
-    if (fboAndTextures.fbo > 0 && _cafbo > 0)
+    if (_fbo > 0 && _cafbo > 0)
     {
         glActiveTexture(GL_TEXTURE0);
         GLint boundTexture0;
@@ -310,7 +281,7 @@ typedef struct {
         glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
         
         //draw the texture inside the view
-        [self bindFogShaderWithColorTexture:fboAndTextures.colorTexture depthTexture:fboAndTextures.depthTexture];
+        [self bindFogShaderWithColorTexture:_colorTexture depthTexture:_depthTexture];
         
         //unbind FBO
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _cafbo);
