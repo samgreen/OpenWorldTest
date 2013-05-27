@@ -15,11 +15,6 @@
 @interface OWTAppDelegate : NSObject <NSApplicationDelegate,SCNSceneRendererDelegate>
 {
 	IBOutlet OWTGameView *_view;
-    GLuint _colorTexture, _depthTexture;
-    GLuint _fbo; //offscreen framebuffer
-    GLuint _program;
-	GLint _cafbo;
-
 }
 @property (assign) IBOutlet NSWindow *window;
 
