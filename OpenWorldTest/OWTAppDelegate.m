@@ -17,44 +17,26 @@
 #import "OWTGameView.h"
 
 @implementation OWTAppDelegate
+{
+    GLuint _program;
+	GLint _cafbo;
+    GLuint _fbo;
+    GLuint _colorTexture;
+    GLuint _depthTexture;
+}
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-	// Insert code here to initialize your application	
-}
-
--(void)awakeFromNib
-{
-//	[self performSelector:@selector(beginFog) withObject:nil afterDelay:1.0]; // lazy, making sure the shader inits with right size
-}
-
--(void)beginFog
-{
-	_view.leftEyeView.delegate = self;
+    _view.leftEyeView.delegate = self;
     _view.rightEyeView.delegate = self;
-    
-	//setup offscreen buffer
-    NSSize viewportSize = [_view convertRectToBase:[_view bounds]].size; //HiDPI
-	
-	viewportSize.width *= _view.layer.contentsScale;
-	viewportSize.height *= _view.layer.contentsScale;
-
-	
-    [self setupOffscreenFramebuffer:viewportSize];
 }
-- (void) setupOffscreenFramebuffer:(NSSize) size
+
+- (void)setupOffscreenFramebuffer:(NSSize)size withContext:(NSOpenGLContext *)context
 {
-    //release previous renderer if any
-    if(_fbo!=0){
-        glDeleteTextures(1, &_colorTexture);
-        glDeleteTextures(1, &_depthTexture);
-        glDeleteFramebuffersEXT(1, &_fbo);
-    }
-	
     //start GL stuffs
-    if([_view.leftEyeView openGLContext]==nil || [_view.rightEyeView openGLContext] == nil) return;
-    
-    [[_view.leftEyeView openGLContext] makeCurrentContext];
+    assert(context != nil);
+
+    [context makeCurrentContext];
     
     //create a fbo
     glGenFramebuffersEXT (1, &_fbo);
@@ -210,11 +192,10 @@
         exit(0);
     }
     
-    
     _program = prgName;
 }
 
-- (void) bindFogShader
+- (void)bindFogShaderWithColorTexture:(GLuint)colorTexture depthTexture:(GLuint)depthTexture
 {
     if(_program == 0){
         [self loadFogShader];
@@ -236,11 +217,10 @@
     unit = 1;
     glUniform1i(samplerLoc, unit);
     
-    
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, _colorTexture);
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, _depthTexture);
+    glBindTexture(GL_TEXTURE_2D, depthTexture);
 }
 
 - (void) drawFullscreenQuad
@@ -261,43 +241,61 @@
 // SCNView delegate
 - (void)renderer:(id <SCNSceneRenderer>)aRenderer willRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time
 {
-    //setup offscreen buffer
-    if(_fbo==0){
-        CGRect viewBounds = [_view bounds];
-//        CGSize eyeViewportSize = CGSizeMake(viewBounds.size.width / 2.0, viewBounds.size.height);
-//        CGRect leftEyeBounds = (CGRect){CGPointZero, eyeViewportSize};
-////        CGRect rightEyeBounds = (CGRect){CGPointMake(eyeViewportSize.width, 0), eyeViewportSize};
-//        NSSize viewportSize = [_view convertRectToBase:leftEyeBounds].size; //HiDPI
-        NSSize viewportSize = [_view convertRectToBase:viewBounds].size; //HiDPI
-        [self setupOffscreenFramebuffer:viewportSize];
+    SCNView *view = (SCNView *)aRenderer;
+    [view.openGLContext makeCurrentContext];
+    if (_fbo == 0)
+    {
+        CGRect viewBounds = [view bounds];
+        NSSize viewportSize = [view convertRectToBase:viewBounds].size; //HiDPI
+        [self setupOffscreenFramebuffer:viewportSize withContext:view.openGLContext];
     }
-    
-    //save fbo
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING_EXT, &_cafbo);
-    
-    //bind our fbo so that scenekit renders into it
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _fbo);
-	
-    //clear
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    else
+    {
+        //save fbo
+        glGetIntegerv(GL_FRAMEBUFFER_BINDING_EXT, &_cafbo);
+        
+        //bind our fbo so that scenekit renders into it
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _fbo);
+        
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    [(id <SCNSceneRendererDelegate>)_view renderer:aRenderer willRenderScene:scene atTime:time];
 }
 
 - (void)renderer:(id <SCNSceneRenderer>)aRenderer didRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time
 {
-    //draw the texture inside the view
-    [self bindFogShader];
+    SCNView *view = (SCNView *)aRenderer;
+    [view.openGLContext makeCurrentContext];
+    if (_fbo > 0 && _cafbo > 0)
+    {
+        glActiveTexture(GL_TEXTURE0);
+        GLint boundTexture0;
+        glGetIntegerv(GL_TEXTURE_BINDING_2D, &boundTexture0);
+        glActiveTexture(GL_TEXTURE1);
+        GLint boundTexture1;
+        glGetIntegerv(GL_TEXTURE_BINDING_2D, &boundTexture1);
+        GLint currentProgram;
+        glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
+        
+        //draw the texture inside the view
+        [self bindFogShaderWithColorTexture:_colorTexture depthTexture:_depthTexture];
+        
+        //unbind FBO
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _cafbo);
+        
+        [self drawFullscreenQuad];
+        
+        //cleanup
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, boundTexture1);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, boundTexture0);
+        glUseProgram(currentProgram);
 	
-    //unbind FBO
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _cafbo);
-	
-    [self drawFullscreenQuad];
-	
-	
-    //cleanup
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, 0);
-	
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+    }
+    
 	[(id <SCNSceneRendererDelegate>)_view renderer:aRenderer didRenderScene:scene atTime:time];
 }
 @end

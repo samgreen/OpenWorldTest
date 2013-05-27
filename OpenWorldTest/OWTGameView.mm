@@ -37,36 +37,19 @@ SCNGeometry *treeGeometry;
 {
     SKROculus *oculus;
     SKRHydra *hydra;
+
+    CGLContextObj cglContext1;
+    CGLContextObj cglContext2;
+    CGLPixelFormatObj cglPixelFormat;
+    NSOpenGLContext *leftEyeContext;
+    NSOpenGLContext *rightEyeContext;
 }
 
 @end
 
 @implementation OWTGameView
 
-- (id)initWithCoder:(NSCoder *)decoder;
-{
-	if (!(self = [super initWithCoder:decoder]))
-		return nil;
-	
-	/*
-	 Turning off Antialiasing here for perf
-	 */
-	
-	NSOpenGLPixelFormatAttribute attrs[] = {
-		NSOpenGLPFADepthSize, 24,
-		NSOpenGLPFAAccelerated,
-		NSOpenGLPFACompliant,
-		NSOpenGLPFAMPSafe,
-		0
-	};
-    NSOpenGLPixelFormat *pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
-	self.leftEyeView.pixelFormat = pixelFormat;
-    self.rightEyeView.pixelFormat = pixelFormat;
-    
-	return self;
-}
-
-- (void)initCrosshairs
+-(void)initCrosshairs
 {
 	crosshairLayer = [CALayer layer];
 	crosshairLayer.contents = (id)[NSImage imageNamed:@"crosshair.png"];
@@ -179,10 +162,11 @@ CVTimeStamp lastChunkTick;
                      position:controllers.right.position
                      rotation:controllers.right.rotation];
         
-        playerNode.movementDirection = GLKVector3Make(controllers.left.joystick.x,
-                                                      0,
-                                                      -controllers.left.joystick.y);
-        
+        playerNode.movementDirection = GLKVector3Add(playerNode.movementDirection,
+                                                     GLKVector3Make(controllers.left.joystick.x,
+                                                                    0,
+                                                                    -controllers.left.joystick.y));
+                                                     
 		if (time.hostTime-lastChunkTick.hostTime > (NSEC_PER_SEC*1))
 		{
 			lastChunkTick = time;
@@ -206,13 +190,36 @@ CVTimeStamp lastChunkTick;
 	
 	[self premakeMaterials];
 	[self setWantsLayer:YES];
-	
-	[self initFPSLabel];
-//	[self initCrosshairs];
-    
+	   
 	SCNScene *scene = [SCNScene scene];
     self.scene = scene;
-	self.leftEyeView.scene = scene;
+    
+    CGLPixelFormatAttribute attribs[] = {
+        kCGLPFADepthSize, (CGLPixelFormatAttribute)24,
+        kCGLPFAAccelerated,
+        kCGLPFACompliant,
+        kCGLPFAMPSafe,
+        (CGLPixelFormatAttribute)0
+    };
+    GLint numPixelFormats = 0;
+    CGLChoosePixelFormat (attribs, &cglPixelFormat, &numPixelFormats);
+    
+    CGLCreateContext(cglPixelFormat, NULL, &cglContext1);
+    CGLCreateContext(cglPixelFormat, cglContext1, &cglContext2);
+    leftEyeContext = [[NSOpenGLContext alloc] initWithCGLContextObj:cglContext1];
+    rightEyeContext = [[NSOpenGLContext alloc] initWithCGLContextObj:cglContext2];
+    
+    NSRect leftEyeFrame = NSMakeRect(0, 0, self.bounds.size.width / 2, self.bounds.size.height);
+    self.leftEyeView = [[SCNView alloc] initWithFrame:leftEyeFrame];
+    self.leftEyeView.openGLContext = leftEyeContext;
+    [self addSubview:self.leftEyeView];
+    
+    NSRect rightEyeFrame = NSMakeRect(self.bounds.size.width / 2, 0, self.bounds.size.width / 2, self.bounds.size.height);
+    self.rightEyeView = [[SCNView alloc] initWithFrame:rightEyeFrame];
+    self.rightEyeView.openGLContext = rightEyeContext;
+    [self addSubview:self.rightEyeView];
+    
+    self.leftEyeView.scene = scene;
     self.rightEyeView.scene = scene;
     
     
@@ -225,7 +232,8 @@ CVTimeStamp lastChunkTick;
     [self.leftEyeView.layer setValue:@"left" forKey:@"eye"];
     [self.rightEyeView.layer setValue:@"right" forKey:@"eye"];
     
-    self.leftEyeView.delegate = self;
+    [self initFPSLabel];
+    //	[self initCrosshairs];
     
 	[self reload:self];
 	[self resetMouse];
@@ -833,43 +841,50 @@ NSUInteger frameCount;
 
 - (void)renderer:(id<SCNSceneRenderer>)aRenderer willRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time
 {
-    GLKQuaternion rotation = GLKQuaternionMakeWithAngleAndAxis(playerNode.rotation.w,
-                                                                  playerNode.rotation.x,
-                                                                  playerNode.rotation.y,
-                                                                  playerNode.rotation.z);
-    GLKVector3 position = GLKVector3Make(playerNode.position.x,
-                                         playerNode.position.y,
-                                         playerNode.position.z);
-    float speed = 0.1;
-    GLKVector3 rotatedVector = GLKQuaternionRotateVector3(rotation, playerNode.movementDirection);
-    GLKVector3 translation = GLKVector3MultiplyScalar(rotatedVector, speed);
-    GLKVector3 newPosition = GLKVector3Add(position, translation);
-    playerNode.position = SCNVector3Make(newPosition.x,
-                                         newPosition.y,
-                                         newPosition.z);
+    // Only do movement for the left eye camera, since this will get called twice per frame (once for each eye) and we only want to move once per frame
+    if ([aRenderer.pointOfView isEqual:playerNode.rightEye])
+    {
+        GLKQuaternion orientation = GLKQuaternionMakeWithAngleAndAxis(playerNode.rotation.w,
+                                                                      playerNode.rotation.x,
+                                                                      playerNode.rotation.y,
+                                                                      playerNode.rotation.z);
+        GLKVector3 position = GLKVector3Make(playerNode.position.x,
+                                             playerNode.position.y,
+                                             playerNode.position.z);
+        float speed = 0.1;
+        GLKVector3 rotatedVector = GLKQuaternionRotateVector3(orientation, playerNode.movementDirection);
+        GLKVector3 translation = GLKVector3MultiplyScalar(rotatedVector, speed);
+        GLKVector3 newPosition = GLKVector3Add(position, translation);
+        playerNode.position = SCNVector3Make(newPosition.x,
+                                             newPosition.y,
+                                             newPosition.z);
+    }
 }
 
 - (void)renderer:(id <SCNSceneRenderer>)aRenderer didRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time
 {
-	dispatch_async(dispatch_get_global_queue(0, 0), ^{
-		NSDate *now = [NSDate date];
-		
-		if (nextFrameCounterReset) {
-			if (NSOrderedDescending == [now compare:nextFrameCounterReset]) {
-				[CATransaction begin];
-				[CATransaction setDisableActions:YES];
-				frameRateLabel.string = [NSString stringWithFormat:@"%ld fps", frameCount];
-				[CATransaction commit];
-				frameCount = 0;
-				nextFrameCounterReset = [now dateByAddingTimeInterval:1.0];
-			}
-		} else {
-			nextFrameCounterReset = [now dateByAddingTimeInterval:1.0];
-		}
-		
-		++frameCount;
-	});
-	
+    // Only do fps update for the left eye camera, since this will get called twice per frame (once for each eye)
+    if ([aRenderer.pointOfView isEqual:playerNode.rightEye])
+    {
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            NSDate *now = [NSDate date];
+            
+            if (nextFrameCounterReset) {
+                if (NSOrderedDescending == [now compare:nextFrameCounterReset]) {
+                    [CATransaction begin];
+                    [CATransaction setDisableActions:YES];
+                    frameRateLabel.string = [NSString stringWithFormat:@"%ld fps", frameCount];
+                    [CATransaction commit];
+                    frameCount = 0;
+                    nextFrameCounterReset = [now dateByAddingTimeInterval:1.0];
+                }
+            } else {
+                nextFrameCounterReset = [now dateByAddingTimeInterval:1.0];
+            }
+            
+            ++frameCount;
+        });
+    }
 }
 
 

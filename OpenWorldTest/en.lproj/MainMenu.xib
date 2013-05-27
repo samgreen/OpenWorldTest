@@ -1333,7 +1333,6 @@
 									<string key="NSFrame">{{640, 0}, {640, 800}}</string>
 									<reference key="NSSuperview" ref="807249305"/>
 									<reference key="NSWindow"/>
-									<reference key="NSNextKeyView"/>
 									<string key="NSReuseIdentifierKey">_NS:22</string>
 									<bool key="loops">NO</bool>
 									<bool key="playing">NO</bool>
@@ -1378,7 +1377,7 @@
 					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="807249305"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1680, 1028}}</string>
+				<string key="NSScreenRect">{{0, 0}, {2560, 1578}}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
@@ -3135,16 +3134,16 @@
 						<reference key="parent" ref="439893737"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">573</int>
-						<reference key="object" ref="769108266"/>
-						<reference key="parent" ref="807249305"/>
-						<string key="objectName">Right Eye View</string>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">562</int>
 						<reference key="object" ref="57243709"/>
 						<reference key="parent" ref="807249305"/>
 						<string key="objectName">Left Eye View</string>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">573</int>
+						<reference key="object" ref="769108266"/>
+						<reference key="parent" ref="807249305"/>
+						<string key="objectName">Right Eye View</string>
 					</object>
 				</array>
 			</object>
