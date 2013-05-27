@@ -20,8 +20,6 @@
 	OWTPlayer * node = (OWTPlayer *)[super node];
 	[node setMass:70];
     
-    node.interpupillaryDistance = hmdInfo.InterpupillaryDistance;
-    
     [node createCamerasWithHMDInfo:hmdInfo];
 	[node buildPlayer];
     [node createArms];    
@@ -44,12 +42,16 @@
     float xFov = 2.0 * atanf(halfScreenAspectRatio * tanf(yFov / 2.0));
     float yFovDegrees = SKR_RADIANS_TO_DEGREES(yFov);
     float xFovDegrees = SKR_RADIANS_TO_DEGREES(xFov);
+    float interpupillaryDistance = hmdInfo.InterpupillaryDistance;
+
+    if (hmdInfo.HResolution == 0)
+    {
+        xFovDegrees = 84.8;
+        yFovDegrees = 97.55;
+        interpupillaryDistance = 0.5;
+    }
+
     NSLog(@"yFov: %f, xFov: %f", yFovDegrees, xFovDegrees);
-    
-    xFovDegrees = 84.8;
-    yFovDegrees = 97.55;
-    
-    CGFloat eyeOffset = self.interpupillaryDistance * 0.5;
     
     for (NSUInteger i = 0; i < 2; i++) {
         SCNCamera *camera = [SCNCamera camera];
@@ -63,13 +65,15 @@
         
         [self addChildNode:eyeNode];
         if (i == 0) {
-            eyeNode.position = SCNVector3Make(-eyeOffset, 0.0, 0.0);
+            eyeNode.position = SCNVector3Make(0.0, 0.0, 0.0);
             self.leftEye = eyeNode;
         } else if (i == 1) {
-            eyeNode.position = SCNVector3Make(eyeOffset, 0.0, 0.0);
+            eyeNode.position = SCNVector3Make(0.0, 0.0, 0.0);
             self.rightEye = eyeNode;
         }
     }
+    
+    self.interpupillaryDistance = interpupillaryDistance;
 }
 - (void)setInterpupillaryDistance:(float)interpupillaryDistance
 {
