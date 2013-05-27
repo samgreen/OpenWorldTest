@@ -162,10 +162,11 @@ CVTimeStamp lastChunkTick;
                      position:controllers.right.position
                   orientation:controllers.right.orientation];
         
-        playerNode.movementDirection = GLKVector3Make(controllers.left.joystick.x,
-                                                      0,
-                                                      -controllers.left.joystick.y);
-        
+        playerNode.movementDirection = GLKVector3Add(playerNode.movementDirection,
+                                                     GLKVector3Make(controllers.left.joystick.x,
+                                                                    0,
+                                                                    -controllers.left.joystick.y));
+                                                     
 		if (time.hostTime-lastChunkTick.hostTime > (NSEC_PER_SEC*1))
 		{
 			lastChunkTick = time;
@@ -188,10 +189,7 @@ CVTimeStamp lastChunkTick;
 	
 	[self premakeMaterials];
 	[self setWantsLayer:YES];
-	
-	[self initFPSLabel];
-//	[self initCrosshairs];
-    
+	   
 	SCNScene *scene = [SCNScene scene];
     self.scene = scene;
     
@@ -231,6 +229,9 @@ CVTimeStamp lastChunkTick;
     
     [self.leftEyeView.layer setValue:@"left" forKey:@"eye"];
     [self.rightEyeView.layer setValue:@"right" forKey:@"eye"];
+    
+    [self initFPSLabel];
+    //	[self initCrosshairs];
     
 	[self reload:self];
 	[self resetMouse];
