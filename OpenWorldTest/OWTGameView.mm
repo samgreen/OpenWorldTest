@@ -66,7 +66,7 @@ SCNGeometry *treeGeometry;
 	return self;
 }
 
--(void)initCrosshairs
+- (void)initCrosshairs
 {
 	crosshairLayer = [CALayer layer];
 	crosshairLayer.contents = (id)[NSImage imageNamed:@"crosshair.png"];
@@ -179,6 +179,10 @@ CVTimeStamp lastChunkTick;
                      position:controllers.right.position
                   orientation:controllers.right.orientation];
         
+        playerNode.movementDirection = GLKVector3Make(controllers.left.joystick.x,
+                                                      0,
+                                                      -controllers.left.joystick.y);
+        
 		if (time.hostTime-lastChunkTick.hostTime > (NSEC_PER_SEC*1))
 		{
 			lastChunkTick = time;
@@ -203,8 +207,8 @@ CVTimeStamp lastChunkTick;
 	[self setWantsLayer:YES];
 	
 	[self initFPSLabel];
-	[self initCrosshairs];
-
+//	[self initCrosshairs];
+    
 	SCNScene *scene = [SCNScene scene];
     self.scene = scene;
 	self.leftEyeView.scene = scene;
@@ -606,11 +610,21 @@ BOOL canReload = YES;
 }
 
 #pragma mark - Hydra input
--(void)leftButton1Pressed:(BOOL)pressed {
-    NSLog(@"Left button 1! %i", pressed);
+- (void)leftBumperPressed:(BOOL)pressed {
+    if (!pressed) {
+        return;
+    }
+    SCNBox *box = [SCNBox boxWithWidth:0.3 height:0.3 length:0.3 chamferRadius:0];
+    SCNMaterial *material = [SCNMaterial material];
+    material.diffuse.contents = [NSColor purpleColor];
+    box.materials = @[material];
+    SCNNode *shapeNode = [SCNNode nodeWithGeometry:box];
+    shapeNode.transform = playerNode.leftHand.worldTransform;
+    
+    [self.scene.rootNode addChildNode:shapeNode];
 }
 
--(void)rightButton4Pressed:(BOOL)pressed {
+- (void)rightButton4Pressed:(BOOL)pressed {
     NSLog(@"Right button 4! %i", pressed);
 }
 
