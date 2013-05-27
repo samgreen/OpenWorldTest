@@ -624,8 +624,19 @@ BOOL canReload = YES;
     [self.scene.rootNode addChildNode:shapeNode];
 }
 
-- (void)rightButton4Pressed:(BOOL)pressed {
-    NSLog(@"Right button 4! %i", pressed);
+- (void)rightBumperPressed:(BOOL)pressed {
+    if (!pressed) {
+        return;
+    }
+    
+    SCNSphere *sphere = [SCNSphere sphereWithRadius:0.3];
+    SCNMaterial *material = [SCNMaterial material];
+    material.diffuse.contents = [NSColor orangeColor];
+    sphere.materials = @[material];
+    SCNNode *shapeNode = [SCNNode nodeWithGeometry:sphere];
+    shapeNode.transform = playerNode.rightHand.worldTransform;
+    
+    [self.scene.rootNode addChildNode:shapeNode];
 }
 
 #pragma mark - Joystick input
