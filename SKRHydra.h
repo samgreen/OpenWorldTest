@@ -32,7 +32,7 @@
 @end
 
 typedef struct _SKRHydraController {
-    SCNVector4 orientation;
+    SCNVector4 rotation;
     SCNVector3 position;
     CGPoint joystick;
 } SKRHydraController;

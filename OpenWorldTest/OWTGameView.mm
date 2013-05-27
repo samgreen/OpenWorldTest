@@ -157,10 +157,10 @@ CVTimeStamp lastChunkTick;
         // Update arms with hydra controllers
         [playerNode updateArm:SKRLeft
                      position:controllers.left.position
-                  orientation:controllers.left.orientation];
+                     rotation:controllers.left.rotation];
         [playerNode updateArm:SKRRight
                      position:controllers.right.position
-                  orientation:controllers.right.orientation];
+                     rotation:controllers.right.rotation];
         
         playerNode.movementDirection = GLKVector3Add(playerNode.movementDirection,
                                                      GLKVector3Make(controllers.left.joystick.x,
@@ -180,9 +180,10 @@ CVTimeStamp lastChunkTick;
 #pragma mark -
 -(void)awakeFromNib
 {
-    oculus = [[SKROculus alloc] init];
     hydra = [[SKRHydra alloc] init];
     hydra.delegate = self;
+    oculus = [[SKROculus alloc] init];
+    OVR::HMDInfo hmdInfo = [oculus hmdInfo];
 
     blocks = @[].mutableCopy;
 	chunkCache = @{}.mutableCopy;
@@ -221,7 +222,8 @@ CVTimeStamp lastChunkTick;
     self.leftEyeView.scene = scene;
     self.rightEyeView.scene = scene;
     
-    playerNode = [OWTPlayer nodeWithHMDInfo:[oculus hmdInfo]];
+    
+    playerNode = [OWTPlayer nodeWithHMDInfo:hmdInfo];
 	playerNode.position = SCNVector3Make(MAP_BOUNDS/2, MAP_BOUNDS/2, 5);
     [scene.rootNode addChildNode:playerNode];
     [self.leftEyeView setPointOfView:playerNode.leftEye];
@@ -622,10 +624,15 @@ BOOL canReload = YES;
     if (!pressed) {
         return;
     }
-    SCNBox *box = [SCNBox boxWithWidth:0.3 height:0.3 length:0.3 chamferRadius:0];
-    SCNMaterial *material = [SCNMaterial material];
-    material.diffuse.contents = [NSColor purpleColor];
-    box.materials = @[material];
+    static SCNBox *box;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        box = [SCNBox boxWithWidth:0.3 height:0.3 length:0.3 chamferRadius:0];
+        SCNMaterial *material = [SCNMaterial material];
+        material.diffuse.contents = [NSColor purpleColor];
+        box.materials = @[material];
+    });
+
     SCNNode *shapeNode = [SCNNode nodeWithGeometry:box];
     shapeNode.transform = playerNode.leftHand.worldTransform;
     
@@ -637,10 +644,15 @@ BOOL canReload = YES;
         return;
     }
     
-    SCNSphere *sphere = [SCNSphere sphereWithRadius:0.3];
-    SCNMaterial *material = [SCNMaterial material];
-    material.diffuse.contents = [NSColor orangeColor];
-    sphere.materials = @[material];
+    static SCNSphere *sphere;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sphere = [SCNSphere sphereWithRadius:0.3];
+        SCNMaterial *material = [SCNMaterial material];
+        material.diffuse.contents = [NSColor orangeColor];
+        sphere.materials = @[material];
+    });
+    
     SCNNode *shapeNode = [SCNNode nodeWithGeometry:sphere];
     shapeNode.transform = playerNode.rightHand.worldTransform;
     
