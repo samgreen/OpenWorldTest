@@ -18,6 +18,8 @@
 #include <sixense_utils/event_triggers.hpp>
 #include <sixense_utils/controller_manager/controller_manager.hpp>
 
+
+
 static bool controller_manager_screen_visible = true;
 std::string controller_manager_text_string;
 void controller_manager_setup_callback( sixenseUtils::ControllerManager::setup_step step ) {
@@ -71,35 +73,41 @@ void controller_manager_setup_callback( sixenseUtils::ControllerManager::setup_s
     
     int base, controllerIndex;
     
-    int leftIndex  = sixenseUtils::getTheControllerManager()->getIndex( sixenseUtils::ControllerManager::P1L );
-    int rightIndex = sixenseUtils::getTheControllerManager()->getIndex( sixenseUtils::ControllerManager::P1R );
+    int leftIndex  = sixenseUtils::getTheControllerManager()->getIndex(sixenseUtils::ControllerManager::P1L);
+    int rightIndex = sixenseUtils::getTheControllerManager()->getIndex(sixenseUtils::ControllerManager::P1R);
     
     // We currently only return one pair of controllers, even if there are multiple base stations.
     SKRHydraControllerPair pair;
     
     // Go through each of the connected systems
-    for( base=0; base<sixenseGetMaxBases(); base++ ) {
+    for (base = 0; base < sixenseGetMaxBases(); base++) {
         sixenseSetActiveBase(base);
         
         // Get the latest controller data
-        sixenseGetAllNewestData( &acd );
+        sixenseGetAllNewestData(&acd);
         
         // For each possible controller
-        for( controllerIndex=0; controllerIndex<sixenseGetMaxControllers(); controllerIndex++ ) {
+        for (controllerIndex = 0; controllerIndex < sixenseGetMaxControllers(); controllerIndex++) {
             sixenseControllerData controller = acd.controllers[controllerIndex];
             // See if it's enabled
-            if( sixenseIsControllerEnabled( controllerIndex ) ) {
+            if (sixenseIsControllerEnabled(controllerIndex)) {
                 
-                SCNVector4 orientation = SKRVector4FromQuaternion(controller.rot_quat[0],
-                                                                  controller.rot_quat[1],
-                                                                  controller.rot_quat[2],
-                                                                  controller.rot_quat[3]);
+                GLKQuaternion quat = GLKQuaternionMake(controller.rot_quat[0],
+                                                       controller.rot_quat[1],
+                                                       controller.rot_quat[2],
+                                                       controller.rot_quat[3]);
+                
+                // Arrrrgh Sixense quats have z & y flipped!
+                SCNVector4 rotation = SKRVector4FromQuaternion(quat.x,
+                                                               quat.z,
+                                                               quat.y,
+                                                               quat.w);
                 
                 SCNVector3 position = SCNVector3Make(controller.pos[0]/500.0f,
                                                      controller.pos[1]/500.0f,
                                                      controller.pos[2]/500.0f);
                 SKRHydraController hydraController;
-                hydraController.orientation = orientation;
+                hydraController.rotation = rotation;
                 hydraController.position = position;
                 hydraController.joystick = CGPointMake(controller.joystick_x,
                                                        controller.joystick_y);

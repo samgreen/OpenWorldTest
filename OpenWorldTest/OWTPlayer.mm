@@ -110,7 +110,7 @@
 
 - (void)updateArm:(SKRSide)side
          position:(SCNVector3)position
-      orientation:(SCNVector4)orientation {
+      rotation:(SCNVector4)rotation {
     SCNNode *hand;
     if (side == SKRLeft) {
         hand = self.leftHand;
@@ -118,7 +118,7 @@
         hand = self.rightHand;
     }
     hand.position = position;
-    hand.rotation = orientation;
+    hand.rotation = rotation;
 }
 
 @end

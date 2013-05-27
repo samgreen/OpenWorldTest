@@ -10,9 +10,9 @@
 #import <GLKit/GLKit.h>
 
 SCNVector4 SKRVector4FromQuaternion(float x, float y, float z, float w) {
-    GLKQuaternion orientation = GLKQuaternionMake(x, y, z, w);
-    GLKVector3 axis = GLKQuaternionAxis(orientation);
-    float angle = GLKQuaternionAngle(orientation);
+    GLKQuaternion rotation = GLKQuaternionMake(x, y, z, w);
+    GLKVector3 axis = GLKQuaternionAxis(rotation);
+    float angle = GLKQuaternionAngle(rotation);
     
     return SCNVector4Make(axis.x, axis.y, axis.z, angle);
 }

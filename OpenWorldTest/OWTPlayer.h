@@ -28,6 +28,6 @@
 
 - (void)updateArm:(SKRSide)side
          position:(SCNVector3)position
-      orientation:(SCNVector4)orientation;
+      rotation:(SCNVector4)rotation;
 
 @end
