@@ -44,6 +44,8 @@ SCNGeometry *treeGeometry;
     NSOpenGLContext *rightEyeContext;
     
     SCNNode *terrainParentNode;
+    
+    GLKVector3 keyboardMovementDirection;
 }
 
 @end
@@ -163,7 +165,7 @@ CVTimeStamp lastChunkTick;
                      position:controllers.right.position
                      rotation:controllers.right.rotation];
         
-        playerNode.movementDirection = GLKVector3Add(playerNode.movementDirection,
+        playerNode.movementDirection = GLKVector3Add(keyboardMovementDirection,
                                                      GLKVector3Make(controllers.left.joystick.x,
                                                                     0,
                                                                     -controllers.left.joystick.y));
@@ -542,7 +544,7 @@ BOOL canReload = YES;
         return;
     }
     
-    GLKVector3 newMovementDirection = playerNode.movementDirection;
+    GLKVector3 newMovementDirection = keyboardMovementDirection;
     
     if (theEvent.keyCode == 13)
     {
@@ -565,7 +567,7 @@ BOOL canReload = YES;
         newMovementDirection = GLKVector3Add(newMovementDirection, rightVector);
     }
     
-    playerNode.movementDirection = newMovementDirection;
+    keyboardMovementDirection = newMovementDirection;
     
 	if (theEvent.keyCode == 49 && playerNode.touchingGround)
 	{
@@ -582,7 +584,7 @@ BOOL canReload = YES;
 
 -(void)keyUp:(NSEvent *)theEvent
 {
-    GLKVector3 newMovementDirection = playerNode.movementDirection;
+    GLKVector3 newMovementDirection = keyboardMovementDirection;
     
     if (theEvent.keyCode == 13)
     {
@@ -605,7 +607,7 @@ BOOL canReload = YES;
         newMovementDirection = GLKVector3Subtract(newMovementDirection, rightVector);
     }
     
-    playerNode.movementDirection = newMovementDirection;
+    keyboardMovementDirection = newMovementDirection;
     
 	if (theEvent.keyCode == 49 && playerNode.touchingGround)
 	{
