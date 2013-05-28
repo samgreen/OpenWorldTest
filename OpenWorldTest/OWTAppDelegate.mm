@@ -15,20 +15,42 @@
 
 #import "OWTAppDelegate.h"
 #import "OWTGameView.h"
+#import "Util_Render_Stereo.h"
+#import "SKROculus.h"
+
+using namespace OVR::Util::Render;
 
 @implementation OWTAppDelegate
 {
-    GLuint _program;
 	GLint _cafbo;
+
+    GLuint _program;
+    
+    NSSize _fboSize;
     GLuint _fbo;
     GLuint _colorTexture;
     GLuint _depthTexture;
+
+    StereoConfig _stereoConfig;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     _view.leftEyeView.delegate = self;
     _view.rightEyeView.delegate = self;
+ 
+    OVR::HMDInfo hmdInfo = _view.oculus.hmdInfo;
+    _stereoConfig.SetFullViewport(Viewport(0,0, 1280, 800));
+    _stereoConfig.SetStereoMode(Stereo_LeftRight_Multipass);
+    _stereoConfig.SetHMDInfo(hmdInfo);
+    _stereoConfig.SetDistortionFitPointVP(-1.0f, 0.0f);
+    
+    [_view enterFullScreenMode:[NSScreen mainScreen] withOptions:@{}];
+}
+
+- (void)applicationWillTerminate:(NSNotification *)notification
+{
+    [_view exitFullScreenModeWithOptions:@{}];
 }
 
 - (void)setupOffscreenFramebuffer:(NSSize)size withContext:(NSOpenGLContext *)context
@@ -37,6 +59,8 @@
     assert(context != nil);
 
     [context makeCurrentContext];
+    
+    _fboSize = size;
     
     //create a fbo
     glGenFramebuffersEXT (1, &_fbo);
@@ -195,7 +219,7 @@
     _program = prgName;
 }
 
-- (void)bindFogShaderWithColorTexture:(GLuint)colorTexture depthTexture:(GLuint)depthTexture
+- (void)bindFogShaderWithColorTexture:(GLuint)colorTexture depthTexture:(GLuint)depthTexture eye:(StereoEye)eye
 {
     if(_program == 0){
         [self loadFogShader];
@@ -221,9 +245,33 @@
     glBindTexture(GL_TEXTURE_2D, colorTexture);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, depthTexture);
+    
+    StereoEyeParams eyeParams = _stereoConfig.GetEyeRenderParams(eye);
+    float xCenterOffset = eyeParams.pDistortion->XCenterOffset;
+    if (eye == StereoEye_Right)
+    {
+        xCenterOffset *= -1;
+    }
+    
+    GLint lensCenterPosition = glGetUniformLocation(_program, "LensCenter");
+    glUniform2f(lensCenterPosition, 0.5 + xCenterOffset, 0.5);
+
+    GLint screenCenterPosition = glGetUniformLocation(_program, "ScreenCenter");
+    glUniform2f(screenCenterPosition, 0.5, 0.5);
+    
+    float aspectRatio = _fboSize.width / _fboSize.height;
+    GLint scaleInPosition = glGetUniformLocation(_program, "ScaleIn");
+    glUniform2f(scaleInPosition, 2.0, 2.0 / aspectRatio);
+
+    float scale = 1.0 / eyeParams.pDistortion->Scale;
+    GLint scalePosition = glGetUniformLocation(_program, "Scale");
+    glUniform2f(scalePosition, 0.5 * scale, 0.5 * scale * aspectRatio);
+    
+    GLint hmdWarpParamPosition = glGetUniformLocation(_program, "HmdWarpParam");
+    glUniform4fv(hmdWarpParamPosition, 1, eyeParams.pDistortion->K);
 }
 
-- (void) drawFullscreenQuad
+- (void)drawFullscreenQuad
 {
     const float vertices[] = {-1,-1,
         1,-1,
@@ -247,7 +295,12 @@
     {
         CGRect viewBounds = [view bounds];
         NSSize viewportSize = [view convertRectToBase:viewBounds].size; //HiDPI
-        [self setupOffscreenFramebuffer:viewportSize withContext:view.openGLContext];
+        
+        StereoEyeParams eyeParams = _stereoConfig.GetEyeRenderParams(StereoEye_Left);
+        
+        float scale = eyeParams.pDistortion->Scale;
+        NSSize scaledSize = NSMakeSize(viewportSize.width * scale, viewportSize.height * scale);
+        [self setupOffscreenFramebuffer:scaledSize withContext:view.openGLContext];
     }
     else
     {
@@ -256,6 +309,8 @@
         
         //bind our fbo so that scenekit renders into it
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _fbo);
+        
+        glViewport(0, 0, _fboSize.width, _fboSize.height);
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
@@ -279,10 +334,16 @@
         glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
         
         //draw the texture inside the view
-        [self bindFogShaderWithColorTexture:_colorTexture depthTexture:_depthTexture];
+        NSString *eyeString = [view.layer valueForKey:@"eye"];
+        StereoEye eye = [eyeString isEqualToString:@"left"] ? StereoEye_Left : StereoEye_Right;
+        [self bindFogShaderWithColorTexture:_colorTexture depthTexture:_depthTexture eye:eye];
         
         //unbind FBO
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _cafbo);
+        
+        CGRect viewBounds = [view bounds];
+        NSSize viewportSize = [view convertRectToBase:viewBounds].size; //HiDPI
+        glViewport(0, 0, viewportSize.width, viewportSize.height);
         
         [self drawFullscreenQuad];
         

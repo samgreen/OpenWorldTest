@@ -35,7 +35,6 @@ SCNGeometry *treeGeometry;
 
 @interface OWTGameView () <SKRHydraDelegate>
 {
-    SKROculus *oculus;
     SKRHydra *hydra;
 
     CGLContextObj cglContext1;
@@ -43,6 +42,8 @@ SCNGeometry *treeGeometry;
     CGLPixelFormatObj cglPixelFormat;
     NSOpenGLContext *leftEyeContext;
     NSOpenGLContext *rightEyeContext;
+    
+    SCNNode *terrainParentNode;
 }
 
 @end
@@ -134,7 +135,7 @@ CVTimeStamp lastChunkTick;
 	
 	previousActive = [NSApplication sharedApplication].isActive;
     
-    SCNVector4 oculusRotation = [oculus poll];
+    SCNVector4 oculusRotation = [self.oculus poll];
     SKRHydraControllerPair controllers = [hydra poll];
 	
 	dispatch_async(dispatch_get_main_queue(), ^{
@@ -182,8 +183,8 @@ CVTimeStamp lastChunkTick;
 {
     hydra = [[SKRHydra alloc] init];
     hydra.delegate = self;
-    oculus = [[SKROculus alloc] init];
-    OVR::HMDInfo hmdInfo = [oculus hmdInfo];
+    self.oculus = [[SKROculus alloc] init];
+    OVR::HMDInfo hmdInfo = [self.oculus hmdInfo];
 
     blocks = @[].mutableCopy;
 	chunkCache = @{}.mutableCopy;
@@ -193,6 +194,11 @@ CVTimeStamp lastChunkTick;
 	   
 	SCNScene *scene = [SCNScene scene];
     self.scene = scene;
+
+    terrainParentNode = [SCNNode node];
+//    GLKQuaternion terrainOrientation = GLKQuaternionMakeWithMatrix3(GLKMatrix3MakeRotation(-M_PI_2, 1, 0, 0));
+//    terrainParentNode.rotation = SKRVector4FromQuaternion(terrainOrientation.x, terrainOrientation.y, terrainOrientation.z, terrainOrientation.w);
+    [scene.rootNode addChildNode:terrainParentNode];
     
     CGLPixelFormatAttribute attribs[] = {
         kCGLPFADepthSize, (CGLPixelFormatAttribute)24,
@@ -224,7 +230,9 @@ CVTimeStamp lastChunkTick;
     
     
     playerNode = [OWTPlayer nodeWithHMDInfo:hmdInfo];
-	playerNode.position = SCNVector3Make(MAP_BOUNDS/2, MAP_BOUNDS/2, 5);
+    playerNode.position = SCNVector3Make(MAP_BOUNDS/2, MAP_BOUNDS/2, 5);
+//	playerNode.position = SCNVector3Make(MAP_BOUNDS/2, 5, MAP_BOUNDS/2);
+//	playerNode.position = SCNVector3Make(0, 10, 0);
     [scene.rootNode addChildNode:playerNode];
     [self.leftEyeView setPointOfView:playerNode.leftEye];
     [self.rightEyeView setPointOfView:playerNode.rightEye];
@@ -266,7 +274,7 @@ BOOL canReload = YES;
 	
 	[blocks removeAllObjects];
 	
-	for (OWTChunk *chunk in self.scene.rootNode.childNodes)
+	for (OWTChunk *chunk in terrainParentNode.childNodes)
 	{
 		if (![chunk isKindOfClass:[OWTChunk class]])
 			continue;
@@ -346,7 +354,7 @@ BOOL canReload = YES;
 		cp.z = -4;
 		chunk.position = cp;
 		cp.z = 0;
-		[scene.rootNode addChildNode:chunk];
+		[terrainParentNode addChildNode:chunk];
 		
 		[SCNTransaction begin];
 		[SCNTransaction setAnimationDuration:0.5];
@@ -379,7 +387,7 @@ BOOL canReload = YES;
 	
 	/* Now unload chunks away from the player */
 	
-	for (OWTChunk *chunk in self.scene.rootNode.childNodes)
+	for (OWTChunk *chunk in terrainParentNode.childNodes)
 	{
 		if (![chunk isKindOfClass:[OWTChunk class]])
 			continue;

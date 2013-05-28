@@ -25,7 +25,7 @@
 		B0AC59E516A346E300E90A1A /* grass.png in Resources */ = {isa = PBXBuildFile; fileRef = B0AC59CB16A346E300E90A1A /* grass.png */; };
 		B0AC59E616A346E300E90A1A /* water.png in Resources */ = {isa = PBXBuildFile; fileRef = B0AC59CC16A346E300E90A1A /* water.png */; };
 		B0AC59E716A346E300E90A1A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59CD16A346E300E90A1A /* main.m */; };
-		B0AC59E916A346E300E90A1A /* OWTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59D116A346E300E90A1A /* OWTAppDelegate.m */; };
+		B0AC59E916A346E300E90A1A /* OWTAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59D116A346E300E90A1A /* OWTAppDelegate.mm */; };
 		B0AC59EA16A346E300E90A1A /* OWTChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59D316A346E300E90A1A /* OWTChunk.m */; };
 		B0AC59EB16A346E300E90A1A /* OWTEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59D516A346E300E90A1A /* OWTEntity.m */; };
 		B0AC59EC16A346E300E90A1A /* OWTGameView.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0AC59D716A346E300E90A1A /* OWTGameView.mm */; };
@@ -69,7 +69,7 @@
 		B03D9AA11686CD6D0013F526 /* DDHidUsageTables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDHidUsageTables.h; sourceTree = "<group>"; };
 		B03D9AA21686CDD90013F526 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		B0AC59BE16A346E300E90A1A /* cube.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = cube.dae; sourceTree = "<group>"; };
-		B0AC59BF16A346E300E90A1A /* shader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = shader.frag; sourceTree = "<group>"; };
+		B0AC59BF16A346E300E90A1A /* shader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = shader.frag; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		B0AC59C016A346E300E90A1A /* shader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = shader.vert; sourceTree = "<group>"; };
 		B0AC59C116A346E300E90A1A /* tree.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = tree.dae; sourceTree = "<group>"; };
 		B0AC59C316A346E300E90A1A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
@@ -83,7 +83,7 @@
 		B0AC59CE16A346E300E90A1A /* OpenWorldTest-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "OpenWorldTest-Info.plist"; sourceTree = "<group>"; };
 		B0AC59CF16A346E300E90A1A /* OpenWorldTest-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OpenWorldTest-Prefix.pch"; sourceTree = "<group>"; };
 		B0AC59D016A346E300E90A1A /* OWTAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTAppDelegate.h; sourceTree = "<group>"; };
-		B0AC59D116A346E300E90A1A /* OWTAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTAppDelegate.m; sourceTree = "<group>"; };
+		B0AC59D116A346E300E90A1A /* OWTAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OWTAppDelegate.mm; sourceTree = "<group>"; };
 		B0AC59D216A346E300E90A1A /* OWTChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTChunk.h; sourceTree = "<group>"; };
 		B0AC59D316A346E300E90A1A /* OWTChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWTChunk.m; sourceTree = "<group>"; };
 		B0AC59D416A346E300E90A1A /* OWTEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTEntity.h; sourceTree = "<group>"; };
@@ -231,7 +231,7 @@
 				B0AC59CE16A346E300E90A1A /* OpenWorldTest-Info.plist */,
 				B0AC59CF16A346E300E90A1A /* OpenWorldTest-Prefix.pch */,
 				B0AC59D016A346E300E90A1A /* OWTAppDelegate.h */,
-				B0AC59D116A346E300E90A1A /* OWTAppDelegate.m */,
+				B0AC59D116A346E300E90A1A /* OWTAppDelegate.mm */,
 				B0AC59D616A346E300E90A1A /* OWTGameView.h */,
 				B0AC59D716A346E300E90A1A /* OWTGameView.mm */,
 				B0AC59D816A346E300E90A1A /* OWTLevelGenerator.h */,
@@ -365,7 +365,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B0AC59E716A346E300E90A1A /* main.m in Sources */,
-				B0AC59E916A346E300E90A1A /* OWTAppDelegate.m in Sources */,
+				B0AC59E916A346E300E90A1A /* OWTAppDelegate.mm in Sources */,
 				B0AC59EA16A346E300E90A1A /* OWTChunk.m in Sources */,
 				B0AC59EB16A346E300E90A1A /* OWTEntity.m in Sources */,
 				B0AC59EC16A346E300E90A1A /* OWTGameView.mm in Sources */,

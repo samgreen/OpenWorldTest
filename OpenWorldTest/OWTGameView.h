@@ -41,6 +41,7 @@ typedef enum _SKRBlockType
 
 @class OWTPlayer;
 @class OWTLevelGenerator;
+@class SKROculus;
 
 @interface OWTGameView : NSView <SCNSceneRendererDelegate, SCNProgramDelegate, SCNNodeRendererDelegate>
 {
@@ -69,6 +70,7 @@ typedef enum _SKRBlockType
 @property (nonatomic, strong) SCNScene *scene;
 @property (nonatomic, strong) IBOutlet SCNView *leftEyeView;
 @property (nonatomic, strong) IBOutlet SCNView *rightEyeView;
+@property (nonatomic, strong) SKROculus *oculus;
 
 -(IBAction)reload:(id)sender;
 - (CVReturn)gameLoopAtTime:(CVTimeStamp)time;
