@@ -73,5 +73,6 @@ typedef enum _SKRBlockType
 @property (nonatomic, strong) SKROculus *oculus;
 
 -(IBAction)reload:(id)sender;
-- (CVReturn)gameLoopAtTime:(CVTimeStamp)time;
+-(CVReturn)gameLoopAtTime:(CVTimeStamp)time;
+-(void)setRunning:(BOOL)running;
 @end

@@ -120,8 +120,6 @@ static CVReturn DisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	}
 }
 
-BOOL previousActive = NO;
-
 CVTimeStamp oldTime;
 
 CVTimeStamp lastChunkTick;
@@ -129,13 +127,6 @@ CVTimeStamp lastChunkTick;
 - (CVReturn)gameLoopAtTime:(CVTimeStamp)time {    
 	if (time.hostTime-oldTime.hostTime < (NSEC_PER_MSEC))
 		return kCVReturnSuccess;
-	
-	if ([NSApplication sharedApplication].isActive && !previousActive)
-	{
-		CGWarpMouseCursorPosition([self.window convertBaseToScreen:CGPointMake(0, 90)]);
-	}
-	
-	previousActive = [NSApplication sharedApplication].isActive;
     
     SCNVector4 oculusRotation = [self.oculus poll];
     SKRHydraControllerPair controllers = [hydra poll];
@@ -148,13 +139,7 @@ CVTimeStamp lastChunkTick;
 		[playerNode updatePositionWithRefreshPeriod:refreshPeriod];
 		
 		[playerNode checkCollisionWithNodes:blocks];
-		
-		SCNVector3 playerNodePosition = playerNode.position;
-		
-		if (playerNodePosition.z < 0) playerNodePosition.z = 0;
-		[playerNode setPosition:playerNodePosition];
-		
-        playerNode.rotation = oculusRotation;
+				
 		oldTime = time;
 		
         // Update arms with hydra controllers
@@ -164,6 +149,8 @@ CVTimeStamp lastChunkTick;
         [playerNode updateArm:SKRRight
                      position:controllers.right.position
                      rotation:controllers.right.rotation];
+
+//        playerNode.rotation = oculusRotation;
         
         playerNode.movementDirection = GLKVector3Add(keyboardMovementDirection,
                                                      GLKVector3Make(controllers.left.joystick.x,
@@ -523,9 +510,21 @@ BOOL canReload = YES;
 	return YES;
 }
 
-- (void)mouseMoved:(NSEvent *)theEvent {
-	
-    //	[playerNode rotateByAmount:CGPointMake(MCP_DEGREES_TO_RADIANS(-theEvent.deltaX / 10000), MCP_DEGREES_TO_RADIANS(-theEvent.deltaY / 10000))];
+- (void)mouseMoved:(NSEvent *)theEvent
+{
+    GLKQuaternion orientation = GLKQuaternionMakeWithAngleAndAxis(playerNode.rotation.w,
+                                                                  playerNode.rotation.x,
+                                                                  playerNode.rotation.y,
+                                                                  playerNode.rotation.z);
+    float sensitivity = 0.005;
+    GLKQuaternion xMouseRotation = GLKQuaternionMakeWithAngleAndAxis(-theEvent.deltaX * sensitivity, 0, 1, 0);
+    GLKQuaternion yMouseRotation = GLKQuaternionMakeWithAngleAndAxis(-theEvent.deltaY * sensitivity, 1, 0, 0);
+    GLKQuaternion newOrientation = GLKQuaternionMultiply(GLKQuaternionMultiply(orientation, yMouseRotation), xMouseRotation);
+    playerNode.rotation = SKRVector4FromQuaternion(newOrientation.x,
+                                                   newOrientation.y,
+                                                   newOrientation.z,
+                                                   newOrientation.w);
+    
 }
 
 -(void)keyDown:(NSEvent *)theEvent

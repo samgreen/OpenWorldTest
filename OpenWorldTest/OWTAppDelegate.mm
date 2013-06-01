@@ -45,12 +45,19 @@ using namespace OVR::Util::Render;
     _stereoConfig.SetHMDInfo(hmdInfo);
     _stereoConfig.SetDistortionFitPointVP(-1.0f, 0.0f);
     
-    [_view enterFullScreenMode:[NSScreen mainScreen] withOptions:@{}];
+//    [_view enterFullScreenMode:[NSScreen mainScreen] withOptions:@{}];
+    
+    NSRect windowCoordsFrame = [_view.superview convertRect:_view.frame toView:nil];
+    NSRect screenCoordsFrame = [self.window convertRectToScreen:windowCoordsFrame];
+    NSPoint screenCoordsCenter = NSMakePoint(screenCoordsFrame.origin.x + _view.frame.size.width / 2,
+                                             [NSScreen mainScreen].frame.size.height - (screenCoordsFrame.origin.y + screenCoordsFrame.size.height / 2));
+    CGWarpMouseCursorPosition(screenCoordsCenter);
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
-    [_view exitFullScreenModeWithOptions:@{}];
+    [_view setRunning:NO];
+//    [_view exitFullScreenModeWithOptions:@{}];
 }
 
 - (void)setupOffscreenFramebuffer:(NSSize)size withContext:(NSOpenGLContext *)context
