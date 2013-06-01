@@ -49,7 +49,7 @@ void controller_manager_setup_callback( sixenseUtils::ControllerManager::setup_s
 
 + (void)load {
     // This fails when called at the same time as oculus init, so I moved it here.
-    sixenseInit();
+//    sixenseInit();
 }
 
 - (id)init

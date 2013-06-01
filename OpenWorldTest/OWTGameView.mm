@@ -170,8 +170,8 @@ CVTimeStamp lastChunkTick;
 #pragma mark -
 -(void)awakeFromNib
 {
-    hydra = [[SKRHydra alloc] init];
-    hydra.delegate = self;
+//    hydra = [[SKRHydra alloc] init];
+//    hydra.delegate = self;
     self.oculus = [[SKROculus alloc] init];
 
     blocks = @[].mutableCopy;
