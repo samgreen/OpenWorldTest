@@ -43,6 +43,7 @@
 		C2982EC7174B359000B57B8A /* RenderTiny_GL_Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC3174B359000B57B8A /* RenderTiny_GL_Device.cpp */; };
 		C2982EC8174B359000B57B8A /* RenderTiny_Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC5174B359000B57B8A /* RenderTiny_Device.cpp */; };
 		C2982ECA174B37D500B57B8A /* OculusRoomModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC9174B37D500B57B8A /* OculusRoomModel.cpp */; };
+		D5B5F171175A078200D23F01 /* SKRStereoEffect.mm in Sources */ = {isa = PBXBuildFile; fileRef = D5B5F170175A078100D23F01 /* SKRStereoEffect.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -109,6 +110,8 @@
 		C2982EC5174B359000B57B8A /* RenderTiny_Device.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderTiny_Device.cpp; sourceTree = "<group>"; };
 		C2982EC6174B359000B57B8A /* RenderTiny_Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderTiny_Device.h; sourceTree = "<group>"; };
 		C2982EC9174B37D500B57B8A /* OculusRoomModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OculusRoomModel.cpp; sourceTree = "<group>"; };
+		D5B5F16F175A078100D23F01 /* SKRStereoEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKRStereoEffect.h; sourceTree = "<group>"; };
+		D5B5F170175A078100D23F01 /* SKRStereoEffect.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SKRStereoEffect.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,6 +240,8 @@
 				B0AC59D816A346E300E90A1A /* OWTLevelGenerator.h */,
 				B0AC59D916A346E300E90A1A /* OWTLevelGenerator.m */,
 				B0429D1516A3505F00331EDE /* Game Logic */,
+				D5B5F16F175A078100D23F01 /* SKRStereoEffect.h */,
+				D5B5F170175A078100D23F01 /* SKRStereoEffect.mm */,
 			);
 			path = OpenWorldTest;
 			sourceTree = "<group>";
@@ -377,6 +382,7 @@
 				C2982ECA174B37D500B57B8A /* OculusRoomModel.cpp in Sources */,
 				C296079E174DDDBB005ECCBE /* SKRHydra.mm in Sources */,
 				C2884FC91752A4A4005D6B48 /* SKRMath.mm in Sources */,
+				D5B5F171175A078200D23F01 /* SKRStereoEffect.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
