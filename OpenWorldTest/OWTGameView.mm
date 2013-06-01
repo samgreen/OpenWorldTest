@@ -173,7 +173,6 @@ CVTimeStamp lastChunkTick;
     hydra = [[SKRHydra alloc] init];
     hydra.delegate = self;
     self.oculus = [[SKROculus alloc] init];
-    OVR::HMDInfo hmdInfo = [self.oculus hmdInfo];
 
     blocks = @[].mutableCopy;
 	chunkCache = @{}.mutableCopy;
@@ -218,7 +217,7 @@ CVTimeStamp lastChunkTick;
     self.rightEyeView.scene = scene;
     
     
-    playerNode = [OWTPlayer nodeWithHMDInfo:hmdInfo];
+    playerNode = [OWTPlayer nodeWithHMDInfo:[self.oculus hmdInfo]];
     playerNode.position = SCNVector3Make(MAP_BOUNDS/2, MAP_BOUNDS/2, 5);
 //	playerNode.position = SCNVector3Make(MAP_BOUNDS/2, 5, MAP_BOUNDS/2);
 //	playerNode.position = SCNVector3Make(0, 10, 0);

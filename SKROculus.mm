@@ -53,6 +53,11 @@
     return self;
 }
 
+- (BOOL)deviceAvailable
+{
+    return app->HMDInfo.HResolution > 0;
+}
+
 - (SCNVector4)poll
 {
     Quatf orientation = app->OnIdle();
@@ -126,7 +131,7 @@ int OculusRoomTinyApp::OnStartup()
 	pManager->SetMessageHandler(this);
     
     CFOptionFlags detectionResult;
-    const char* detectionMessage;
+//    const char* detectionMessage;
     
     do
     {
@@ -162,47 +167,47 @@ int OculusRoomTinyApp::OnStartup()
         
         // If there was a problem detecting the Rift, display appropriate message.
         detectionResult  = kCFUserNotificationAlternateResponse;
-        
-        if (!pHMD && !pSensor)
-            detectionMessage = "Oculus Rift not detected.";
-        else if (!pHMD)
-            detectionMessage = "Oculus Sensor detected; HMD Display not detected.";
-        else if (!pSensor)
-            detectionMessage = "Oculus HMD Display detected; Sensor not detected.";
-        else if (HMDInfo.DisplayDeviceName[0] == '\0')
-            detectionMessage = "Oculus Sensor detected; HMD display EDID not detected.";
-        else
-            detectionMessage = 0;
-        
-        if (detectionMessage)
-        {
-            String messageText(detectionMessage);
-            messageText += "\n\n"
-            "Press 'Try Again' to run retry detection.\n"
-            "Press 'Continue' to run full-screen anyway.";
-            
-            CFStringRef headerStrRef  = CFStringCreateWithCString(NULL, "Oculus Rift Detection", kCFStringEncodingMacRoman);
-            CFStringRef messageStrRef = CFStringCreateWithCString(NULL, messageText, kCFStringEncodingMacRoman);
-            
-            //launch the message box
-            CFUserNotificationDisplayAlert(0,
-                                           kCFUserNotificationNoteAlertLevel,
-                                           NULL, NULL, NULL,
-                                           headerStrRef, // header text
-                                           messageStrRef, // message text
-                                           CFSTR("Try again"),
-                                           CFSTR("Continue"),
-                                           CFSTR("Cancel"),
-                                           &detectionResult);
-            
-            //Clean up the strings
-            CFRelease(headerStrRef);
-            CFRelease(messageStrRef);
-            
-            if (detectionResult == kCFUserNotificationCancelResponse ||
-                detectionResult == kCFUserNotificationOtherResponse)
-                return 1;
-        }
+
+//        if (!pHMD && !pSensor)
+//            detectionMessage = "Oculus Rift not detected.";
+//        else if (!pHMD)
+//            detectionMessage = "Oculus Sensor detected; HMD Display not detected.";
+//        else if (!pSensor)
+//            detectionMessage = "Oculus HMD Display detected; Sensor not detected.";
+//        else if (HMDInfo.DisplayDeviceName[0] == '\0')
+//            detectionMessage = "Oculus Sensor detected; HMD display EDID not detected.";
+//        else
+//            detectionMessage = 0;
+//        
+//        if (detectionMessage)
+//        {
+//            String messageText(detectionMessage);
+//            messageText += "\n\n"
+//            "Press 'Try Again' to run retry detection.\n"
+//            "Press 'Continue' to run full-screen anyway.";
+//            
+//            CFStringRef headerStrRef  = CFStringCreateWithCString(NULL, "Oculus Rift Detection", kCFStringEncodingMacRoman);
+//            CFStringRef messageStrRef = CFStringCreateWithCString(NULL, messageText, kCFStringEncodingMacRoman);
+//            
+//            //launch the message box
+//            CFUserNotificationDisplayAlert(0,
+//                                           kCFUserNotificationNoteAlertLevel,
+//                                           NULL, NULL, NULL,
+//                                           headerStrRef, // header text
+//                                           messageStrRef, // message text
+//                                           CFSTR("Try again"),
+//                                           CFSTR("Continue"),
+//                                           CFSTR("Cancel"),
+//                                           &detectionResult);
+//            
+//            //Clean up the strings
+//            CFRelease(headerStrRef);
+//            CFRelease(messageStrRef);
+//            
+//            if (detectionResult == kCFUserNotificationCancelResponse ||
+//                detectionResult == kCFUserNotificationOtherResponse)
+//                return 1;
+//        }
         
     } while (detectionResult != kCFUserNotificationAlternateResponse);
     
