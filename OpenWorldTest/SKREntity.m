@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 Tom Irving. All rights reserved.
 //
 
-#import "OWTEntity.h"
+#import "SKREntity.h"
 
-@implementation OWTEntity
+@implementation SKREntity
 @synthesize velocity;
 @synthesize acceleration;
 @synthesize mass;

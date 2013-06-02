@@ -8,7 +8,7 @@
 
 #import <SceneKit/SceneKit.h>
 
-@interface OWTEntity : SCNNode {
+@interface SKREntity : SCNNode {
 	
 	SCNVector3 velocity;
 	SCNVector3 acceleration;

@@ -7,15 +7,9 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <SceneKit/SceneKit.h>
-#import <OpenGL/gl.h>
 
-@class OWTGameView;
+@interface OWTAppDelegate : NSObject <NSApplicationDelegate>
 
-@interface OWTAppDelegate : NSObject <NSApplicationDelegate,SCNSceneRendererDelegate>
-{
-	IBOutlet OWTGameView *_view;
-}
 @property (assign) IBOutlet NSWindow *window;
 
 @end

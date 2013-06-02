@@ -6,18 +6,18 @@
 //  Copyright (c) 2012 Tom Irving. All rights reserved.
 //
 
-#import "OWTPlayer.h"
+#import "SKRPlayer.h"
 #import "SKRMath.h"
 
-@interface OWTPlayer ()
+@interface SKRPlayer ()
 - (void)buildPlayer;
 @end
 
-@implementation OWTPlayer
+@implementation SKRPlayer
 
-+ (OWTPlayer *)nodeWithHMDInfo:(OVR::HMDInfo)hmdInfo
++ (SKRPlayer *)nodeWithHMDInfo:(OVR::HMDInfo)hmdInfo
 {
-	OWTPlayer * node = (OWTPlayer *)[super node];
+	SKRPlayer * node = (SKRPlayer *)[super node];
 	[node setMass:70];
     
     [node createCamerasWithHMDInfo:hmdInfo];

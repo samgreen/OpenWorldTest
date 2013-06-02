@@ -24,13 +24,6 @@ typedef struct _SKRInput
 	
 } SKRInput;
 
-typedef struct _SKRPlayer
-{
-	BOOL moving;
-	
-} SKRPlayer;
-
-
 typedef enum _SKRBlockType
 {
 	SKRBlockTypeWater,
@@ -39,20 +32,19 @@ typedef enum _SKRBlockType
 	SKRBlockTypeTree
 } SKRBlockType;
 
-@class OWTPlayer;
+@class SKRPlayer;
 @class OWTLevelGenerator;
 @class SKROculus;
 
-@interface OWTGameView : NSView <SCNSceneRendererDelegate, SCNProgramDelegate, SCNNodeRendererDelegate>
+@interface SKRView : NSView <SCNSceneRendererDelegate, SCNProgramDelegate, SCNNodeRendererDelegate>
 {
 	
 	NSMutableDictionary *chunkCache;
 	CATextLayer *frameRateLabel;
 	
 	SKRInput input;
-	SKRPlayer player;
 	
-	OWTPlayer *playerNode;
+	SKRPlayer *playerNode;
 	NSMutableArray *blocks;
 	NSArray *joysticks;
 	OWTLevelGenerator *gen;

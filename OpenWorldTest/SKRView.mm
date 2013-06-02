@@ -12,9 +12,9 @@
  
  */
 
-#import "OWTGameView.h"
+#import "SKRView.h"
 #import "DDHidLib.h"
-#import "OWTPlayer.h"
+#import "SKRPlayer.h"
 #import "OWTChunk.h"
 #import "OWTLevelGenerator.h"
 
@@ -33,7 +33,7 @@ SCNGeometry *grassGeometry;
 SCNGeometry *waterGeometry;
 SCNGeometry *treeGeometry;
 
-@interface OWTGameView () <SKRHydraDelegate>
+@interface SKRView () <SKRHydraDelegate>
 {
     SKRHydra *hydra;
 
@@ -52,7 +52,7 @@ SCNGeometry *treeGeometry;
 
 @end
 
-@implementation OWTGameView
+@implementation SKRView
 
 -(void)initCrosshairs
 {
@@ -83,7 +83,7 @@ SCNGeometry *treeGeometry;
 
 static CVReturn DisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow, const CVTimeStamp *inOutputTime,
 									CVOptionFlags flagsIn, CVOptionFlags *flagsOut, void *displayLinkContext){
-	return [(__bridge OWTGameView *)displayLinkContext gameLoopAtTime:*inOutputTime];
+	return [(__bridge SKRView *)displayLinkContext gameLoopAtTime:*inOutputTime];
 }
 
 -(void)setupLink
@@ -148,7 +148,7 @@ CVTimeStamp lastChunkTick;
                                                                       playerNode.rotation.x,
                                                                       playerNode.rotation.y,
                                                                       playerNode.rotation.z);
-        float rollSpeed = 0.006;
+        float rollSpeed = 0.01;
         GLKQuaternion rollRotation = GLKQuaternionMakeWithAngleAndAxis(_rollDirection * rollSpeed, 0, 0, 1);
         GLKQuaternion newOrientation = GLKQuaternionMultiply(orientation, rollRotation);
         playerNode.rotation = SKRVector4FromQuaternion(newOrientation.x,
@@ -192,7 +192,7 @@ CVTimeStamp lastChunkTick;
 //    terrainParentNode.rotation = SKRVector4FromQuaternion(terrainOrientation.x, terrainOrientation.y, terrainOrientation.z, terrainOrientation.w);
     [scene.rootNode addChildNode:terrainParentNode];
     
-    playerNode = [OWTPlayer nodeWithHMDInfo:[self.oculus hmdInfo]];
+    playerNode = [SKRPlayer nodeWithHMDInfo:[self.oculus hmdInfo]];
     playerNode.position = SCNVector3Make(MAP_BOUNDS/2, MAP_BOUNDS/2, 5);
     //	playerNode.position = SCNVector3Make(MAP_BOUNDS/2, 5, MAP_BOUNDS/2);
     //	playerNode.position = SCNVector3Make(0, 10, 0);
@@ -774,8 +774,6 @@ int lastStickY = 0;
 	
 	if (value == 0)
 	{
-		player.moving = NO;
-		
 		movement.y = 0;
 		movement.w = 0;		
 		
@@ -800,8 +798,6 @@ int lastStickY = 0;
 			input.left = YES;
 			movement.y = delta;
 		}
-		
-		player.moving =YES;
 	}
 	
 //	[playerNode setMovement:movement];
@@ -824,7 +820,6 @@ int lastStickY = 0;
 	
 	if (value == 0)
 	{
-		player.moving = NO;
 		input.forward = NO;
 		input.backward = NO;
 		
@@ -851,8 +846,6 @@ int lastStickY = 0;
 			input.forward = YES;
 			movement.x = delta;
 		}
-		
-		player.moving = YES;
 	}
 	
 //	[playerNode setMovement:movement];

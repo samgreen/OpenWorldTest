@@ -8,11 +8,11 @@
 
 #import <SceneKit/SceneKit.h>
 #import <GLKit/GLKMath.h>
-#import "OWTEntity.h"
+#import "SKREntity.h"
 #import "OVR_Device.h"
 #import "SKRMath.h"
 
-@interface OWTPlayer : OWTEntity {
+@interface SKRPlayer : SKREntity {
 }
 
 @property (nonatomic, strong) SCNNode *leftEye;
@@ -24,7 +24,7 @@
 @property (nonatomic) GLKVector3 movementDirection;
 @property (nonatomic) float interpupillaryDistance;
 
-+ (OWTPlayer *)nodeWithHMDInfo:(OVR::HMDInfo)hmdInfo;
++ (SKRPlayer *)nodeWithHMDInfo:(OVR::HMDInfo)hmdInfo;
 
 - (void)updateArm:(SKRSide)side
          position:(SCNVector3)position

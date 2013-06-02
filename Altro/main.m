@@ -1,0 +1,14 @@
+//
+//  main.m
+//  Altro
+//
+//  Created by Mike Rotondo on 6/1/13.
+//  Copyright (c) 2013 Taka Taka. All rights reserved.
+//
+
+#import <Cocoa/Cocoa.h>
+
+int main(int argc, char *argv[])
+{
+    return NSApplicationMain(argc, (const char **)argv);
+}
