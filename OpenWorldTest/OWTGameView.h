@@ -68,8 +68,8 @@ typedef enum _SKRBlockType
 }
 
 @property (nonatomic, strong) SCNScene *scene;
-@property (nonatomic, strong) IBOutlet SCNView *leftEyeView;
-@property (nonatomic, strong) IBOutlet SCNView *rightEyeView;
+@property (nonatomic, strong) SCNView *leftEyeView;
+@property (nonatomic, strong) SCNView *rightEyeView;
 @property (nonatomic, strong) SKROculus *oculus;
 
 -(IBAction)reload:(id)sender;

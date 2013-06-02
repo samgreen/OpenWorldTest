@@ -21,6 +21,7 @@
 @implementation OWTAppDelegate
 {
     SKRStereoEffect *_stereoEffect;
+    NSTrackingArea *_trackingArea;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
@@ -34,11 +35,48 @@
     }
 //    [_view enterFullScreenMode:[NSScreen mainScreen] withOptions:@{}];
     
+}
+
+- (void)applicationWillBecomeActive:(NSNotification *)notification
+{
+    [self setupMouseTracking];
+}
+
+- (void)applicationWillResignActive:(NSNotification *)notification
+{
+    [self teardownMouseTracking];
+}
+
+- (void)setupMouseTracking
+{
+    if ([_view.oculus deviceAvailable])
+    {
+        return;
+    }
+    
     NSRect windowCoordsFrame = [_view.superview convertRect:_view.frame toView:nil];
     NSRect screenCoordsFrame = [self.window convertRectToScreen:windowCoordsFrame];
     NSPoint screenCoordsCenter = NSMakePoint(screenCoordsFrame.origin.x + _view.frame.size.width / 2,
                                              [NSScreen mainScreen].frame.size.height - (screenCoordsFrame.origin.y + screenCoordsFrame.size.height / 2));
     CGWarpMouseCursorPosition(screenCoordsCenter);
+    
+    CGAssociateMouseAndMouseCursorPosition(FALSE);
+	
+    [_view removeTrackingArea:_trackingArea];
+	_trackingArea = [[NSTrackingArea alloc] initWithRect:_view.frame
+                                                 options:(NSTrackingActiveInActiveApp | NSTrackingMouseMoved) owner:_view userInfo:nil];
+	[_view addTrackingArea:_trackingArea];
+    
+    [NSCursor hide];
+}
+
+- (void)teardownMouseTracking
+{
+    CGAssociateMouseAndMouseCursorPosition(TRUE);
+
+    [_view removeTrackingArea:_trackingArea];
+    
+    [NSCursor unhide];
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification

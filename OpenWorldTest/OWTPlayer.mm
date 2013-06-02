@@ -46,9 +46,8 @@
 
     if (hmdInfo.HResolution == 0)
     {
-        xFovDegrees = 84.8;
+        xFovDegrees = 90;
         yFovDegrees = 97.55;
-        interpupillaryDistance = 0.5;
     }
 
     NSLog(@"yFov: %f, xFov: %f", yFovDegrees, xFovDegrees);

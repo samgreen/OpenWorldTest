@@ -6,10 +6,10 @@
 		<string key="IBDocument.InterfaceBuilderVersion">3084</string>
 		<string key="IBDocument.AppKitVersion">1187.37</string>
 		<string key="IBDocument.HIToolboxVersion">626.00</string>
-		<dictionary class="NSMutableDictionary" key="IBDocument.PluginVersions">
-			<string key="com.apple.InterfaceBuilder.CocoaPlugin">3084</string>
-			<string key="com.apple.SceneKitIBPlugin">2053</string>
-		</dictionary>
+		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
+			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
+			<string key="NS.object.0">3084</string>
+		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>NSCustomObject</string>
 			<string>NSCustomView</string>
@@ -17,11 +17,9 @@
 			<string>NSMenuItem</string>
 			<string>NSView</string>
 			<string>NSWindowTemplate</string>
-			<string>SCNViewTemplate</string>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string>com.apple.SceneKitIBPlugin</string>
 		</array>
 		<object class="NSMutableDictionary" key="IBDocument.Metadata">
 			<string key="NS.key.0">PluginDependencyRecalculationVersion</string>
@@ -1326,48 +1324,11 @@
 						<object class="NSCustomView" id="807249305">
 							<reference key="NSNextResponder" ref="439893737"/>
 							<int key="NSvFlags">268</int>
-							<array class="NSMutableArray" key="NSSubviews">
-								<object class="SCNViewTemplate" id="769108266">
-									<reference key="NSNextResponder" ref="807249305"/>
-									<int key="NSvFlags">275</int>
-									<string key="NSFrame">{{640, 0}, {640, 800}}</string>
-									<reference key="NSSuperview" ref="807249305"/>
-									<reference key="NSWindow"/>
-									<string key="NSReuseIdentifierKey">_NS:22</string>
-									<bool key="loops">NO</bool>
-									<bool key="playing">NO</bool>
-									<bool key="jitteringEnabled">NO</bool>
-									<bool key="allowsCameraControl">NO</bool>
-									<bool key="ibWantsMultisampling">YES</bool>
-									<bool key="autoenablesDefaultLighting">NO</bool>
-									<nil key="ibSceneName"/>
-									<object class="NSColor" key="backgroundColor" id="154540837">
-										<int key="NSColorSpace">3</int>
-										<bytes key="NSWhite">MQA</bytes>
-									</object>
-								</object>
-								<object class="SCNViewTemplate" id="57243709">
-									<reference key="NSNextResponder" ref="807249305"/>
-									<int key="NSvFlags">278</int>
-									<string key="NSFrameSize">{640, 800}</string>
-									<reference key="NSSuperview" ref="807249305"/>
-									<reference key="NSWindow"/>
-									<reference key="NSNextKeyView" ref="769108266"/>
-									<string key="NSReuseIdentifierKey">_NS:22</string>
-									<bool key="loops">NO</bool>
-									<bool key="playing">NO</bool>
-									<bool key="jitteringEnabled">NO</bool>
-									<bool key="allowsCameraControl">NO</bool>
-									<bool key="ibWantsMultisampling">YES</bool>
-									<bool key="autoenablesDefaultLighting">NO</bool>
-									<nil key="ibSceneName"/>
-									<reference key="backgroundColor" ref="154540837"/>
-								</object>
-							</array>
+							<array class="NSMutableArray" key="NSSubviews"/>
 							<string key="NSFrameSize">{1280, 800}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="57243709"/>
+							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<string key="NSClassName">OWTGameView</string>
 						</object>
@@ -2093,22 +2054,6 @@
 						<reference key="destination" ref="467452493"/>
 					</object>
 					<int key="connectionID">586</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">leftEyeView</string>
-						<reference key="source" ref="807249305"/>
-						<reference key="destination" ref="57243709"/>
-					</object>
-					<int key="connectionID">587</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">rightEyeView</string>
-						<reference key="source" ref="807249305"/>
-						<reference key="destination" ref="769108266"/>
-					</object>
-					<int key="connectionID">588</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3127,23 +3072,8 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">584</int>
 						<reference key="object" ref="807249305"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="769108266"/>
-							<reference ref="57243709"/>
-						</array>
+						<array class="NSMutableArray" key="children"/>
 						<reference key="parent" ref="439893737"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">562</int>
-						<reference key="object" ref="57243709"/>
-						<reference key="parent" ref="807249305"/>
-						<string key="objectName">Left Eye View</string>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">573</int>
-						<reference key="object" ref="769108266"/>
-						<reference key="parent" ref="807249305"/>
-						<string key="objectName">Right Eye View</string>
 					</object>
 				</array>
 			</object>
@@ -3293,9 +3223,7 @@
 				<string key="550.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="559.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="56.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="562.IBPluginDependency">com.apple.SceneKitIBPlugin</string>
 				<string key="57.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="573.IBPluginDependency">com.apple.SceneKitIBPlugin</string>
 				<string key="58.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="584.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="72.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>

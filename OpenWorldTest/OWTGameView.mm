@@ -77,15 +77,6 @@ SCNGeometry *treeGeometry;
 	[self.layer addSublayer:frameRateLabel];
 }
 
--(void)resetMouse
-{
-	[self removeTrackingArea:trackingArea];
-	trackingArea = [[NSTrackingArea alloc] initWithRect:self.bounds
-												options:(NSTrackingActiveInKeyWindow | NSTrackingMouseMoved) owner:self userInfo:nil];
-	[self addTrackingArea:trackingArea];
-	
-}
-
 #pragma mark - DisplayLink
 
 static CVReturn DisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow, const CVTimeStamp *inOutputTime,
@@ -106,16 +97,12 @@ static CVReturn DisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	if (gameLoopRunning != running){
 		gameLoopRunning = running;
 		
-		CGAssociateMouseAndMouseCursorPosition(gameLoopRunning ? FALSE : TRUE);
-		
 		if (gameLoopRunning){
-			[NSCursor hide];
 			CVDisplayLinkStart(displayLinkRef);
 		}
 		else
 		{
 			CVDisplayLinkStop(displayLinkRef);
-			[NSCursor unhide];
 		}
 	}
 }
@@ -150,7 +137,10 @@ CVTimeStamp lastChunkTick;
                      position:controllers.right.position
                      rotation:controllers.right.rotation];
 
-//        playerNode.rotation = oculusRotation;
+        if ([self.oculus deviceAvailable])
+        {
+            playerNode.rotation = oculusRotation;
+        }
         
         playerNode.movementDirection = GLKVector3Add(keyboardMovementDirection,
                                                      GLKVector3Make(controllers.left.joystick.x,
@@ -188,6 +178,12 @@ CVTimeStamp lastChunkTick;
 //    terrainParentNode.rotation = SKRVector4FromQuaternion(terrainOrientation.x, terrainOrientation.y, terrainOrientation.z, terrainOrientation.w);
     [scene.rootNode addChildNode:terrainParentNode];
     
+    playerNode = [OWTPlayer nodeWithHMDInfo:[self.oculus hmdInfo]];
+    playerNode.position = SCNVector3Make(MAP_BOUNDS/2, MAP_BOUNDS/2, 5);
+    //	playerNode.position = SCNVector3Make(MAP_BOUNDS/2, 5, MAP_BOUNDS/2);
+    //	playerNode.position = SCNVector3Make(0, 10, 0);
+    [scene.rootNode addChildNode:playerNode];
+    
     CGLPixelFormatAttribute attribs[] = {
         kCGLPFADepthSize, (CGLPixelFormatAttribute)24,
         kCGLPFAAccelerated,
@@ -200,39 +196,33 @@ CVTimeStamp lastChunkTick;
     
     CGLCreateContext(cglPixelFormat, NULL, &cglContext1);
     CGLCreateContext(cglPixelFormat, cglContext1, &cglContext2);
-    leftEyeContext = [[NSOpenGLContext alloc] initWithCGLContextObj:cglContext1];
-    rightEyeContext = [[NSOpenGLContext alloc] initWithCGLContextObj:cglContext2];
     
-    NSRect leftEyeFrame = NSMakeRect(0, 0, self.bounds.size.width / 2, self.bounds.size.height);
+    float leftEyeWidth = [self.oculus deviceAvailable] ? self.bounds.size.width / 2 : self.bounds.size.width;
+    NSRect leftEyeFrame = NSMakeRect(0, 0, leftEyeWidth, self.bounds.size.height);
     self.leftEyeView = [[SCNView alloc] initWithFrame:leftEyeFrame];
+    leftEyeContext = [[NSOpenGLContext alloc] initWithCGLContextObj:cglContext1];
     self.leftEyeView.openGLContext = leftEyeContext;
-    [self addSubview:self.leftEyeView];
-    
-    NSRect rightEyeFrame = NSMakeRect(self.bounds.size.width / 2, 0, self.bounds.size.width / 2, self.bounds.size.height);
-    self.rightEyeView = [[SCNView alloc] initWithFrame:rightEyeFrame];
-    self.rightEyeView.openGLContext = rightEyeContext;
-    [self addSubview:self.rightEyeView];
-    
     self.leftEyeView.scene = scene;
-    self.rightEyeView.scene = scene;
-    
-    
-    playerNode = [OWTPlayer nodeWithHMDInfo:[self.oculus hmdInfo]];
-    playerNode.position = SCNVector3Make(MAP_BOUNDS/2, MAP_BOUNDS/2, 5);
-//	playerNode.position = SCNVector3Make(MAP_BOUNDS/2, 5, MAP_BOUNDS/2);
-//	playerNode.position = SCNVector3Make(0, 10, 0);
-    [scene.rootNode addChildNode:playerNode];
-    [self.leftEyeView setPointOfView:playerNode.leftEye];
-    [self.rightEyeView setPointOfView:playerNode.rightEye];
-    
+    [self addSubview:self.leftEyeView];
     [self.leftEyeView.layer setValue:@"left" forKey:@"eye"];
-    [self.rightEyeView.layer setValue:@"right" forKey:@"eye"];
+    [self.leftEyeView setPointOfView:playerNode.leftEye];
+    
+    if ([self.oculus deviceAvailable])
+    {
+        NSRect rightEyeFrame = NSMakeRect(self.bounds.size.width / 2, 0, self.bounds.size.width / 2, self.bounds.size.height);
+        self.rightEyeView = [[SCNView alloc] initWithFrame:rightEyeFrame];
+        rightEyeContext = [[NSOpenGLContext alloc] initWithCGLContextObj:cglContext2];
+        self.rightEyeView.openGLContext = rightEyeContext;
+        self.rightEyeView.scene = scene;
+        [self addSubview:self.rightEyeView];
+        [self.rightEyeView.layer setValue:@"right" forKey:@"eye"];
+        [self.rightEyeView setPointOfView:playerNode.rightEye];
+    }
     
     [self initFPSLabel];
     //	[self initCrosshairs];
     
 	[self reload:self];
-	[self resetMouse];
 
 	[self becomeFirstResponder];
 	[self startWatchingJoysticks];
@@ -246,11 +236,8 @@ CVTimeStamp lastChunkTick;
 
 -(void)setFrame:(NSRect)frameRect
 {
-	[self resetMouse];
-
 	[super setFrame:frameRect];
 	crosshairLayer.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-	CGWarpMouseCursorPosition([self.window convertBaseToScreen:CGPointMake(0, 90)]);
 }
 
 BOOL canReload = YES;
@@ -515,7 +502,7 @@ BOOL canReload = YES;
                                                                   playerNode.rotation.x,
                                                                   playerNode.rotation.y,
                                                                   playerNode.rotation.z);
-    float sensitivity = 0.005;
+    float sensitivity = 0.003;
     GLKQuaternion xMouseRotation = GLKQuaternionMakeWithAngleAndAxis(-theEvent.deltaX * sensitivity, 0, 1, 0);
     GLKQuaternion yMouseRotation = GLKQuaternionMakeWithAngleAndAxis(-theEvent.deltaY * sensitivity, 1, 0, 0);
     GLKQuaternion newOrientation = GLKQuaternionMultiply(GLKQuaternionMultiply(orientation, yMouseRotation), xMouseRotation);
@@ -849,8 +836,9 @@ NSUInteger frameCount;
 
 - (void)renderer:(id<SCNSceneRenderer>)aRenderer willRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time
 {
-    // Only do movement for the left eye camera, since this will get called twice per frame (once for each eye) and we only want to move once per frame
-    if ([aRenderer.pointOfView isEqual:playerNode.rightEye])
+    // Only do movement for the left eye camera, since in stereo mode this will get called twice per frame (once for each eye)
+    // and we only want to move once per frame
+    if ([aRenderer.pointOfView isEqual:playerNode.leftEye])
     {
         GLKQuaternion orientation = GLKQuaternionMakeWithAngleAndAxis(playerNode.rotation.w,
                                                                       playerNode.rotation.x,
@@ -871,8 +859,8 @@ NSUInteger frameCount;
 
 - (void)renderer:(id <SCNSceneRenderer>)aRenderer didRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time
 {
-    // Only do fps update for the left eye camera, since this will get called twice per frame (once for each eye)
-    if ([aRenderer.pointOfView isEqual:playerNode.rightEye])
+    // Only do fps update for the left eye camera, since in stereo mode this will get called twice per frame (once for each eye)
+    if ([aRenderer.pointOfView isEqual:playerNode.leftEye])
     {
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             NSDate *now = [NSDate date];
