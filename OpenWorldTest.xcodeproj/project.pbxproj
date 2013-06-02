@@ -77,6 +77,7 @@
 		D5C2781F175B15B3007432E9 /* libsixense_x64.dylib in Resources */ = {isa = PBXBuildFile; fileRef = C29607A8174DF857005ECCBE /* libsixense_x64.dylib */; };
 		D5C27820175B15B7007432E9 /* libsixense_utils_x64.dylib in Resources */ = {isa = PBXBuildFile; fileRef = C29607A7174DF857005ECCBE /* libsixense_utils_x64.dylib */; };
 		D5C27823175B1C04007432E9 /* ALTWorldGenerator.mm in Sources */ = {isa = PBXBuildFile; fileRef = D5C27822175B1C04007432E9 /* ALTWorldGenerator.mm */; };
+		D5C27826175B463F007432E9 /* ALTHeightField.m in Sources */ = {isa = PBXBuildFile; fileRef = D5C27825175B463F007432E9 /* ALTHeightField.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -177,6 +178,8 @@
 		D5C2780D175B003C007432E9 /* OWTWorldGenerator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OWTWorldGenerator.mm; sourceTree = "<group>"; };
 		D5C27821175B1C04007432E9 /* ALTWorldGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALTWorldGenerator.h; sourceTree = "<group>"; };
 		D5C27822175B1C04007432E9 /* ALTWorldGenerator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ALTWorldGenerator.mm; sourceTree = "<group>"; };
+		D5C27824175B463F007432E9 /* ALTHeightField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALTHeightField.h; sourceTree = "<group>"; };
+		D5C27825175B463F007432E9 /* ALTHeightField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALTHeightField.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -392,6 +395,8 @@
 				D5C277D6175ACF62007432E9 /* Supporting Files */,
 				D5C27821175B1C04007432E9 /* ALTWorldGenerator.h */,
 				D5C27822175B1C04007432E9 /* ALTWorldGenerator.mm */,
+				D5C27824175B463F007432E9 /* ALTHeightField.h */,
+				D5C27825175B463F007432E9 /* ALTHeightField.m */,
 			);
 			path = Altro;
 			sourceTree = "<group>";
@@ -631,6 +636,7 @@
 				D5C2781D175B152C007432E9 /* RenderTiny_GL_Device.cpp in Sources */,
 				D5C2781E175B1533007432E9 /* RenderTiny_Device.cpp in Sources */,
 				D5C27823175B1C04007432E9 /* ALTWorldGenerator.mm in Sources */,
+				D5C27826175B463F007432E9 /* ALTHeightField.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
