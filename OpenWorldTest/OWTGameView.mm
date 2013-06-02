@@ -46,6 +46,8 @@ SCNGeometry *treeGeometry;
     SCNNode *terrainParentNode;
     
     GLKVector3 keyboardMovementDirection;
+
+    float _rollDirection;
 }
 
 @end
@@ -141,6 +143,18 @@ CVTimeStamp lastChunkTick;
         {
             playerNode.rotation = oculusRotation;
         }
+        
+        GLKQuaternion orientation = GLKQuaternionMakeWithAngleAndAxis(playerNode.rotation.w,
+                                                                      playerNode.rotation.x,
+                                                                      playerNode.rotation.y,
+                                                                      playerNode.rotation.z);
+        float rollSpeed = 0.006;
+        GLKQuaternion rollRotation = GLKQuaternionMakeWithAngleAndAxis(_rollDirection * rollSpeed, 0, 0, 1);
+        GLKQuaternion newOrientation = GLKQuaternionMultiply(orientation, rollRotation);
+        playerNode.rotation = SKRVector4FromQuaternion(newOrientation.x,
+                                                       newOrientation.y,
+                                                       newOrientation.z,
+                                                       newOrientation.w);
         
         playerNode.movementDirection = GLKVector3Add(keyboardMovementDirection,
                                                      GLKVector3Make(controllers.left.joystick.x,
@@ -491,7 +505,7 @@ BOOL canReload = YES;
 
 #pragma mark - Input
 
--(BOOL)canBecomKeyView
+-(BOOL)canBecomeKeyView
 {
 	return YES;
 }
@@ -551,6 +565,14 @@ BOOL canReload = YES;
         GLKVector3 rightVector = GLKVector3Make(1.0, 0.0, 0.0);
         newMovementDirection = GLKVector3Add(newMovementDirection, rightVector);
     }
+    else if (theEvent.keyCode == 12)
+    {
+        _rollDirection += 1;
+    }
+    else if (theEvent.keyCode == 14)
+    {
+        _rollDirection -= 1;
+    }
     
     keyboardMovementDirection = newMovementDirection;
     
@@ -590,6 +612,14 @@ BOOL canReload = YES;
     {
         GLKVector3 rightVector = GLKVector3Make(1.0, 0.0, 0.0);
         newMovementDirection = GLKVector3Subtract(newMovementDirection, rightVector);
+    }
+    else if (theEvent.keyCode == 12)
+    {
+        _rollDirection -= 1;
+    }
+    else if (theEvent.keyCode == 14)
+    {
+        _rollDirection += 1;
     }
     
     keyboardMovementDirection = newMovementDirection;
