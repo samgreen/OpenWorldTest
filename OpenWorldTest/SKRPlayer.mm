@@ -47,7 +47,7 @@
     if (hmdInfo.HResolution == 0)
     {
         xFovDegrees = 90;
-        yFovDegrees = 97.55;
+        yFovDegrees = 64.01;
     }
 
     NSLog(@"yFov: %f, xFov: %f", yFovDegrees, xFovDegrees);

@@ -151,9 +151,25 @@ CVTimeStamp lastChunkTick;
                                                                 0,
                                                                 -controllers.left.joystick.y));
 
+    GLKQuaternion orientation = GLKQuaternionMakeWithAngleAndAxis(playerNode.rotation.w,
+                                                                  playerNode.rotation.x,
+                                                                  playerNode.rotation.y,
+                                                                  playerNode.rotation.z);
+    GLKVector3 position = GLKVector3Make(playerNode.position.x,
+                                         playerNode.position.y,
+                                         playerNode.position.z);
+    float speed = 0.1;
+    GLKVector3 rotatedVector = GLKQuaternionRotateVector3(orientation, playerNode.movementDirection);
+    GLKVector3 translation = GLKVector3MultiplyScalar(rotatedVector, speed);
+    GLKVector3 newPosition = GLKVector3Add(position, translation);
+    playerNode.position = SCNVector3Make(newPosition.x,
+                                         newPosition.y,
+                                         newPosition.z);
+    
     // Update world
     if (time.hostTime-oldTime.hostTime < (NSEC_PER_MSEC))
 		return kCVReturnSuccess;
+    
 	dispatch_async(dispatch_get_main_queue(), ^{
         
         if (time.hostTime-lastChunkTick.hostTime > (NSEC_PER_SEC*1))
@@ -604,25 +620,6 @@ NSUInteger frameCount;
 
 - (void)renderer:(id<SCNSceneRenderer>)aRenderer willRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time
 {
-    // Only do movement for the left eye camera, since in stereo mode this will get called twice per frame (once for each eye)
-    // and we only want to move once per frame
-    if ([aRenderer.pointOfView isEqual:playerNode.leftEye])
-    {
-        GLKQuaternion orientation = GLKQuaternionMakeWithAngleAndAxis(playerNode.rotation.w,
-                                                                      playerNode.rotation.x,
-                                                                      playerNode.rotation.y,
-                                                                      playerNode.rotation.z);
-        GLKVector3 position = GLKVector3Make(playerNode.position.x,
-                                             playerNode.position.y,
-                                             playerNode.position.z);
-        float speed = 0.1;
-        GLKVector3 rotatedVector = GLKQuaternionRotateVector3(orientation, playerNode.movementDirection);
-        GLKVector3 translation = GLKVector3MultiplyScalar(rotatedVector, speed);
-        GLKVector3 newPosition = GLKVector3Add(position, translation);
-        playerNode.position = SCNVector3Make(newPosition.x,
-                                             newPosition.y,
-                                             newPosition.z);
-    }
 }
 
 - (void)renderer:(id <SCNSceneRenderer>)aRenderer didRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time
