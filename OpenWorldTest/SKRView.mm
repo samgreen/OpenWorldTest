@@ -196,6 +196,8 @@ CVTimeStamp lastChunkTick;
 #pragma mark -
 -(void)awakeFromNib
 {
+    [self enterFullScreenMode:[NSScreen mainScreen] withOptions:@{}];
+
 //    hydra = [[SKRHydra alloc] init];
 //    hydra.delegate = self;
     self.oculus = [[SKROculus alloc] init];

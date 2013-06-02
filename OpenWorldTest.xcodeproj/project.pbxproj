@@ -42,6 +42,8 @@
 		C2982EC2174B353E00B57B8A /* SKROculus.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC1174B353E00B57B8A /* SKROculus.mm */; };
 		C2982EC7174B359000B57B8A /* RenderTiny_GL_Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC3174B359000B57B8A /* RenderTiny_GL_Device.cpp */; };
 		C2982EC8174B359000B57B8A /* RenderTiny_Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC5174B359000B57B8A /* RenderTiny_Device.cpp */; };
+		D53747A8175B62DC00B4BFE3 /* shader.frag in Resources */ = {isa = PBXBuildFile; fileRef = B0AC59BF16A346E300E90A1A /* shader.frag */; };
+		D53747A9175B62DC00B4BFE3 /* shader.vert in Resources */ = {isa = PBXBuildFile; fileRef = B0AC59C016A346E300E90A1A /* shader.vert */; };
 		D5B5F171175A078200D23F01 /* SKRStereoEffect.mm in Sources */ = {isa = PBXBuildFile; fileRef = D5B5F170175A078100D23F01 /* SKRStereoEffect.mm */; };
 		D5C277D4175ACF62007432E9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B02C44F01686B37E0050BD75 /* Cocoa.framework */; };
 		D5C277DA175ACF62007432E9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D5C277D8175ACF62007432E9 /* InfoPlist.strings */; };
@@ -562,6 +564,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D53747A8175B62DC00B4BFE3 /* shader.frag in Resources */,
+				D53747A9175B62DC00B4BFE3 /* shader.vert in Resources */,
 				D5C277DA175ACF62007432E9 /* InfoPlist.strings in Resources */,
 				D5C277E0175ACF62007432E9 /* Credits.rtf in Resources */,
 				D5C277E6175ACF62007432E9 /* MainMenu.xib in Resources */,
@@ -923,6 +927,7 @@
 				D5C277FC175ACF62007432E9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D5C27800175ACF62007432E9 /* Build configuration list for PBXNativeTarget "AltroTests" */ = {
 			isa = XCConfigurationList;
@@ -931,6 +936,7 @@
 				D5C277FE175ACF62007432E9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

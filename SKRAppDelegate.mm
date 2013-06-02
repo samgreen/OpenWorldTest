@@ -37,7 +37,6 @@
         {
             _stereoEffect = [[SKRStereoEffect alloc] initWithHMDInfo:[_view.oculus hmdInfo]];
         }
-        //    [_view enterFullScreenMode:[NSScreen mainScreen] withOptions:@{}];
     }
     return self;
 }
@@ -87,7 +86,7 @@
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
     [_view setRunning:NO];
-    //    [_view exitFullScreenModeWithOptions:@{}];
+    [_view exitFullScreenModeWithOptions:@{}];
 }
 
 // SCNView delegate
