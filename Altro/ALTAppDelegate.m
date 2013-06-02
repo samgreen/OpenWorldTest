@@ -8,6 +8,7 @@
 
 #import "ALTAppDelegate.h"
 #import "SKRAppDelegate.h"
+#import "ALTWorldGenerator.h"
 
 @implementation ALTAppDelegate
 {
@@ -17,7 +18,8 @@
 
 -	 (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
-    _skrAppDelegate = [[SKRAppDelegate alloc] initWithWindow:_window skrView:(SKRView *)_view worldGenerator:nil];
+    ALTWorldGenerator *worldGenerator = [[ALTWorldGenerator alloc] init];
+    _skrAppDelegate = [[SKRAppDelegate alloc] initWithWindow:_window skrView:(SKRView *)_view worldGenerator:worldGenerator];
 }
 
 - (void)applicationWillBecomeActive:(NSNotification *)notification

@@ -76,6 +76,7 @@
 		D5C2781E175B1533007432E9 /* RenderTiny_Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC5174B359000B57B8A /* RenderTiny_Device.cpp */; };
 		D5C2781F175B15B3007432E9 /* libsixense_x64.dylib in Resources */ = {isa = PBXBuildFile; fileRef = C29607A8174DF857005ECCBE /* libsixense_x64.dylib */; };
 		D5C27820175B15B7007432E9 /* libsixense_utils_x64.dylib in Resources */ = {isa = PBXBuildFile; fileRef = C29607A7174DF857005ECCBE /* libsixense_utils_x64.dylib */; };
+		D5C27823175B1C04007432E9 /* ALTWorldGenerator.mm in Sources */ = {isa = PBXBuildFile; fileRef = D5C27822175B1C04007432E9 /* ALTWorldGenerator.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -174,6 +175,8 @@
 		D5C2780B175AFC29007432E9 /* SKRWorldGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKRWorldGenerator.h; sourceTree = "<group>"; };
 		D5C2780C175B003C007432E9 /* OWTWorldGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWTWorldGenerator.h; sourceTree = "<group>"; };
 		D5C2780D175B003C007432E9 /* OWTWorldGenerator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OWTWorldGenerator.mm; sourceTree = "<group>"; };
+		D5C27821175B1C04007432E9 /* ALTWorldGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALTWorldGenerator.h; sourceTree = "<group>"; };
+		D5C27822175B1C04007432E9 /* ALTWorldGenerator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ALTWorldGenerator.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -387,6 +390,8 @@
 				D5C277E2175ACF62007432E9 /* ALTAppDelegate.m */,
 				D5C277E4175ACF62007432E9 /* MainMenu.xib */,
 				D5C277D6175ACF62007432E9 /* Supporting Files */,
+				D5C27821175B1C04007432E9 /* ALTWorldGenerator.h */,
+				D5C27822175B1C04007432E9 /* ALTWorldGenerator.mm */,
 			);
 			path = Altro;
 			sourceTree = "<group>";
@@ -625,6 +630,7 @@
 				D5C2781A175B14E9007432E9 /* SKROculus.mm in Sources */,
 				D5C2781D175B152C007432E9 /* RenderTiny_GL_Device.cpp in Sources */,
 				D5C2781E175B1533007432E9 /* RenderTiny_Device.cpp in Sources */,
+				D5C27823175B1C04007432E9 /* ALTWorldGenerator.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
