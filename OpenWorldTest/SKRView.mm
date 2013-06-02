@@ -116,12 +116,44 @@ CVTimeStamp oldTime;
 CVTimeStamp lastChunkTick;
 
 - (CVReturn)gameLoopAtTime:(CVTimeStamp)time {    
-	if (time.hostTime-oldTime.hostTime < (NSEC_PER_MSEC))
-		return kCVReturnSuccess;
-    
     SCNVector4 oculusRotation = [self.oculus poll];
     SKRHydraControllerPair controllers = [hydra poll];
 	
+    // Update player
+    // Update arms with hydra controllers
+    [playerNode updateArm:SKRLeft
+                 position:controllers.left.position
+                 rotation:controllers.left.rotation];
+    [playerNode updateArm:SKRRight
+                 position:controllers.right.position
+                 rotation:controllers.right.rotation];
+    
+    // Update rotation
+    if ([self.oculus deviceAvailable])
+    {
+        playerNode.rotation = oculusRotation;
+    }
+    else
+    {
+        GLKQuaternion orientation = GLKQuaternionMakeWithAngleAndAxis(playerNode.rotation.w,
+                                                                      playerNode.rotation.x,
+                                                                      playerNode.rotation.y,
+                                                                      playerNode.rotation.z);
+        float rollSpeed = 0.01;
+        GLKQuaternion rollRotation = GLKQuaternionMakeWithAngleAndAxis(_rollDirection * rollSpeed, 0, 0, 1);
+        GLKQuaternion newOrientation = GLKQuaternionMultiply(orientation, rollRotation);
+        playerNode.rotation = SKRVector4FromQuaternion(newOrientation);
+    }
+    
+    // Update movement
+    playerNode.movementDirection = GLKVector3Add(_keyboardMovementDirection,
+                                                 GLKVector3Make(controllers.left.joystick.x,
+                                                                0,
+                                                                -controllers.left.joystick.y));
+
+    // Update world
+    if (time.hostTime-oldTime.hostTime < (NSEC_PER_MSEC))
+		return kCVReturnSuccess;
 	dispatch_async(dispatch_get_main_queue(), ^{
         
         if (time.hostTime-lastChunkTick.hostTime > (NSEC_PER_SEC*1))
@@ -133,44 +165,15 @@ CVTimeStamp lastChunkTick;
             [_worldParentNode addChildNode:[_worldGenerator worldNodeForPlayerPosition:playerNode.position rotation:playerNode.rotation]];
 		}
         
-		CGFloat refreshPeriod = CVDisplayLinkGetActualOutputVideoRefreshPeriod(displayLinkRef);
-		[playerNode setAcceleration:SCNVector3Make(0, 0, kGravityAcceleration)];
-		[playerNode updatePositionWithRefreshPeriod:refreshPeriod];
+//		CGFloat refreshPeriod = CVDisplayLinkGetActualOutputVideoRefreshPeriod(displayLinkRef);
+//		[playerNode setAcceleration:SCNVector3Make(0, 0, kGravityAcceleration)];
+//		[playerNode updatePositionWithRefreshPeriod:refreshPeriod];
 		
 //		[playerNode checkCollisionWithNodes:blocks];
 				
 		oldTime = time;
-		
-        // Update arms with hydra controllers
-        [playerNode updateArm:SKRLeft
-                     position:controllers.left.position
-                     rotation:controllers.left.rotation];
-        [playerNode updateArm:SKRRight
-                     position:controllers.right.position
-                     rotation:controllers.right.rotation];
-
-        if ([self.oculus deviceAvailable])
-        {
-            playerNode.rotation = oculusRotation;
-        }
-        else
-        {
-            GLKQuaternion orientation = GLKQuaternionMakeWithAngleAndAxis(playerNode.rotation.w,
-                                                                          playerNode.rotation.x,
-                                                                          playerNode.rotation.y,
-                                                                          playerNode.rotation.z);
-            float rollSpeed = 0.01;
-            GLKQuaternion rollRotation = GLKQuaternionMakeWithAngleAndAxis(_rollDirection * rollSpeed, 0, 0, 1);
-            GLKQuaternion newOrientation = GLKQuaternionMultiply(orientation, rollRotation);
-            playerNode.rotation = SKRVector4FromQuaternion(newOrientation);
-        }
-
-        playerNode.movementDirection = GLKVector3Add(_keyboardMovementDirection,
-                                                     GLKVector3Make(controllers.left.joystick.x,
-                                                                    0,
-                                                                    -controllers.left.joystick.y));
 	});
-    
+
 	return kCVReturnSuccess;
 }
 
