@@ -14,6 +14,7 @@
  */
 
 #import "OWTAppDelegate.h"
+#import "OWTWorldGenerator.h"
 #import "SKRAppDelegate.h"
 
 @implementation OWTAppDelegate
@@ -24,7 +25,8 @@
 
 -	 (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
-    _skrAppDelegate = [[SKRAppDelegate alloc] initWithWindow:_window skrView:(SKRView *)_view];
+    OWTWorldGenerator *worldGenerator = [[OWTWorldGenerator alloc] init];
+    _skrAppDelegate = [[SKRAppDelegate alloc] initWithWindow:_window skrView:(SKRView *)_view worldGenerator:worldGenerator];
 }
 
 - (void)applicationWillBecomeActive:(NSNotification *)notification

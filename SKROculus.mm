@@ -62,10 +62,10 @@
 {
     Quatf orientation = app->OnIdle();
     
-    return SKRVector4FromQuaternion(orientation.x,
-                                    orientation.y,
-                                    orientation.z,
-                                    orientation.w);
+    return SKRVector4FromQuaternionValues(orientation.x,
+                                          orientation.y,
+                                          orientation.z,
+                                          orientation.w);
 }
 
 - (OVR::HMDInfo)hmdInfo

@@ -20,13 +20,15 @@
     NSTrackingArea *_trackingArea;
 }
 
-- (id)initWithWindow:(NSWindow *)window skrView:(SKRView *)view
+- (id)initWithWindow:(NSWindow *)window skrView:(SKRView *)view worldGenerator:(NSObject<SKRWorldGenerator>*)worldGenerator
 {
     self = [self init];
     if (self)
     {
         _window = window;
         _view = view;
+        
+        [_view setWorldGenerator:worldGenerator];
         
         _view.leftEyeView.delegate = self;
         _view.rightEyeView.delegate = self;

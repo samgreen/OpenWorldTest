@@ -10,7 +10,8 @@
 #import <SceneKit/SceneKit.h>
 #import <GLKit/GLKit.h>
 
-extern SCNVector4 SKRVector4FromQuaternion(float x, float y, float z, float w);
+extern SCNVector4 SKRVector4FromQuaternionValues(float x, float y, float z, float w);
+extern SCNVector4 SKRVector4FromQuaternion(GLKQuaternion);
 extern NSString *NSStringFromSCNVector3(SCNVector3 vector);
 extern NSString *NSStringFromSCNVector4(SCNVector4 vector);
 

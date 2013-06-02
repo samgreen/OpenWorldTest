@@ -15,8 +15,6 @@
 #import "SKRView.h"
 #import "DDHidLib.h"
 #import "SKRPlayer.h"
-#import "OWTChunk.h"
-#import "OWTLevelGenerator.h"
 
 #import "OVR.h"
 #import "SKROculus.h"
@@ -28,11 +26,6 @@ CGFloat const kGravityAcceleration = 0;//-9.80665;
 CGFloat const kJumpHeight = 1.5;
 CGFloat const kPlayerMovementSpeed = 1.4;
 
-SCNGeometry *dirtGeometry;
-SCNGeometry *grassGeometry;
-SCNGeometry *waterGeometry;
-SCNGeometry *treeGeometry;
-
 @interface SKRView () <SKRHydraDelegate>
 {
     SKRHydra *hydra;
@@ -43,9 +36,10 @@ SCNGeometry *treeGeometry;
     NSOpenGLContext *leftEyeContext;
     NSOpenGLContext *rightEyeContext;
     
-    SCNNode *terrainParentNode;
+    NSObject<SKRWorldGenerator> *_worldGenerator;
+    SCNNode *_worldParentNode;
     
-    GLKVector3 keyboardMovementDirection;
+    GLKVector3 _keyboardMovementDirection;
 
     float _rollDirection;
 }
@@ -64,7 +58,6 @@ SCNGeometry *treeGeometry;
 	[self.layer addSublayer:crosshairLayer];
 }
 
-
 -(void)initFPSLabel
 {
 	
@@ -77,6 +70,15 @@ SCNGeometry *treeGeometry;
 	frameRateLabel.fontSize = 16;
 	
 	[self.layer addSublayer:frameRateLabel];
+}
+
+#pragma mark - World generation
+
+-(void)setWorldGenerator:(NSObject<SKRWorldGenerator>*)worldGenerator
+{
+    playerNode.position = [worldGenerator initialPlayerPosition];
+    playerNode.rotation = [worldGenerator initialPlayerRotation];
+    _worldGenerator = worldGenerator;
 }
 
 #pragma mark - DisplayLink
@@ -121,13 +123,21 @@ CVTimeStamp lastChunkTick;
     SKRHydraControllerPair controllers = [hydra poll];
 	
 	dispatch_async(dispatch_get_main_queue(), ^{
-		
+        
+        if (time.hostTime-lastChunkTick.hostTime > (NSEC_PER_SEC*1))
+		{
+			lastChunkTick = time;
+            [[_worldParentNode childNodes] enumerateObjectsUsingBlock:^(SCNNode *childNode, NSUInteger idx, BOOL *stop) {
+                [childNode removeFromParentNode];
+            }];
+            [_worldParentNode addChildNode:[_worldGenerator worldNodeForPlayerPosition:playerNode.position rotation:playerNode.rotation]];
+		}
+        
 		CGFloat refreshPeriod = CVDisplayLinkGetActualOutputVideoRefreshPeriod(displayLinkRef);
-		
 		[playerNode setAcceleration:SCNVector3Make(0, 0, kGravityAcceleration)];
 		[playerNode updatePositionWithRefreshPeriod:refreshPeriod];
 		
-		[playerNode checkCollisionWithNodes:blocks];
+//		[playerNode checkCollisionWithNodes:blocks];
 				
 		oldTime = time;
 		
@@ -143,29 +153,22 @@ CVTimeStamp lastChunkTick;
         {
             playerNode.rotation = oculusRotation;
         }
-        
-        GLKQuaternion orientation = GLKQuaternionMakeWithAngleAndAxis(playerNode.rotation.w,
-                                                                      playerNode.rotation.x,
-                                                                      playerNode.rotation.y,
-                                                                      playerNode.rotation.z);
-        float rollSpeed = 0.01;
-        GLKQuaternion rollRotation = GLKQuaternionMakeWithAngleAndAxis(_rollDirection * rollSpeed, 0, 0, 1);
-        GLKQuaternion newOrientation = GLKQuaternionMultiply(orientation, rollRotation);
-        playerNode.rotation = SKRVector4FromQuaternion(newOrientation.x,
-                                                       newOrientation.y,
-                                                       newOrientation.z,
-                                                       newOrientation.w);
-        
-        playerNode.movementDirection = GLKVector3Add(keyboardMovementDirection,
+        else
+        {
+            GLKQuaternion orientation = GLKQuaternionMakeWithAngleAndAxis(playerNode.rotation.w,
+                                                                          playerNode.rotation.x,
+                                                                          playerNode.rotation.y,
+                                                                          playerNode.rotation.z);
+            float rollSpeed = 0.01;
+            GLKQuaternion rollRotation = GLKQuaternionMakeWithAngleAndAxis(_rollDirection * rollSpeed, 0, 0, 1);
+            GLKQuaternion newOrientation = GLKQuaternionMultiply(orientation, rollRotation);
+            playerNode.rotation = SKRVector4FromQuaternion(newOrientation);
+        }
+
+        playerNode.movementDirection = GLKVector3Add(_keyboardMovementDirection,
                                                      GLKVector3Make(controllers.left.joystick.x,
                                                                     0,
                                                                     -controllers.left.joystick.y));
-                                                     
-		if (time.hostTime-lastChunkTick.hostTime > (NSEC_PER_SEC*1))
-		{
-			lastChunkTick = time;
-			[self loadChunksAroundPlayerPosition];
-		}
 	});
     
 	return kCVReturnSuccess;
@@ -178,24 +181,17 @@ CVTimeStamp lastChunkTick;
 //    hydra.delegate = self;
     self.oculus = [[SKROculus alloc] init];
 
-    blocks = @[].mutableCopy;
-	chunkCache = @{}.mutableCopy;
-	
-	[self premakeMaterials];
 	[self setWantsLayer:YES];
 	   
 	SCNScene *scene = [SCNScene scene];
     self.scene = scene;
 
-    terrainParentNode = [SCNNode node];
+    _worldParentNode = [SCNNode node];
 //    GLKQuaternion terrainOrientation = GLKQuaternionMakeWithMatrix3(GLKMatrix3MakeRotation(-M_PI_2, 1, 0, 0));
-//    terrainParentNode.rotation = SKRVector4FromQuaternion(terrainOrientation.x, terrainOrientation.y, terrainOrientation.z, terrainOrientation.w);
-    [scene.rootNode addChildNode:terrainParentNode];
+//    worldParentNode.rotation = SKRVector4FromQuaternion(terrainOrientation.x, terrainOrientation.y, terrainOrientation.z, terrainOrientation.w);
+    [scene.rootNode addChildNode:_worldParentNode];
     
     playerNode = [SKRPlayer nodeWithHMDInfo:[self.oculus hmdInfo]];
-    playerNode.position = SCNVector3Make(MAP_BOUNDS/2, MAP_BOUNDS/2, 5);
-    //	playerNode.position = SCNVector3Make(MAP_BOUNDS/2, 5, MAP_BOUNDS/2);
-    //	playerNode.position = SCNVector3Make(0, 10, 0);
     [scene.rootNode addChildNode:playerNode];
     
     CGLPixelFormatAttribute attribs[] = {
@@ -236,8 +232,6 @@ CVTimeStamp lastChunkTick;
     [self initFPSLabel];
     //	[self initCrosshairs];
     
-	[self reload:self];
-
 	[self becomeFirstResponder];
 	[self startWatchingJoysticks];
 	
@@ -252,255 +246,6 @@ CVTimeStamp lastChunkTick;
 {
 	[super setFrame:frameRect];
 	crosshairLayer.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-}
-
-BOOL canReload = YES;
-
--(IBAction)reload:(id)sender
-{
-	if (!canReload)
-		return;
-	
-	[blocks removeAllObjects];
-	
-	for (OWTChunk *chunk in terrainParentNode.childNodes)
-	{
-		if (![chunk isKindOfClass:[OWTChunk class]])
-			continue;
-		[chunk performSelector:@selector(removeFromParentNode)];
-	}
-	
-	[chunkCache removeAllObjects];
-	
-	gen = [[OWTLevelGenerator alloc] init];
-	
-	[gen gen:12];
-	
-	dispatch_async(dispatch_get_global_queue(0, 0), ^{
-		canReload = NO;
-		[self loadChunksAroundPlayerPosition];
-		canReload = YES;
-	});
-	
-}
-
-#pragma mark - Map Generation
-
--(void)generateChunk:(CGPoint)chunkCoord
-{
-	OWTChunk *chunk = [chunkCache objectForKey:NSStringFromPoint(chunkCoord)];
-	SCNScene *scene = self.scene;
-	
-	if (!chunk)
-	{
-		chunk = [[OWTChunk alloc] init];
-		chunk.chunkX = chunkCoord.x;
-		chunk.chunkY = chunkCoord.y;
-		chunk.name = [NSString stringWithFormat:@"chunk:%@", NSStringFromPoint(chunkCoord)];
-		
-		dispatch_async(dispatch_get_global_queue(0, 0), ^{
-			
-			CGPoint position = chunkCoord;
-			
-			position.x *= CHUNK_SIZE;
-			position.y *= CHUNK_SIZE;
-			
-			for (int y = position.y; y < position.y+CHUNK_SIZE; y++)
-			{
-				for (int x = position.x; x < position.x+CHUNK_SIZE; x++)
-				{
-					int maxZ = [gen valueForX:x Y:y]/GAME_DEPTH;
-					
-					for (int z = 0; z <= maxZ; z++)
-					{
-						SKRBlockType blockType = SKRBlockTypeGrass;
-						
-						if (z == 0 && z == maxZ)
-							blockType = SKRBlockTypeWater;
-						
-						else if (z < 2 && z == maxZ)
-							blockType = SKRBlockTypeDirt;
-						
-						if (z > 3 && z == maxZ)
-							blockType = SKRBlockTypeTree;
-
-						if (z >= 0 && z == maxZ)
-							[self addBlockAtLocation:SCNVector3Make(x, y, z) inNode:chunk withType:blockType];
-					}
-				}
-			}
-		});
-		
-		[chunkCache setObject:chunk forKey:NSStringFromPoint(chunkCoord)];
-	}
-	
-	if (!chunk.parentNode)
-	{
-		/* Animate the chunk into position */
-		
-		SCNVector3 cp = chunk.position;
-		chunk.opacity = 0;
-		cp.z = -4;
-		chunk.position = cp;
-		cp.z = 0;
-		[terrainParentNode addChildNode:chunk];
-		
-		[SCNTransaction begin];
-		[SCNTransaction setAnimationDuration:0.5];
-		chunk.opacity = 1;
-		chunk.position = cp;
-		[SCNTransaction commit];
-	}
-}
-
--(void)loadChunksAroundPlayerPosition
-{
-	CGPoint playerChunk = CGPointMake(round(playerNode.position.x/CHUNK_SIZE), round(playerNode.position.y/CHUNK_SIZE));
-	
-	if (playerChunk.x > 2)
-		playerChunk.x -= 2;
-	if (playerChunk.y > 2)
-		playerChunk.y -= 2;
-	
-	for (int j = 0; j < 4; j++)
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			CGPoint newChunk;
-			newChunk.x = playerChunk.x+i;
-			newChunk.y = playerChunk.y+j;
-			
-			[self generateChunk:newChunk];
-		}
-	}
-	
-	/* Now unload chunks away from the player */
-	
-	for (OWTChunk *chunk in terrainParentNode.childNodes)
-	{
-		if (![chunk isKindOfClass:[OWTChunk class]])
-			continue;
-		
-		double chunkDistance = sqrt(pow((playerChunk.x-chunk.chunkX),2)+pow((playerChunk.y-chunk.chunkY),2));
-		
-		if (chunkDistance > 4)
-		{
-			[chunk performSelector:@selector(removeFromParentNode) withObject:nil afterDelay:0.0];
-		}
-	}
-}
-
-
--(SCNMaterial *)generateMaterialForBlockType:(SKRBlockType)type
-{
-	SCNMaterial *material = [SCNMaterial material];
-
-	switch (type) {
-		case SKRBlockTypeGrass:
-			material.diffuse.contents = [NSImage imageNamed:@"grass.png"];
-			break;
-		case SKRBlockTypeWater:
-		{
-			material.diffuse.contents = [NSImage imageNamed:@"water.png"];
-			material.transparency = 0.9;
-			break;
-		}
-		case SKRBlockTypeDirt:
-			material.diffuse.contents = [NSImage imageNamed:@"dirt.png"];
-			break;
-		case SKRBlockTypeTree:
-		{
-			material.diffuse.contents = [NSColor colorWithCalibratedRed:0.001 green:0.352 blue:0.001 alpha:1.000];
-			break;
-		}
-		default:
-			break;
-	}
-	
-	material.diffuse.wrapS = SCNRepeat;
-	material.diffuse.wrapT = SCNRepeat;
-	material.diffuse.magnificationFilter = SCNNearestFiltering;
-	material.doubleSided = NO;
-	
-	material.diffuse.contentsTransform = CATransform3DMakeScale(4, 4, 4);
-	
-	return material;
-}
-
--(void)premakeMaterials
-{
-	/* Blocks */
-	
-	/* 
-		We share the same scene for the different blocks, but copy the geometry
-		for each kind. Each geometry has its own texture it shares with blocks
-		of same type.
-	 */
-	
-	NSString *cubePath = [[NSBundle mainBundle] pathForResource:@"cube" ofType:@"dae"];
-	SCNScene *cubeScene = [SCNScene sceneWithURL:[NSURL fileURLWithPath:cubePath] options:nil error:nil];
-	
-	SCNNode *cubeNode = [cubeScene.rootNode childNodeWithName:@"cube" recursively:NO];
-	
-	dirtGeometry = cubeNode.geometry.copy;
-	dirtGeometry.materials = @[[self generateMaterialForBlockType:SKRBlockTypeDirt]];
-	
-	grassGeometry = cubeNode.geometry.copy;
-	grassGeometry.materials = @[[self generateMaterialForBlockType:SKRBlockTypeGrass]];
-	
-	waterGeometry = cubeNode.geometry.copy;
-	waterGeometry.materials = @[[self generateMaterialForBlockType:SKRBlockTypeWater]];
-	
-	/* Trees */
-	
-	NSString *treePath = [[NSBundle mainBundle] pathForResource:@"tree" ofType:@"dae"];
-	SCNScene *treeScene = [SCNScene sceneWithURL:[NSURL fileURLWithPath:treePath] options:nil error:nil];
-	
-	SCNNode *treeNode = [treeScene.rootNode childNodeWithName:@"tree" recursively:NO];
-	
-	treeGeometry = treeNode.geometry;
-	treeGeometry.materials = @[[self generateMaterialForBlockType:SKRBlockTypeTree]];
-	
-}
-
--(void)addBlockAtLocation:(SCNVector3)location inNode:(SCNNode *)node withType:(SKRBlockType)type
-{
-	SCNGeometry *geometry = nil;
-	
-	switch (type) {
-		case SKRBlockTypeGrass:
-		{
-			geometry = grassGeometry;
-			break;
-		}
-		case SKRBlockTypeWater:
-		{
-			geometry = waterGeometry;
-			break;
-		}
-		case SKRBlockTypeDirt:
-		{
-			geometry = dirtGeometry;
-			break;
-		}
-		case SKRBlockTypeTree:
-		{
-			geometry = treeGeometry;
-			break;
-		}
-			
-		default:
-			break;
-	}
-	
-	dispatch_async(dispatch_get_main_queue(), ^{
-		
-		SCNNode *boxNode = [SCNNode nodeWithGeometry:geometry];
-		boxNode.position = SCNVector3Make(location.x, location.y, location.z);
-		[node addChildNode:boxNode];
-        node.rendererDelegate = self;
-		[blocks addObject:boxNode];
-	});
 }
 
 #pragma mark - Input
@@ -520,10 +265,7 @@ BOOL canReload = YES;
     GLKQuaternion xMouseRotation = GLKQuaternionMakeWithAngleAndAxis(-theEvent.deltaX * sensitivity, 0, 1, 0);
     GLKQuaternion yMouseRotation = GLKQuaternionMakeWithAngleAndAxis(-theEvent.deltaY * sensitivity, 1, 0, 0);
     GLKQuaternion newOrientation = GLKQuaternionMultiply(GLKQuaternionMultiply(orientation, yMouseRotation), xMouseRotation);
-    playerNode.rotation = SKRVector4FromQuaternion(newOrientation.x,
-                                                   newOrientation.y,
-                                                   newOrientation.z,
-                                                   newOrientation.w);
+    playerNode.rotation = SKRVector4FromQuaternion(newOrientation);
     
 }
 
@@ -543,7 +285,7 @@ BOOL canReload = YES;
         return;
     }
     
-    GLKVector3 newMovementDirection = keyboardMovementDirection;
+    GLKVector3 newMovementDirection = _keyboardMovementDirection;
     
     if (theEvent.keyCode == 13)
     {
@@ -574,7 +316,7 @@ BOOL canReload = YES;
         _rollDirection -= 1;
     }
     
-    keyboardMovementDirection = newMovementDirection;
+    _keyboardMovementDirection = newMovementDirection;
     
 	if (theEvent.keyCode == 49 && playerNode.touchingGround)
 	{
@@ -591,7 +333,7 @@ BOOL canReload = YES;
 
 -(void)keyUp:(NSEvent *)theEvent
 {
-    GLKVector3 newMovementDirection = keyboardMovementDirection;
+    GLKVector3 newMovementDirection = _keyboardMovementDirection;
     
     if (theEvent.keyCode == 13)
     {
@@ -622,7 +364,7 @@ BOOL canReload = YES;
         _rollDirection += 1;
     }
     
-    keyboardMovementDirection = newMovementDirection;
+    _keyboardMovementDirection = newMovementDirection;
     
 	if (theEvent.keyCode == 49 && playerNode.touchingGround)
 	{

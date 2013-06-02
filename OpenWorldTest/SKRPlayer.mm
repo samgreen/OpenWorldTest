@@ -40,8 +40,8 @@
     float halfScreenDistance = hmdInfo.VScreenSize * 0.5;
     float yFov = 2.0 * atanf(halfScreenDistance / hmdInfo.EyeToScreenDistance);
     float xFov = 2.0 * atanf(halfScreenAspectRatio * tanf(yFov / 2.0));
-    float yFovDegrees = SKR_RADIANS_TO_DEGREES(yFov);
-    float xFovDegrees = SKR_RADIANS_TO_DEGREES(xFov);
+    float yFovDegrees = GLKMathRadiansToDegrees(yFov);
+    float xFovDegrees = GLKMathRadiansToDegrees(xFov);
     float interpupillaryDistance = hmdInfo.InterpupillaryDistance;
 
     if (hmdInfo.HResolution == 0)

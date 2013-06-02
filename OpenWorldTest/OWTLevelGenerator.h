@@ -11,7 +11,7 @@
 @interface OWTLevelGenerator : NSObject
 {
 
-		double values[MAP_BOUNDS*CHUNK_SIZE][MAP_BOUNDS*CHUNK_SIZE];
+    double values[MAP_BOUNDS*CHUNK_SIZE][MAP_BOUNDS*CHUNK_SIZE];
 }
 
 -(void)gen:(int)featureSize;

@@ -9,11 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <SceneKit/SceneKit.h>
 #import <OpenGL/gl.h>
+#import "SKRWorldGenerator.h"
 
 @class SKRView;
 
 @interface SKRAppDelegate : NSObject <NSApplicationDelegate, SCNSceneRendererDelegate>
 
-- (id)initWithWindow:(NSWindow *)window skrView:(SKRView *)view;
+- (id)initWithWindow:(NSWindow *)window skrView:(SKRView *)view worldGenerator:(NSObject<SKRWorldGenerator>*)worldGenerator;
 
 @end
