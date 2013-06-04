@@ -10,14 +10,10 @@
 #import "SKREntity.h"
 #import "SKRWorldGenerator.h"
 #import "SKRMath.h"
-#import <GLKit/GLKMath.h>
 
 SKRPhysics *sharedInstance;
 
 @implementation SKRPhysics
-{
-    GLKVector3 _gravity;
-}
 
 + (SKRPhysics *)sharedInstance
 {

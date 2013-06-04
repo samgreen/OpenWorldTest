@@ -16,6 +16,8 @@
 #import "OWTAppDelegate.h"
 #import "OWTWorldGenerator.h"
 #import "SKRAppDelegate.h"
+#import "SKRPhysics.h"
+#import <GLKit/GLKMath.h>
 
 @implementation OWTAppDelegate
 {
@@ -25,6 +27,7 @@
 
 -	 (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
+    [SKRPhysics sharedInstance].gravity = GLKVector3Make(0, 0, 0);
     OWTWorldGenerator *worldGenerator = [[OWTWorldGenerator alloc] init];
     _skrAppDelegate = [[SKRAppDelegate alloc] initWithWindow:_window skrView:(SKRView *)_view worldGenerator:worldGenerator];
 }
