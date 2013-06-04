@@ -151,16 +151,10 @@ CVTimeStamp lastChunkTick;
                                                                   playerNode.rotation.x,
                                                                   playerNode.rotation.y,
                                                                   playerNode.rotation.z);
-    GLKVector3 position = GLKVector3Make(playerNode.position.x,
-                                         playerNode.position.y,
-                                         playerNode.position.z);
-    float speed = 0.1;
+    float speed = 0.5;
     GLKVector3 rotatedVector = GLKQuaternionRotateVector3(orientation, playerNode.movementDirection);
     GLKVector3 translation = GLKVector3MultiplyScalar(rotatedVector, speed);
-    GLKVector3 newPosition = GLKVector3Add(position, translation);
-    playerNode.position = SCNVector3Make(newPosition.x,
-                                         newPosition.y,
-                                         newPosition.z);
+    playerNode.velocity = GLKVector3Add(playerNode.velocity, translation);
     
     // Update world
     if (time.hostTime-oldTime.hostTime < (NSEC_PER_MSEC))

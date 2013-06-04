@@ -36,7 +36,7 @@ typedef enum _SKRBlockType
 
 - (SCNVector3)initialPlayerPosition
 {
-    return SCNVector3Make(MAP_BOUNDS/2, MAP_BOUNDS/2, 5);
+    return SCNVector3Make(MAP_BOUNDS/2, MAP_BOUNDS/2, 10);
 }
 
 - (SCNVector4)initialPlayerRotation
@@ -47,16 +47,11 @@ typedef enum _SKRBlockType
 
 - (SCNNode *)worldNodeForPlayerPosition:(SCNVector3)newPlayerPosition rotation:(SCNVector4)newPlayerRotation
 {
-    CGPoint playerChunk = CGPointMake(round(newPlayerPosition.x/CHUNK_SIZE), round(newPlayerPosition.y/CHUNK_SIZE));
-    
-    if (playerChunk.x > 2)
-        playerChunk.x -= 2;
-    if (playerChunk.y > 2)
-        playerChunk.y -= 2;
-    
-    for (int j = 0; j < 4; j++)
+    CGPoint playerChunk = CGPointMake(floor(newPlayerPosition.x/CHUNK_SIZE), floor(newPlayerPosition.y/CHUNK_SIZE));
+
+    for (int j = -2; j < 3; j++)
     {
-        for (int i = 0; i < 4; i++)
+        for (int i = -2; i < 3; i++)
         {
             CGPoint newChunk;
             newChunk.x = playerChunk.x+i;
@@ -84,18 +79,35 @@ typedef enum _SKRBlockType
     return worldNode;
 }
 
+- (float)terrainHeightAt:(GLKVector3)location
+{
+    SCNNode *closestTerrainBlock = [self terrainBlockAt:GLKVector2Make(location.x, location.y)];
+    if (!closestTerrainBlock)
+    {
+        return 0;
+    }
+    
+    SCNVector3 min, max;
+	[closestTerrainBlock getBoundingBoxMin:&min max:&max];
+    GLKVector4 localTerrainHeight = GLKVector4Make(0, 0, max.z, 1);
+    CATransform3D transform = closestTerrainBlock.worldTransform;
+    GLKMatrix4 usefulTransform = GLKMatrix4MakeWithCATransform3D(transform);
+    GLKVector4 worldTerrainHeight = GLKMatrix4MultiplyVector4(usefulTransform, localTerrainHeight);
+    return worldTerrainHeight.z;
+}
+
 - (id)init
 {
     self = [super init];
     if (self) {
         blocks = @[].mutableCopy;
         chunkCache = @{}.mutableCopy;
-
+        
         worldNode = [SCNNode node];
         
         gen = [[OWTLevelGenerator alloc] init];
         [gen gen:12];
-
+        
         [self premakeMaterials];
     }
     return self;
@@ -187,7 +199,7 @@ typedef enum _SKRBlockType
 		chunk.name = [NSString stringWithFormat:@"chunk:%@", NSStringFromPoint(chunkCoord)];
 		
 		dispatch_async(dispatch_get_global_queue(0, 0), ^{
-			
+            
 			CGPoint position = chunkCoord;
 			
 			position.x *= CHUNK_SIZE;
@@ -278,6 +290,42 @@ typedef enum _SKRBlockType
 		[node addChildNode:boxNode];
 		[blocks addObject:boxNode];
 	});
+}
+
+- (OWTChunk *)closestChunkTo:(GLKVector2)xyPosition
+{
+    CGPoint playerChunk = CGPointMake(floor(xyPosition.x/CHUNK_SIZE), floor(xyPosition.y/CHUNK_SIZE));
+    [self generateChunk:playerChunk];
+    OWTChunk *chunk = [chunkCache objectForKey:NSStringFromPoint(playerChunk)];
+    return chunk;
+}
+
+- (SCNNode *)terrainBlockAt:(GLKVector2)xyPosition
+{
+    OWTChunk *closestChunk = [self closestChunkTo:xyPosition];
+    
+    double minBlockDistance = MAXFLOAT;
+    SCNNode *closestTerrainBlock = nil;
+    for (SCNNode *block in closestChunk.childNodes)
+    {
+        if (![block isKindOfClass:[SCNNode class]])
+        {
+            continue;
+        }
+        
+        GLKVector4 localPosition = GLKVector4Make(0, 0, 0, 1);
+        GLKMatrix4 transform = GLKMatrix4MakeWithCATransform3D(block.worldTransform);
+        GLKVector4 worldPosition = GLKMatrix4MultiplyVector4(transform, localPosition);
+        double blockDistanceManhattan = fabs(xyPosition.x - worldPosition.x) + fabs(xyPosition.y - worldPosition.y);
+        
+        if (blockDistanceManhattan < minBlockDistance)
+        {
+            minBlockDistance = blockDistanceManhattan;
+            closestTerrainBlock = block;
+        }
+    }
+    
+    return closestTerrainBlock;
 }
 
 @end

@@ -8,11 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <SceneKit/SceneKit.h>
+#import <GLKit/GLKMath.h>
 
 @protocol SKRWorldGenerator <NSObject>
 
 - (SCNVector3)initialPlayerPosition;
 - (SCNVector4)initialPlayerRotation;
 - (SCNNode *)worldNodeForPlayerPosition:(SCNVector3)newPlayerPosition rotation:(SCNVector4)newPlayerRotation;
+- (float)terrainHeightAt:(GLKVector3)location;
 
 @end

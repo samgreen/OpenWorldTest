@@ -14,10 +14,11 @@
 extern "C" {
 #endif
 
-SCNVector4 SKRVector4FromQuaternionValues(float x, float y, float z, float w);
-SCNVector4 SKRVector4FromQuaternion(GLKQuaternion);
-GLKVector3 GLKVector3MakeWithSCNVector3(SCNVector3 v);
-SCNVector3 SCNVector3MakeWithGLKVector3(GLKVector3 v);
+    SCNVector4 SKRVector4FromQuaternionValues(float x, float y, float z, float w);
+    SCNVector4 SKRVector4FromQuaternion(GLKQuaternion);
+    GLKVector3 GLKVector3MakeWithSCNVector3(SCNVector3 v);
+    SCNVector3 SCNVector3MakeWithGLKVector3(GLKVector3 v);
+    GLKMatrix4 GLKMatrix4MakeWithCATransform3D(CATransform3D transform);
 
 typedef NS_ENUM(NSUInteger, SKRSide){
     SKRLeft,

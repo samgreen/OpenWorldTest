@@ -33,6 +33,11 @@
     return worldNode;
 }
 
+- (float)terrainHeightAt:(GLKVector3)location
+{
+    return 0.0;
+}
+
 static void generateHeightmap(int rows, int columns, float *heights)
 {
     for (int i = 0; i < 200; i++)

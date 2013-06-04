@@ -8,6 +8,7 @@
 
 #import "SKRMath.h"
 
+
 SCNVector4 SKRVector4FromQuaternion(GLKQuaternion q)
 {
     return SKRVector4FromQuaternionValues(q.x, q.y, q.z, q.w);
@@ -29,4 +30,13 @@ GLKVector3 GLKVector3MakeWithSCNVector3(SCNVector3 v)
 SCNVector3 SCNVector3MakeWithGLKVector3(GLKVector3 v)
 {
     return SCNVector3Make(v.x, v.y, v.z);
+}
+
+GLKMatrix4 GLKMatrix4MakeWithCATransform3D(CATransform3D t)
+{
+    GLKMatrix4 matrix = GLKMatrix4Make(t.m11, t.m12, t.m13, t.m14,
+                                       t.m21, t.m22, t.m21, t.m24,
+                                       t.m31, t.m32, t.m33, t.m34,
+                                       t.m41, t.m42, t.m43, t.m44);
+    return matrix;
 }
