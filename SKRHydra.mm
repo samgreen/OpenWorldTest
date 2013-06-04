@@ -8,7 +8,6 @@
 
 #import "SKRHydra.h"
 #import "SKRMath.h"
-
 #import <objc/message.h>
 
 #include <sixense.h>
@@ -17,8 +16,6 @@
 #include <sixense_utils/button_states.hpp>
 #include <sixense_utils/event_triggers.hpp>
 #include <sixense_utils/controller_manager/controller_manager.hpp>
-
-
 
 static bool controller_manager_screen_visible = true;
 std::string controller_manager_text_string;

@@ -7,22 +7,15 @@
 //
 
 #import <SceneKit/SceneKit.h>
+#import <GLKit/GLKMath.h>
 
-@interface SKREntity : SCNNode {
-	
-	SCNVector3 velocity;
-	SCNVector3 acceleration;
-	CGFloat mass;
-	
-	BOOL touchingGround;
-}
+@interface SKREntity : SCNNode
 
-@property (nonatomic, assign) SCNVector3 velocity;
-@property (nonatomic, assign) SCNVector3 acceleration;
+@property (nonatomic, assign) GLKVector3 velocity;
+@property (nonatomic, assign) GLKVector3 acceleration;
 @property (nonatomic, assign) CGFloat mass;
 @property (nonatomic, readonly) BOOL touchingGround;
 
-- (void)updatePositionWithRefreshPeriod:(CGFloat)refreshPeriod;
 - (void)checkCollisionWithNodes:(NSArray *)nodes;
 
 @end

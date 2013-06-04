@@ -24,8 +24,6 @@
 	[node buildPlayer];
     [node createArms];    
 	
-    
-    
 	SCNLight * light = [SCNLight light];
 	[light setType:SCNLightTypeOmni];
 	[node setLight:light];

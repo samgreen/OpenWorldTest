@@ -15,16 +15,12 @@
 #import "SKRView.h"
 #import "DDHidLib.h"
 #import "SKRPlayer.h"
+#import "SKRPhysics.h"
 
 #import "OVR.h"
 #import "SKROculus.h"
 #import <GLKit/GLKMath.h>
 #import "SKRHydra.h"
-
-// Standard units.
-CGFloat const kGravityAcceleration = 0;//-9.80665;
-CGFloat const kJumpHeight = 1.5;
-CGFloat const kPlayerMovementSpeed = 1.4;
 
 @interface SKRView () <SKRHydraDelegate>
 {
@@ -181,9 +177,8 @@ CVTimeStamp lastChunkTick;
             [_worldParentNode addChildNode:[_worldGenerator worldNodeForPlayerPosition:playerNode.position rotation:playerNode.rotation]];
 		}
         
-//		CGFloat refreshPeriod = CVDisplayLinkGetActualOutputVideoRefreshPeriod(displayLinkRef);
-//		[playerNode setAcceleration:SCNVector3Make(0, 0, kGravityAcceleration)];
-//		[playerNode updatePositionWithRefreshPeriod:refreshPeriod];
+		NSTimeInterval deltaTime = CVDisplayLinkGetActualOutputVideoRefreshPeriod(displayLinkRef);
+        [[SKRPhysics sharedInstance] updateEntity:playerNode inWorld:_worldGenerator deltaTime:deltaTime];
 		
 //		[playerNode checkCollisionWithNodes:blocks];
 				
@@ -196,7 +191,7 @@ CVTimeStamp lastChunkTick;
 #pragma mark -
 -(void)awakeFromNib
 {
-    [self enterFullScreenMode:[NSScreen mainScreen] withOptions:@{}];
+//    [self enterFullScreenMode:[NSScreen mainScreen] withOptions:@{}];
 
 //    hydra = [[SKRHydra alloc] init];
 //    hydra.delegate = self;
@@ -208,8 +203,6 @@ CVTimeStamp lastChunkTick;
     self.scene = scene;
 
     _worldParentNode = [SCNNode node];
-//    GLKQuaternion terrainOrientation = GLKQuaternionMakeWithMatrix3(GLKMatrix3MakeRotation(-M_PI_2, 1, 0, 0));
-//    worldParentNode.rotation = SKRVector4FromQuaternion(terrainOrientation.x, terrainOrientation.y, terrainOrientation.z, terrainOrientation.w);
     [scene.rootNode addChildNode:_worldParentNode];
     
     playerNode = [SKRPlayer nodeWithHMDInfo:[self.oculus hmdInfo]];
@@ -402,9 +395,9 @@ CVTimeStamp lastChunkTick;
 
 - (void)jump
 {
-	SCNVector3 playerNodeVelocity = playerNode.velocity;
-	playerNodeVelocity.z = sqrtf(-2 * kGravityAcceleration * kJumpHeight);
-	[playerNode setVelocity:playerNodeVelocity];
+//	SCNVector3 playerNodeVelocity = playerNode.velocity;
+//	playerNodeVelocity.z = sqrtf(-2 * kGravityAcceleration * kJumpHeight);
+//	[playerNode setVelocity:playerNodeVelocity];
 }
 
 #pragma mark - Hydra input

@@ -22,11 +22,12 @@
  *************************************************************************************/
 
 #import "SKROculus.h"
-#import "SKRMath.h"
 
 #include "RenderTiny_GL_Device.h"
 
 #include "Kernel/OVR_KeyCodes.h"
+
+#import "SKRMath.h"
 
 @implementation SKROculus {
     OculusRoomTinyApp *app;

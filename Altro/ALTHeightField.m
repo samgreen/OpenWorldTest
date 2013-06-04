@@ -9,6 +9,7 @@
 // This code started off courtesy of "abes", see: https://devforums.apple.com/message/709572#709572
 
 #import "ALTHeightField.h"
+#import "SKRMath.h"
 #import <GLKit/GLKMath.h>
 
 @implementation ALTHeightField
@@ -19,11 +20,6 @@
     unsigned rows;
     unsigned columns;
     float *heights;
-}
-
-static GLKVector3 GLKVector3MakeWithSCNVector3(SCNVector3 v)
-{
-    return GLKVector3Make(v.x, v.y, v.z);
 }
 
 // creates a grid of vertices and maps their location to the texture maped on heightfield

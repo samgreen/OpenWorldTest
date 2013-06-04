@@ -8,30 +8,23 @@
 
 #import "SKREntity.h"
 
+@interface SKREntity ()
+
+@property (nonatomic, readwrite) BOOL touchingGround;
+
+@end
+
 @implementation SKREntity
-@synthesize velocity;
-@synthesize acceleration;
-@synthesize mass;
-@synthesize touchingGround;
 
-
-- (void)updatePositionWithRefreshPeriod:(CGFloat)refreshPeriod {
-	
-	velocity.x += acceleration.x * refreshPeriod;
-	velocity.y += acceleration.y * refreshPeriod;
-	velocity.z += acceleration.z * refreshPeriod;
-	
-	SCNVector3 position = self.position;
-	position.x += velocity.x * refreshPeriod;
-	position.y += velocity.y * refreshPeriod;
-	position.z += velocity.z * refreshPeriod;
-	[self setPosition:position];
-}
+// Standard units.
+CGFloat const kGravityAcceleration = -9.81;
+CGFloat const kJumpHeight = 1.5;
+CGFloat const kPlayerMovementSpeed = 1.4;
 
 - (void)checkCollisionWithNodes:(NSArray *)nodes {
 	// TODO: Make this better.
 	
-	touchingGround = NO;
+	self.touchingGround = NO;
 	__block SCNVector3 selfPosition = self.position;
 	
 	[nodes enumerateObjectsUsingBlock:^(SCNNode * node, NSUInteger idx, BOOL *stop) {
@@ -40,11 +33,11 @@
 		{
 			if (NodeCollision(node,selfPosition))
 			{
-				selfPosition.z = node.position.z+1.5;
-				velocity.z = 0;
+				selfPosition.y = node.position.z+1.5;
+				self.velocity = GLKVector3Multiply(self.velocity, GLKVector3Make(1, 0, 1));
 				node.opacity = 0.5;
 				
-				touchingGround = YES;
+				self.touchingGround = YES;
 				*stop = YES;
 			}
 		}

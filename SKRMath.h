@@ -10,12 +10,20 @@
 #import <SceneKit/SceneKit.h>
 #import <GLKit/GLKit.h>
 
-extern SCNVector4 SKRVector4FromQuaternionValues(float x, float y, float z, float w);
-extern SCNVector4 SKRVector4FromQuaternion(GLKQuaternion);
-extern NSString *NSStringFromSCNVector3(SCNVector3 vector);
-extern NSString *NSStringFromSCNVector4(SCNVector4 vector);
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+SCNVector4 SKRVector4FromQuaternionValues(float x, float y, float z, float w);
+SCNVector4 SKRVector4FromQuaternion(GLKQuaternion);
+GLKVector3 GLKVector3MakeWithSCNVector3(SCNVector3 v);
+SCNVector3 SCNVector3MakeWithGLKVector3(GLKVector3 v);
 
 typedef NS_ENUM(NSUInteger, SKRSide){
     SKRLeft,
     SKRRight
 };
+
+#ifdef __cplusplus
+}
+#endif
