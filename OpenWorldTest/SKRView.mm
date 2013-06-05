@@ -185,7 +185,7 @@ CVTimeStamp lastChunkTick;
 #pragma mark -
 -(void)awakeFromNib
 {
-    [self enterFullScreenMode:[NSScreen mainScreen] withOptions:@{}];
+//    [self enterFullScreenMode:[NSScreen mainScreen] withOptions:@{}];
 
 //    hydra = [[SKRHydra alloc] init];
 //    hydra.delegate = self;
@@ -315,6 +315,10 @@ CVTimeStamp lastChunkTick;
         GLKVector3 rightVector = GLKVector3Make(1.0, 0.0, 0.0);
         newMovementDirection = GLKVector3Add(newMovementDirection, rightVector);
     }
+    else if (theEvent.keyCode == 49)
+    {
+        [self jump];
+    }
     else if (theEvent.keyCode == 12)
     {
         _rollDirection += 1;
@@ -325,18 +329,6 @@ CVTimeStamp lastChunkTick;
     }
     
     _keyboardMovementDirection = newMovementDirection;
-    
-	if (theEvent.keyCode == 49 && playerNode.touchingGround)
-	{
-		
-		// v^2 = u^2 + 2as
-		// 0 = u^2 + 2as (v = 0 at top of jump)
-		// -u^2 = 2as;
-		// u^2 = -2as;
-		// u = sqrt(-2 * kGravityAcceleration * kJumpHeight)
-		
-		[self jump];
-	}
 }
 
 -(void)keyUp:(NSEvent *)theEvent
@@ -373,25 +365,15 @@ CVTimeStamp lastChunkTick;
     }
     
     _keyboardMovementDirection = newMovementDirection;
-    
-	if (theEvent.keyCode == 49 && playerNode.touchingGround)
-	{
-		
-		// v^2 = u^2 + 2as
-		// 0 = u^2 + 2as (v = 0 at top of jump)
-		// -u^2 = 2as;
-		// u^2 = -2as;
-		// u = sqrt(-2 * kGravityAcceleration * kJumpHeight)
-		
-		[self jump];
-	}
 }
 
 - (void)jump
 {
-//	SCNVector3 playerNodeVelocity = playerNode.velocity;
-//	playerNodeVelocity.z = sqrtf(-2 * kGravityAcceleration * kJumpHeight);
-//	[playerNode setVelocity:playerNodeVelocity];
+    GLKVector3 gravity = [SKRPhysics sharedInstance].gravity;
+    float jumpMagnitude = GLKVector3Length(gravity) * 0.5;
+    GLKVector3 normalizedUpVector = GLKVector3Negate(GLKVector3Normalize(gravity));
+    GLKVector3 jumpVelocity = GLKVector3MultiplyScalar(normalizedUpVector, jumpMagnitude);
+    playerNode.velocity = GLKVector3Add(playerNode.velocity, jumpVelocity);
 }
 
 #pragma mark - Hydra input
