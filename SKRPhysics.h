@@ -15,6 +15,7 @@
 @interface SKRPhysics : NSObject
 
 @property (nonatomic) GLKVector3 gravity;
+@property (nonatomic) GLKVector3 friction;
 
 + (SKRPhysics *)sharedInstance;
 - (void)updateEntity:(SKREntity *)entity inWorld:(NSObject <SKRWorldGenerator>*)world deltaTime:(NSTimeInterval)deltaTime;

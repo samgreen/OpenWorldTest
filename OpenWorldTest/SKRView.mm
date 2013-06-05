@@ -151,11 +151,11 @@ CVTimeStamp lastChunkTick;
                                                                   playerNode.rotation.x,
                                                                   playerNode.rotation.y,
                                                                   playerNode.rotation.z);
-    float speed = 0.5;
+    float speed = 0.06;
     GLKVector3 rotatedVector = GLKQuaternionRotateVector3(orientation, playerNode.movementDirection);
     GLKVector3 translation = GLKVector3MultiplyScalar(rotatedVector, speed);
     playerNode.velocity = GLKVector3Add(playerNode.velocity, translation);
-    
+
     // Update world
     if (time.hostTime-oldTime.hostTime < (NSEC_PER_MSEC))
 		return kCVReturnSuccess;
@@ -185,7 +185,7 @@ CVTimeStamp lastChunkTick;
 #pragma mark -
 -(void)awakeFromNib
 {
-//    [self enterFullScreenMode:[NSScreen mainScreen] withOptions:@{}];
+    [self enterFullScreenMode:[NSScreen mainScreen] withOptions:@{}];
 
 //    hydra = [[SKRHydra alloc] init];
 //    hydra.delegate = self;

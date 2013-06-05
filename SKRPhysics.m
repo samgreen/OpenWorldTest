@@ -29,6 +29,7 @@ SKRPhysics *sharedInstance;
     self = [super init];
     if (self) {
         _gravity = GLKVector3Make(0, -9.81, 0);
+        _friction = GLKVector3Make(0.05, 0.0, 0.05);
     }
     return self;
 }
@@ -37,8 +38,8 @@ SKRPhysics *sharedInstance;
 {
     entity.acceleration = _gravity;
     entity.velocity = GLKVector3Add(entity.velocity, GLKVector3MultiplyScalar(entity.acceleration, deltaTime));
-    float friction = 0.005;
-    entity.velocity = GLKVector3MultiplyScalar(entity.velocity, 1.0 - friction);
+    GLKVector3 inverseFriction = GLKVector3Subtract(GLKVector3Make(1, 1, 1), GLKVector3MultiplyScalar(self.friction, deltaTime));
+    entity.velocity = GLKVector3Multiply(entity.velocity, inverseFriction);
     GLKVector3 currentPosition = GLKVector3MakeWithSCNVector3(entity.position);
     GLKVector3 newPosition = GLKVector3Add(currentPosition, GLKVector3MultiplyScalar(entity.velocity, deltaTime));
  
