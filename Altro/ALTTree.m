@@ -9,21 +9,28 @@
 #import "ALTTree.h"
 #import <SceneKit/SceneKit.h>
 
+SCNMaterial *branchMaterial;
+SCNGeometry *branchGeometry;
+
 @implementation ALTTree
 
 + (ALTTree *)tree
 {
     ALTTree *tree = (ALTTree *)[super node];
     
-    SCNMaterial *branchMaterial = [SCNMaterial material];
-    branchMaterial.diffuse.contents = [NSColor brownColor];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        branchMaterial = [SCNMaterial material];
+        branchMaterial.diffuse.contents = [NSColor brownColor];
+        
+        branchGeometry = [SCNCylinder cylinderWithRadius:1.0 height:1.0];
+        branchGeometry.materials = @[branchMaterial];
+    });
 
-    float height = 5.0;
-    SCNGeometry *trunkGeometry = [SCNCylinder cylinderWithRadius:0.5 height:height];
-    trunkGeometry.materials = @[branchMaterial];
-
-    SCNNode *trunkNode = [SCNNode nodeWithGeometry:trunkGeometry];
-    trunkNode.pivot = CATransform3DMakeTranslation(0, -height * 0.4, 0);
+    SCNNode *trunkNode = [SCNNode nodeWithGeometry:branchGeometry];
+    float height = 50;
+    trunkNode.pivot = CATransform3DMakeTranslation(0, -0.4, 0);
+    trunkNode.transform = CATransform3DMakeScale(1, height, 1);
     [tree addChildNode:trunkNode];
     return tree;
 }
