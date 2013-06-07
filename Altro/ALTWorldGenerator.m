@@ -14,7 +14,8 @@
 
 @implementation ALTWorldGenerator
 {
-    SCNNode *worldNode;
+    SCNNode *_worldNode;
+    ALTHeightField *_heightField;
 }
 
 - (SCNVector3)initialPlayerPosition
@@ -30,12 +31,12 @@
 
 - (SCNNode *)worldNodeForPlayerPosition:(SCNVector3)newPlayerPosition rotation:(SCNVector4)newPlayerRotation
 {
-    return worldNode;
+    return _worldNode;
 }
 
 - (float)terrainHeightAt:(GLKVector3)location
 {
-    return 0.0;
+    return [_heightField heightAt:location] - 20;
 }
 
 static void generateHeightmap(int rows, int columns, float *heights)
@@ -63,7 +64,7 @@ static void generateHeightmap(int rows, int columns, float *heights)
 {
     self = [super init];
     if (self) {
-        worldNode = [SCNNode node];
+        _worldNode = [SCNNode node];
         
         SCNGeometry *sphereGeometry = [SCNSphere sphereWithRadius:0.3];
         SCNMaterial *sphereMaterial = [SCNMaterial material];
@@ -71,23 +72,22 @@ static void generateHeightmap(int rows, int columns, float *heights)
         sphereGeometry.materials = @[sphereMaterial];
         SCNNode *sphereNode = [SCNNode nodeWithGeometry:sphereGeometry];
         sphereNode.position = SCNVector3Make(0, 0, -1);
-        [worldNode addChildNode:sphereNode];
+        [_worldNode addChildNode:sphereNode];
         
         int rows = 200;
         int columns = 200;
         float *heights = (float *)malloc(rows * columns * sizeof(float));
-        generateHeightmap(rows, columns, heights);
-        ALTHeightField *heightField = [[ALTHeightField alloc] initWithRows:rows columns:columns heights:heights xspace:1.0 zspace:1.0];
-        free(heights);
+        generateHeightmap(rows, columns, heights); // ALTHeightField takes ownership of heights pointer, so we don't free it here
+        _heightField = [[ALTHeightField alloc] initWithRows:rows columns:columns heights:heights xspace:1.0 zspace:1.0];
         
         SCNMaterial *heightFieldMaterial = [SCNMaterial material];
         heightFieldMaterial.diffuse.contents = [NSColor colorWithCalibratedRed:0.089 green:0.371 blue:0.483 alpha:1.000];
         heightFieldMaterial.lightingModelName = SCNLightingModelBlinn;
-        heightField.geometry.firstMaterial = heightFieldMaterial;
+        _heightField.geometry.firstMaterial = heightFieldMaterial;
 
-        SCNNode *heightFieldNode = [SCNNode nodeWithGeometry:heightField.geometry];
+        SCNNode *heightFieldNode = [SCNNode nodeWithGeometry:_heightField.geometry];
         heightFieldNode.position = SCNVector3Make(0, -20, 0);
-        [worldNode addChildNode:heightFieldNode];
+        [_worldNode addChildNode:heightFieldNode];
     }
     return self;
 }

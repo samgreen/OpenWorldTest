@@ -10,6 +10,8 @@
 #import <SceneKit/SceneKit.h>
 #import <GLKit/GLKit.h>
 
+#define CLAMP(val, min, max) MAX(min, MIN(max, val))
+
 #ifdef __cplusplus
 extern "C" {
 #endif

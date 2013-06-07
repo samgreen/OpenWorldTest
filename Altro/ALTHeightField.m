@@ -15,7 +15,6 @@
 @implementation ALTHeightField
 {
     float xSpacing, zSpacing;
-    float xSize, zSize;
     unsigned vertexCount, elementCount;
     unsigned rows;
     unsigned columns;
@@ -26,11 +25,11 @@
 - (void) createVertices: (SCNVector3 *)vertices texCoords:(CGPoint *)texCoords normals:(SCNVector3 *)normals
 {
     float halfWidth = columns * xSpacing / 2;
-    float halfHeight = rows * zSpacing / 2;
+    float halfLength = rows * zSpacing / 2;
     for (int z = 0; z < rows; z++) {
         for (int x = 0; x < columns; x++) {
             float xPos = x * xSpacing - halfWidth;
-            float zPos = z * zSpacing - halfHeight;
+            float zPos = z * zSpacing - halfLength;
             float height = heights[x+z*columns];
             vertices[x + z*columns] = SCNVector3Make(xPos, height, zPos);
             texCoords[x + z*columns] = CGPointMake(((float)x)/columns, ((float)z)/rows);
@@ -145,6 +144,43 @@
     }
     
     return self;
+}
+
+- (void)dealloc
+{
+    free(heights);
+}
+
+- (float)heightAt:(GLKVector3)location
+{
+    float halfWidth = columns * xSpacing / 2;
+    float halfLength = rows * zSpacing / 2;
+    
+    GLKVector3 locationInGrid = GLKVector3Add(location, GLKVector3Make(halfWidth, 0, halfLength));
+
+    int columnAIndex = CLAMP(floor((locationInGrid.x) / xSpacing), 0, columns - 1);
+    int columnBIndex = CLAMP(columnAIndex + 1, 0, columns - 1);
+    int rowAIndex = CLAMP(floor((locationInGrid.z) / zSpacing), 0, rows - 1);
+    int rowBIndex = CLAMP(rowAIndex + 1, 0, rows - 1);
+    
+    float x = MAX(0, MIN(1, (locationInGrid.x - (columnAIndex * xSpacing)) / xSpacing));
+    float z = MAX(0, MIN(1, (locationInGrid.z - (rowAIndex * zSpacing)) / zSpacing));
+    
+    float x0y0Height = heights[columnAIndex + rowAIndex * columns];
+    float x1y0Height = heights[columnBIndex + rowAIndex * columns];
+    float x0y1Height = heights[columnAIndex + rowBIndex * columns];
+    float x1y1Height = heights[columnBIndex + rowBIndex * columns];
+    
+    float interpolatedHeight = (x0y0Height * (1 - x) * (1 - z) +
+                                x1y0Height * x * (1 - z) +
+                                x0y1Height * (1 - x) * z +
+                                x1y1Height * x * z);
+    
+    NSLog(@"cA: %d, cB: %d, rA: %d, rB: %d", columnAIndex, columnBIndex, rowAIndex, rowBIndex);
+    NSLog(@"x0y0: %f, x1y0: %f, x0y1: %f, x1y1: %f", x0y0Height, x1y0Height, x0y1Height, x1y1Height);
+    NSLog(@"x: %f, z: %f, h: %f", x, z, interpolatedHeight);
+    
+    return interpolatedHeight;
 }
 
 @end

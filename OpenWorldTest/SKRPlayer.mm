@@ -53,7 +53,7 @@
     for (NSUInteger i = 0; i < 2; i++) {
         SCNCamera *camera = [SCNCamera camera];
         camera.zNear = 0.1;
-        camera.zFar = 100;
+        camera.zFar = 200;
         camera.xFov = xFovDegrees;
         camera.yFov = yFovDegrees;
         
