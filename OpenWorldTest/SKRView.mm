@@ -369,6 +369,10 @@ CVTimeStamp lastChunkTick;
 
 - (void)jump
 {
+    if (!playerNode.touchingGround)
+    {
+        return;
+    }
     GLKVector3 gravity = [SKRPhysics sharedInstance].gravity;
     float jumpMagnitude = GLKVector3Length(gravity) * 0.5;
     GLKVector3 normalizedUpVector = GLKVector3Negate(GLKVector3Normalize(gravity));

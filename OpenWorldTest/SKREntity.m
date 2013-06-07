@@ -8,12 +8,6 @@
 
 #import "SKREntity.h"
 
-@interface SKREntity ()
-
-@property (nonatomic, readwrite) BOOL touchingGround;
-
-@end
-
 @implementation SKREntity
 
 // Standard units.

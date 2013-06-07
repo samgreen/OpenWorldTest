@@ -43,18 +43,28 @@ SKRPhysics *sharedInstance;
     GLKVector3 currentPosition = GLKVector3MakeWithSCNVector3(entity.position);
     GLKVector3 newPosition = GLKVector3Add(currentPosition, GLKVector3MultiplyScalar(entity.velocity, deltaTime));
  
-    float height = [world terrainHeightAt:newPosition];
+    float terrainHeight = [world terrainHeightAt:newPosition];
     GLKVector3 normalizedUpVector = GLKVector3Normalize(GLKVector3Negate(self.gravity));
     float positionAlongUpVector = GLKVector3DotProduct(newPosition, normalizedUpVector);
-    if (positionAlongUpVector < height + 1.75) // buffer
+    float entityHeight = 1.75;
+    if (positionAlongUpVector < terrainHeight + entityHeight)
     {
         float velocityAlongUpVector = GLKVector3DotProduct(entity.velocity, normalizedUpVector);
         
         GLKVector3 correctedVelocity = GLKVector3Subtract(entity.velocity, GLKVector3MultiplyScalar(normalizedUpVector, velocityAlongUpVector));
         entity.velocity = correctedVelocity;
-        float amountPastTerrainHeight = height - positionAlongUpVector;
+        float amountPastTerrainHeight = terrainHeight - positionAlongUpVector;
         
         newPosition = GLKVector3Add(newPosition, GLKVector3MultiplyScalar(normalizedUpVector, amountPastTerrainHeight + 1.75));
+    }
+
+    if (positionAlongUpVector < terrainHeight + entityHeight * 1.5)  // buffer
+    {
+        entity.touchingGround = YES;
+    }
+    else
+    {
+        entity.touchingGround = NO;
     }
     
     entity.position = SCNVector3MakeWithGLKVector3(newPosition);

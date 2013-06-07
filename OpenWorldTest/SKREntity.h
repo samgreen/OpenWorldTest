@@ -11,10 +11,10 @@
 
 @interface SKREntity : SCNNode
 
-@property (nonatomic, assign) GLKVector3 velocity;
-@property (nonatomic, assign) GLKVector3 acceleration;
-@property (nonatomic, assign) CGFloat mass;
-@property (nonatomic, readonly) BOOL touchingGround;
+@property (nonatomic) GLKVector3 velocity;
+@property (nonatomic) GLKVector3 acceleration;
+@property (nonatomic) CGFloat mass;
+@property (nonatomic) BOOL touchingGround;
 
 - (void)checkCollisionWithNodes:(NSArray *)nodes;
 

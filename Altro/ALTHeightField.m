@@ -176,10 +176,6 @@
                                 x0y1Height * (1 - x) * z +
                                 x1y1Height * x * z);
     
-    NSLog(@"cA: %d, cB: %d, rA: %d, rB: %d", columnAIndex, columnBIndex, rowAIndex, rowBIndex);
-    NSLog(@"x0y0: %f, x1y0: %f, x0y1: %f, x1y1: %f", x0y0Height, x1y0Height, x0y1Height, x1y1Height);
-    NSLog(@"x: %f, z: %f, h: %f", x, z, interpolatedHeight);
-    
     return interpolatedHeight;
 }
 
