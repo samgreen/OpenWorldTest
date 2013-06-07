@@ -15,6 +15,7 @@
 @implementation ALTWorldGenerator
 {
     SCNNode *_worldNode;
+    SCNNode *_sunlightNode;
     ALTHeightField *_heightField;
     NSMutableArray *_trees;
 }
@@ -51,17 +52,8 @@ static SCNNode *generateSunlightNode()
     sunlight.type = SCNLightTypeDirectional;
     SCNNode *sunlightNode = [SCNNode node];
     sunlightNode.light = sunlight;
+    sunlightNode.rotation = SKRVector4FromQuaternion(GLKQuaternionMakeWithAngleAndAxis(-M_PI_4, 1, 0, 0));
     
-    CAKeyframeAnimation *sunlightAnimation = [CAKeyframeAnimation animationWithKeyPath:@"rotation"];
-    sunlightAnimation.values = [NSArray arrayWithObjects:
-                                [NSValue valueWithSCNVector4:SKRVector4FromQuaternion(GLKQuaternionMakeWithAngleAndAxis(-M_PI_4, 1, 0, 0))],
-                                [NSValue valueWithSCNVector4:SKRVector4FromQuaternion(GLKQuaternionMakeWithAngleAndAxis(-3 * M_PI_4, 1, 0, 0))],
-                                nil];
-    sunlightAnimation.duration = 3.0f;
-    sunlightAnimation.repeatCount = HUGE_VALF;
-    sunlightAnimation.autoreverses = YES;
-    [sunlightNode addAnimation:sunlightAnimation forKey:@"rotation"];
-
     return sunlightNode;
 }
 
@@ -112,13 +104,28 @@ static void generateHeightmap(int rows, int columns, float *heights)
 //    
 //}
 
+- (void)updateAfterFirstAddedToParentNode
+{
+    // This has to be after the node has been added to a parent node, which is dumb & I've reported it in bug ID 14096429
+    CAKeyframeAnimation *sunlightAnimation = [CAKeyframeAnimation animationWithKeyPath:@"rotation"];
+    sunlightAnimation.values = [NSArray arrayWithObjects:
+                                [NSValue valueWithSCNVector4:SKRVector4FromQuaternion(GLKQuaternionMakeWithAngleAndAxis(-M_PI_4, 1, 0, 0))],
+                                [NSValue valueWithSCNVector4:SKRVector4FromQuaternion(GLKQuaternionMakeWithAngleAndAxis(-3 * M_PI_4, 1, 0, 0))],
+                                nil];
+    sunlightAnimation.duration = 30.0f;
+    sunlightAnimation.repeatCount = HUGE_VALF;
+    sunlightAnimation.autoreverses = YES;
+    [_sunlightNode addAnimation:sunlightAnimation forKey:@"rotation"];
+}
+
 - (id)init
 {
     self = [super init];
     if (self) {
         _worldNode = [SCNNode node];
-
-        [_worldNode addChildNode:generateSunlightNode()];
+        
+        _sunlightNode = generateSunlightNode();
+        [_worldNode addChildNode:_sunlightNode];
 
         _heightField = generateHeightfield();
         [_worldNode addChildNode:generateTerrainNode(_heightField)];

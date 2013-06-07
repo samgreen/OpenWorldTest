@@ -18,4 +18,7 @@
 - (float)terrainHeightAt:(GLKVector3)location;
 - (BOOL)playerShouldHaveLight;
 
+@optional
+- (void)updateAfterFirstAddedToParentNode;
+
 @end

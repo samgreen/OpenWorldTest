@@ -178,7 +178,15 @@ CVTimeStamp lastChunkTick;
             [[_worldParentNode childNodes] enumerateObjectsUsingBlock:^(SCNNode *childNode, NSUInteger idx, BOOL *stop) {
                 [childNode removeFromParentNode];
             }];
-            [_worldParentNode addChildNode:[_worldGenerator worldNodeForPlayerPosition:playerNode.position rotation:playerNode.rotation]];
+            SCNNode *worldNode = [_worldGenerator worldNodeForPlayerPosition:playerNode.position rotation:playerNode.rotation];
+            [_worldParentNode addChildNode:worldNode];
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken, ^{
+                if ([_worldGenerator respondsToSelector:@selector(updateAfterFirstAddedToParentNode)])
+                {
+                    [_worldGenerator updateAfterFirstAddedToParentNode];
+                }
+            });
 		}
         
 		NSTimeInterval deltaTime = CVDisplayLinkGetActualOutputVideoRefreshPeriod(displayLinkRef);
