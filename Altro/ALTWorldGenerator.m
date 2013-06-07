@@ -39,6 +39,11 @@
     return [_heightField heightAt:location] - 20;
 }
 
+- (BOOL)playerShouldHaveLight
+{
+    return NO;
+}
+
 static void generateHeightmap(int rows, int columns, float *heights)
 {
     for (int i = 0; i < 200; i++)
@@ -65,6 +70,24 @@ static void generateHeightmap(int rows, int columns, float *heights)
     self = [super init];
     if (self) {
         _worldNode = [SCNNode node];
+        
+        SCNLight *sunlight = [SCNLight light];
+        sunlight.type = SCNLightTypeDirectional;
+        SCNNode *sunlightNode = [SCNNode node];
+        sunlightNode.light = sunlight;
+        GLKQuaternion sunlightOrientation = GLKQuaternionMakeWithAngleAndAxis(-M_PI_4, 1, 0, 0);
+        sunlightNode.rotation = SKRVector4FromQuaternion(sunlightOrientation);
+        [_worldNode addChildNode:sunlightNode];
+        
+        CAKeyframeAnimation *sunlightAnimation = [CAKeyframeAnimation animationWithKeyPath:@"rotation"];
+        sunlightAnimation.values = [NSArray arrayWithObjects:
+                                    [NSValue valueWithSCNVector4:SKRVector4FromQuaternion(GLKQuaternionMakeWithAngleAndAxis(-M_PI_4, 1, 0, 0))],
+                                    [NSValue valueWithSCNVector4:SKRVector4FromQuaternion(GLKQuaternionMakeWithAngleAndAxis(-3 * M_PI_4, 1, 0, 0))],
+                                    nil];
+        sunlightAnimation.duration = 30.0f;
+        sunlightAnimation.repeatCount = HUGE_VALF;
+        sunlightAnimation.autoreverses = YES;
+        [sunlightNode addAnimation:sunlightAnimation forKey:@"rotation"];
         
         SCNGeometry *sphereGeometry = [SCNSphere sphereWithRadius:0.3];
         SCNMaterial *sphereMaterial = [SCNMaterial material];

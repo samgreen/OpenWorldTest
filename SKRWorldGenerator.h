@@ -16,5 +16,6 @@
 - (SCNVector4)initialPlayerRotation;
 - (SCNNode *)worldNodeForPlayerPosition:(SCNVector3)newPlayerPosition rotation:(SCNVector4)newPlayerRotation;
 - (float)terrainHeightAt:(GLKVector3)location;
+- (BOOL)playerShouldHaveLight;
 
 @end

@@ -96,6 +96,11 @@ typedef enum _SKRBlockType
     return worldTerrainHeight.z;
 }
 
+- (BOOL)playerShouldHaveLight
+{
+    return YES;
+}
+
 - (id)init
 {
     self = [super init];
@@ -104,6 +109,10 @@ typedef enum _SKRBlockType
         chunkCache = @{}.mutableCopy;
         
         worldNode = [SCNNode node];
+        
+        SCNLight *sunlight = [SCNLight light];
+        sunlight.type = SCNLightTypeDirectional;
+        worldNode.light = sunlight;
         
         gen = [[OWTLevelGenerator alloc] init];
         [gen gen:12];
