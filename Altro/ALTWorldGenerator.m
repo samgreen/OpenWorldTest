@@ -11,6 +11,7 @@
 #import "ALTHeightField.h"
 #import <GLKit/GLKMath.h>
 #import <SceneKit/SceneKit.h>
+#import "ALTTree.h"
 
 @implementation ALTWorldGenerator
 {
@@ -99,10 +100,24 @@ static void generateHeightmap(int rows, int columns, float *heights)
     }
 }
 
-//static NSMutableArray *generateTrees(ALTHeightField *heightField)
-//{
-//    
-//}
+static NSMutableArray *generateTrees(ALTHeightField *heightField)
+{
+    NSMutableArray *trees = [NSMutableArray array];
+    
+    for (int i = 0; i < 200; i++)
+    {
+        ALTTree *tree = [ALTTree tree];
+        GLKVector3 location = GLKVector3Make(heightField.width * (arc4random() / (float)0x100000000) - heightField.width / 2,
+                                             0,
+                                             heightField.length * (arc4random() / (float)0x100000000) - heightField.length / 2);
+        float terrainHeight = [heightField heightAt:location];
+        tree.position = SCNVector3Make(location.x, terrainHeight, location.z);
+        
+        [trees addObject:tree];
+    }
+    
+    return trees;
+}
 
 - (void)updateAfterFirstAddedToParentNode
 {
@@ -126,9 +141,16 @@ static void generateHeightmap(int rows, int columns, float *heights)
         
         _sunlightNode = generateSunlightNode();
         [_worldNode addChildNode:_sunlightNode];
-
+        
         _heightField = generateHeightfield();
-        [_worldNode addChildNode:generateTerrainNode(_heightField)];
+        SCNNode *terrainNode = generateTerrainNode(_heightField);
+
+        _trees = generateTrees(_heightField);
+        for (ALTTree *tree in _trees) {
+            [terrainNode addChildNode:tree];
+        }
+
+        [_worldNode addChildNode:terrainNode];
     }
     return self;
 }

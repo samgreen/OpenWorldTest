@@ -114,6 +114,9 @@
         heights = h;
         vertexCount = rows*columns;
         elementCount = 2*columns*(rows-1) + (rows - 2);
+       
+        self.width = columns * xSpacing;
+        self.length = rows * zSpacing;
         
         // create vertices
         SCNVector3 *vertices = malloc(vertexCount*sizeof(SCNVector3));

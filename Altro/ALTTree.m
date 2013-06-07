@@ -11,17 +11,19 @@
 
 @implementation ALTTree
 
-+ (id)tree
++ (ALTTree *)tree
 {
-    ALTTree *tree = [ALTTree node];
+    ALTTree *tree = (ALTTree *)[super node];
     
     SCNMaterial *branchMaterial = [SCNMaterial material];
     branchMaterial.diffuse.contents = [NSColor brownColor];
 
-    SCNGeometry *trunkGeometry = [SCNTube tubeWithInnerRadius:0 outerRadius:0.5 height:5];
+    float height = 5.0;
+    SCNGeometry *trunkGeometry = [SCNCylinder cylinderWithRadius:0.5 height:height];
     trunkGeometry.materials = @[branchMaterial];
 
     SCNNode *trunkNode = [SCNNode nodeWithGeometry:trunkGeometry];
+    trunkNode.pivot = CATransform3DMakeTranslation(0, -height * 0.4, 0);
     [tree addChildNode:trunkNode];
     return tree;
 }

@@ -12,6 +12,8 @@
 
 @interface ALTHeightField : NSObject
 
+@property (nonatomic) float width;
+@property (nonatomic) float length;
 @property (nonatomic, strong) SCNGeometry *geometry;
 
 - (id)initWithRows:(int)r columns:(int)c heights:(float *)h xspace:(float)xs zspace:(float)zs;
