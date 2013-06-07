@@ -81,7 +81,7 @@ static void generateHeightmap(int rows, int columns, float *heights)
         _heightField = [[ALTHeightField alloc] initWithRows:rows columns:columns heights:heights xspace:1.0 zspace:1.0];
         
         SCNMaterial *heightFieldMaterial = [SCNMaterial material];
-        heightFieldMaterial.diffuse.contents = [NSColor colorWithCalibratedRed:0.089 green:0.371 blue:0.483 alpha:1.000];
+        heightFieldMaterial.diffuse.contents = [NSColor colorWithCalibratedRed:87.0/255 green:126.0/255 blue:42.0/255 alpha:1.000];
         heightFieldMaterial.lightingModelName = SCNLightingModelBlinn;
         _heightField.geometry.firstMaterial = heightFieldMaterial;
 

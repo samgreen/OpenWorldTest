@@ -247,7 +247,21 @@ CVTimeStamp lastChunkTick;
 	
 	SCNLight *sunlight = [SCNLight light];
 	sunlight.type = SCNLightTypeDirectional;
-	scene.rootNode.light = sunlight;
+    SCNNode *sunlightNode = [SCNNode node];
+    sunlightNode.light = sunlight;
+    GLKQuaternion sunlightOrientation = GLKQuaternionMakeWithAngleAndAxis(-M_PI_4, 1, 0, 0);
+    sunlightNode.rotation = SKRVector4FromQuaternion(sunlightOrientation);
+	[scene.rootNode addChildNode:sunlightNode];
+    
+    CAKeyframeAnimation *sunlightAnimation = [CAKeyframeAnimation animationWithKeyPath:@"rotation"];
+    sunlightAnimation.values = [NSArray arrayWithObjects:
+                                [NSValue valueWithSCNVector4:SKRVector4FromQuaternion(GLKQuaternionMakeWithAngleAndAxis(-M_PI_4, 1, 0, 0))],
+                                [NSValue valueWithSCNVector4:SKRVector4FromQuaternion(GLKQuaternionMakeWithAngleAndAxis(-3 * M_PI_4, 1, 0, 0))],
+                                nil];
+    sunlightAnimation.duration = 30.0f;
+    sunlightAnimation.repeatCount = HUGE_VALF;
+    sunlightAnimation.autoreverses = YES;
+    [sunlightNode addAnimation:sunlightAnimation forKey:@"rotation"];
 }
 
 -(void)setFrame:(NSRect)frameRect
