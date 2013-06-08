@@ -21,7 +21,7 @@
 	[node setMass:70];
     [node createCamerasWithHMDInfo:hmdInfo];
 	[node buildPlayer];
-    [node createArms];
+//    [node createArms];
 	[node buildPlayer];
 	return node;
 }

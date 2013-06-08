@@ -45,6 +45,7 @@
 		D53747A9175B62DC00B4BFE3 /* shader.vert in Resources */ = {isa = PBXBuildFile; fileRef = B0AC59C016A346E300E90A1A /* shader.vert */; };
 		D5B5F171175A078200D23F01 /* SKRStereoEffect.mm in Sources */ = {isa = PBXBuildFile; fileRef = D5B5F170175A078100D23F01 /* SKRStereoEffect.mm */; };
 		D5B7ED2B1762809D00108B55 /* ALTTree.m in Sources */ = {isa = PBXBuildFile; fileRef = D5B7ED2A1762809D00108B55 /* ALTTree.m */; };
+		D5B7ED2E17629F1B00108B55 /* SKRLSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = D5B7ED2D17629F1B00108B55 /* SKRLSystem.m */; };
 		D5C277D4175ACF62007432E9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B02C44F01686B37E0050BD75 /* Cocoa.framework */; };
 		D5C277DA175ACF62007432E9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D5C277D8175ACF62007432E9 /* InfoPlist.strings */; };
 		D5C277DC175ACF62007432E9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D5C277DB175ACF62007432E9 /* main.m */; };
@@ -162,6 +163,8 @@
 		D5B5F170175A078100D23F01 /* SKRStereoEffect.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SKRStereoEffect.mm; path = OpenWorldTest/SKRStereoEffect.mm; sourceTree = "<group>"; };
 		D5B7ED291762809D00108B55 /* ALTTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALTTree.h; sourceTree = "<group>"; };
 		D5B7ED2A1762809D00108B55 /* ALTTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALTTree.m; sourceTree = "<group>"; };
+		D5B7ED2C17629F1B00108B55 /* SKRLSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKRLSystem.h; sourceTree = "<group>"; };
+		D5B7ED2D17629F1B00108B55 /* SKRLSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKRLSystem.m; sourceTree = "<group>"; };
 		D5C277D3175ACF62007432E9 /* Altro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Altro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5C277D7175ACF62007432E9 /* Altro-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Altro-Info.plist"; sourceTree = "<group>"; };
 		D5C277D9175ACF62007432E9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -408,6 +411,8 @@
 				D5C27825175B463F007432E9 /* ALTHeightField.m */,
 				D5B7ED291762809D00108B55 /* ALTTree.h */,
 				D5B7ED2A1762809D00108B55 /* ALTTree.m */,
+				D5B7ED2C17629F1B00108B55 /* SKRLSystem.h */,
+				D5B7ED2D17629F1B00108B55 /* SKRLSystem.m */,
 			);
 			path = Altro;
 			sourceTree = "<group>";
@@ -655,6 +660,7 @@
 				D5DB3E0E175DA38000D7132D /* SKRPhysics.m in Sources */,
 				D5DB3E14175DAD4D00D7132D /* SKRMath.m in Sources */,
 				D5B7ED2B1762809D00108B55 /* ALTTree.m in Sources */,
+				D5B7ED2E17629F1B00108B55 /* SKRLSystem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
