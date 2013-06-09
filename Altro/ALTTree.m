@@ -11,7 +11,7 @@
 #import "ALTLSystem.h"
 
 SCNMaterial *branchMaterial;
-SCNGeometry *branchGeometry;
+SCNTube *branchGeometry;
 
 @implementation ALTTree
 
@@ -25,11 +25,12 @@ static float trunkHeight = 5.0;
         branchMaterial.diffuse.contents = [NSColor brownColor];
         
         branchGeometry = [SCNCylinder cylinderWithRadius:1.0 height:trunkHeight];
+        branchGeometry.radialSegmentCount = 8;
         branchGeometry.materials = @[branchMaterial];
     });
 
     ALTLSystem *lSystem = [[ALTLSystem alloc] initWithVariables:@[@"A"] constants:@[@"+"] rules:@{@"A": @"A+A"}];
-    NSString *treeString = [lSystem process:@"A" numGenerations:5];
+    NSString *treeString = [lSystem process:@"A" numGenerations:4];
     
     ALTTree *treeParent = (ALTTree *)[SCNNode node];
     generateTreeNodesRecursive(treeString, treeParent, 0, CATransform3DIdentity);
@@ -63,13 +64,13 @@ static void generateTreeNodesRecursive(NSString *treeString, SCNNode *parent, in
 static void addBranch(SCNNode *parent, CATransform3D transform, SCNNode **outNewParent, CATransform3D *outNewTransform)
 {
     SCNNode *branchNode = [SCNNode nodeWithGeometry:branchGeometry];
-    branchNode.pivot = CATransform3DMakeTranslation(0, -0.4, 0);
+    branchNode.pivot = CATransform3DMakeTranslation(0, -trunkHeight / 2.0, 0);
     branchNode.transform = transform;
     [parent addChildNode:branchNode];
     *outNewParent = branchNode;
-    CATransform3D translation = CATransform3DMakeTranslation(0, trunkHeight * 0.9, 0);
+    CATransform3D translation = CATransform3DMakeTranslation(0, trunkHeight / 2.0, 0);
     CATransform3D scale = CATransform3DMakeScale(0.8, 0.8, 0.8);
-    *outNewTransform = CATransform3DConcat(translation, scale);
+    *outNewTransform = CATransform3DConcat(scale, translation);
 }
 
 static void rotate(CATransform3D transform, CATransform3D *outNewTransform)
