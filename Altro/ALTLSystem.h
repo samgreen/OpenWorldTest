@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface SKRLSystem : NSObject
+@interface ALTLSystem : NSObject
 
 - (id)initWithVariables:(NSArray *)variables constants:(NSArray *)constants rules:(NSDictionary *)rules;
 - (NSString *)process:(NSString *)string numGenerations:(int)numGenerations;

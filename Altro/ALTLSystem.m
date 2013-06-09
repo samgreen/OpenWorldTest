@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Taka Taka. All rights reserved.
 //
 
-#import "SKRLSystem.h"
+#import "ALTLSystem.h"
 
-@implementation SKRLSystem
+@implementation ALTLSystem
 {
     NSSet *_variables;
     NSSet *_constants;
@@ -37,7 +37,6 @@
     {
         [newString appendString:[self processCharacter:[string substringWithRange:NSMakeRange(i, 1)]]];
     }
-    NSLog(@"Got a new string; %@", newString);
     return [self process:newString numGenerations:numGenerations - 1];
 }
 

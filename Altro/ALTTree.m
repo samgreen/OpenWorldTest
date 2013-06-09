@@ -8,7 +8,7 @@
 
 #import "ALTTree.h"
 #import <SceneKit/SceneKit.h>
-#import "SKRLSystem.h"
+#import "ALTLSystem.h"
 
 SCNMaterial *branchMaterial;
 SCNGeometry *branchGeometry;
@@ -28,7 +28,7 @@ static float trunkHeight = 5.0;
         branchGeometry.materials = @[branchMaterial];
     });
 
-    SKRLSystem *lSystem = [[SKRLSystem alloc] initWithVariables:@[@"A"] constants:@[@"+"] rules:@{@"A": @"A+A"}];
+    ALTLSystem *lSystem = [[ALTLSystem alloc] initWithVariables:@[@"A"] constants:@[@"+"] rules:@{@"A": @"A+A"}];
     NSString *treeString = [lSystem process:@"A" numGenerations:5];
     
     ALTTree *treeParent = (ALTTree *)[SCNNode node];
