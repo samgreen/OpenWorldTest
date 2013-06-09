@@ -13,9 +13,28 @@
 SCNMaterial *branchMaterial;
 SCNTube *branchGeometry;
 
-@implementation ALTTree
+@interface ALTTransformStackNode : NSObject <NSCopying>
 
-static float trunkHeight = 5.0;
+@property (nonatomic) CATransform3D transform;
+@property (nonatomic, strong) SCNNode *parent;
+
+@end
+
+@implementation ALTTransformStackNode
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    ALTTransformStackNode *newNode = [[ALTTransformStackNode alloc] init];
+    newNode.transform = self.transform;
+    newNode.parent = self.parent;
+    return newNode;
+}
+
+@end
+
+static float trunkHeight = 1.0;
+
+@implementation ALTTree
 
 + (ALTTree *)tree
 {
@@ -29,22 +48,34 @@ static float trunkHeight = 5.0;
         branchGeometry.materials = @[branchMaterial];
     });
 
-    ALTLSystem *lSystem = [[ALTLSystem alloc] initWithVariables:@[@"A"] constants:@[@"+"] rules:@{@"A": @"A+A"}];
-    NSString *treeString = [lSystem process:@"A" numGenerations:4];
+    ALTLSystem *lSystem = [[ALTLSystem alloc] initWithVariables:@[@"A", @"B"]
+                                                      constants:@[@"+", @"-", @"[", @"]"]
+                                                          rules:@{
+                           @"A": @"AA",
+                           @"B": @"A[+B]-B"
+                           }];
+    NSString *treeString = [lSystem process:@"B" numGenerations:6];
     
     ALTTree *treeParent = (ALTTree *)[SCNNode node];
-    generateTreeNodesRecursive(treeString, treeParent, 0, CATransform3DIdentity);
+    ALTTransformStackNode *node = [[ALTTransformStackNode alloc] init];
+    node.parent = treeParent;
+    node.transform = CATransform3DIdentity;
+    NSMutableArray *transformStack = [NSMutableArray arrayWithObject:node];
+    generateTreeNodesRecursive(treeString, 0, transformStack);
     
     return treeParent;
 }
 
-static void generateTreeNodesRecursive(NSString *treeString, SCNNode *parent, int charIndex, CATransform3D transform)
+static void generateTreeNodesRecursive(NSString *treeString, int charIndex, NSMutableArray *transformStack)
 {
     if (charIndex >= [treeString length] || charIndex < 0)
     {
         return;
     }
     
+    ALTTransformStackNode *stackNode = [transformStack lastObject];
+    SCNNode *parent = stackNode.parent;
+    CATransform3D transform = stackNode.transform;
     SCNNode *newParent = parent;
     CATransform3D newTransform = transform;
     
@@ -52,13 +83,29 @@ static void generateTreeNodesRecursive(NSString *treeString, SCNNode *parent, in
     switch (symbol) {
         case 'A':
             addBranch(parent, transform, &newParent, &newTransform);
+            stackNode.parent = newParent;
+            stackNode.transform = newTransform;
             break;
         case '+':
-            rotate(transform, &newTransform);
+            rotate(M_PI / 4.0, transform, &newTransform);
+            stackNode.parent = newParent;
+            stackNode.transform = newTransform;
+            break;
+        case '-':
+            rotate(-M_PI / 4.0, transform, &newTransform);
+            stackNode.parent = newParent;
+            stackNode.transform = newTransform;
+            break;
+        case '[':
+            [transformStack addObject:[stackNode copy]];
+            break;
+        case ']':
+            [transformStack removeLastObject];
+            break;
         default:
             break;
     }
-    generateTreeNodesRecursive(treeString, newParent, charIndex + 1, newTransform);
+    generateTreeNodesRecursive(treeString, charIndex + 1, transformStack);
 }
 
 static void addBranch(SCNNode *parent, CATransform3D transform, SCNNode **outNewParent, CATransform3D *outNewTransform)
@@ -69,13 +116,13 @@ static void addBranch(SCNNode *parent, CATransform3D transform, SCNNode **outNew
     [parent addChildNode:branchNode];
     *outNewParent = branchNode;
     CATransform3D translation = CATransform3DMakeTranslation(0, trunkHeight / 2.0, 0);
-    CATransform3D scale = CATransform3DMakeScale(0.8, 0.8, 0.8);
+    CATransform3D scale = CATransform3DMakeScale(1.0, 1.0, 1.0);
     *outNewTransform = CATransform3DConcat(scale, translation);
 }
 
-static void rotate(CATransform3D transform, CATransform3D *outNewTransform)
+static void rotate(float angle, CATransform3D transform, CATransform3D *outNewTransform)
 {
-    CATransform3D rotation = CATransform3DMakeRotation(M_PI / 18.0, 1, 0, 0);
+    CATransform3D rotation = CATransform3DMakeRotation(angle, 1, 0, 0);
     *outNewTransform = CATransform3DConcat(rotation, transform);
 }
 

@@ -104,7 +104,7 @@ static NSMutableArray *generateTrees(ALTHeightField *heightField)
 {
     NSMutableArray *trees = [NSMutableArray array];
     
-    for (int i = 0; i < 40; i++)
+    for (int i = 0; i < 10; i++)
     {
         ALTTree *tree = [ALTTree tree];
         GLKVector3 location = GLKVector3Make(heightField.width * (arc4random() / (float)0x100000000) - heightField.width / 2,
