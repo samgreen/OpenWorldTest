@@ -9,14 +9,15 @@
 #import "ALTTree.h"
 #import <SceneKit/SceneKit.h>
 #import "ALTLSystem.h"
+#import "ALTCylinders.h"
+#import <GLKit/GLKit.h>
 
 SCNMaterial *branchMaterial;
 SCNTube *branchGeometry;
 
 @interface ALTTransformStackNode : NSObject <NSCopying>
 
-@property (nonatomic) CATransform3D transform;
-@property (nonatomic, strong) SCNNode *parent;
+@property (nonatomic) GLKMatrix4 transform;
 
 @end
 
@@ -26,7 +27,6 @@ SCNTube *branchGeometry;
 {
     ALTTransformStackNode *newNode = [[ALTTransformStackNode alloc] init];
     newNode.transform = self.transform;
-    newNode.parent = self.parent;
     return newNode;
 }
 
@@ -54,19 +54,23 @@ static float trunkHeight = 1.0;
                            @"A": @"AA",
                            @"B": @"A[+B]-B"
                            }];
-    NSString *treeString = [lSystem process:@"B" numGenerations:6];
+    NSString *treeString = [lSystem process:@"B" numGenerations:3];
     
-    ALTTree *treeParent = (ALTTree *)[SCNNode node];
+    ALTTree *tree = (ALTTree *)[SCNNode node];
     ALTTransformStackNode *node = [[ALTTransformStackNode alloc] init];
-    node.parent = treeParent;
-    node.transform = CATransform3DIdentity;
+    node.transform = GLKMatrix4Identity;
     NSMutableArray *transformStack = [NSMutableArray arrayWithObject:node];
-    generateTreeNodesRecursive(treeString, 0, transformStack);
+    ALTCylinders *cylinders = [[ALTCylinders alloc] init];
+    generateTreeNodesRecursive(treeString, 0, transformStack, cylinders);
     
-    return treeParent;
+    SCNGeometry *treeGeometry = [cylinders geometry];
+    treeGeometry.materials = @[branchMaterial];
+    tree.geometry = treeGeometry;
+    
+    return tree;
 }
 
-static void generateTreeNodesRecursive(NSString *treeString, int charIndex, NSMutableArray *transformStack)
+static void generateTreeNodesRecursive(NSString *treeString, int charIndex, NSMutableArray *transformStack, ALTCylinders *cylinders)
 {
     if (charIndex >= [treeString length] || charIndex < 0)
     {
@@ -74,26 +78,21 @@ static void generateTreeNodesRecursive(NSString *treeString, int charIndex, NSMu
     }
     
     ALTTransformStackNode *stackNode = [transformStack lastObject];
-    SCNNode *parent = stackNode.parent;
-    CATransform3D transform = stackNode.transform;
-    SCNNode *newParent = parent;
-    CATransform3D newTransform = transform;
+    GLKMatrix4 transform = stackNode.transform;
+    GLKMatrix4 newTransform = transform;
     
     char symbol = [treeString characterAtIndex:charIndex];
     switch (symbol) {
         case 'A':
-            addBranch(parent, transform, &newParent, &newTransform);
-            stackNode.parent = newParent;
+            addBranch(transform, &newTransform, cylinders);
             stackNode.transform = newTransform;
             break;
         case '+':
             rotate(M_PI / 4.0, transform, &newTransform);
-            stackNode.parent = newParent;
             stackNode.transform = newTransform;
             break;
         case '-':
             rotate(-M_PI / 4.0, transform, &newTransform);
-            stackNode.parent = newParent;
             stackNode.transform = newTransform;
             break;
         case '[':
@@ -105,25 +104,22 @@ static void generateTreeNodesRecursive(NSString *treeString, int charIndex, NSMu
         default:
             break;
     }
-    generateTreeNodesRecursive(treeString, charIndex + 1, transformStack);
+    generateTreeNodesRecursive(treeString, charIndex + 1, transformStack, cylinders);
 }
 
-static void addBranch(SCNNode *parent, CATransform3D transform, SCNNode **outNewParent, CATransform3D *outNewTransform)
+static void addBranch(GLKMatrix4 transform, GLKMatrix4 *outNewTransform, ALTCylinders *cylinders)
 {
-    SCNNode *branchNode = [SCNNode nodeWithGeometry:branchGeometry];
-    branchNode.pivot = CATransform3DMakeTranslation(0, -trunkHeight / 2.0, 0);
-    branchNode.transform = transform;
-    [parent addChildNode:branchNode];
-    *outNewParent = branchNode;
-    CATransform3D translation = CATransform3DMakeTranslation(0, trunkHeight / 2.0, 0);
-    CATransform3D scale = CATransform3DMakeScale(1.0, 1.0, 1.0);
-    *outNewTransform = CATransform3DConcat(scale, translation);
+    [cylinders addCylinderWithTransform:transform];
+    GLKMatrix4 translation = GLKMatrix4MakeTranslation(0, trunkHeight / 2.0, 0);
+//    GLKMatrix4 scale = GLKMatrix4MakeScale(1.0, 1.1, 1.0);
+//    *outNewTransform = CATransform3DConcat(CATransform3DConcat(scale, translation), transform);
+    *outNewTransform = GLKMatrix4Multiply(transform, translation);
 }
 
-static void rotate(float angle, CATransform3D transform, CATransform3D *outNewTransform)
+static void rotate(float angle, GLKMatrix4 transform, GLKMatrix4 *outNewTransform)
 {
-    CATransform3D rotation = CATransform3DMakeRotation(angle, 1, 0, 0);
-    *outNewTransform = CATransform3DConcat(rotation, transform);
+    GLKMatrix4 rotation = GLKMatrix4MakeRotation(angle, 1, 0, 0);
+    *outNewTransform = GLKMatrix4Multiply(transform, rotation);
 }
 
 @end
