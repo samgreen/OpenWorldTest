@@ -48,20 +48,22 @@ static float trunkHeight = 1.0;
         branchGeometry.materials = @[branchMaterial];
     });
 
+    ALTTree *tree = (ALTTree *)[SCNNode node];
+
+    ALTCylinders *cylinders = [[ALTCylinders alloc] init];
     ALTLSystem *lSystem = [[ALTLSystem alloc] initWithVariables:@[@"A", @"B"]
                                                       constants:@[@"+", @"-", @"[", @"]"]
                                                           rules:@{
                            @"A": @"AA",
                            @"B": @"A[+B]-B"
                            }];
-    NSString *treeString = [lSystem process:@"B" numGenerations:3];
+    NSString *treeString = [lSystem process:@"B" numGenerations:6];
     
-    ALTTree *tree = (ALTTree *)[SCNNode node];
-    ALTTransformStackNode *node = [[ALTTransformStackNode alloc] init];
-    node.transform = GLKMatrix4Identity;
-    NSMutableArray *transformStack = [NSMutableArray arrayWithObject:node];
-    ALTCylinders *cylinders = [[ALTCylinders alloc] init];
+    ALTTransformStackNode *stackNode = [[ALTTransformStackNode alloc] init];
+    stackNode.transform = GLKMatrix4Identity;
+    NSMutableArray *transformStack = [NSMutableArray arrayWithObject:stackNode];
     generateTreeNodesRecursive(treeString, 0, transformStack, cylinders);
+    
     
     SCNGeometry *treeGeometry = [cylinders geometry];
     treeGeometry.materials = @[branchMaterial];

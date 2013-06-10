@@ -110,6 +110,11 @@ static NSMutableArray *generateTrees(ALTHeightField *heightField)
         GLKVector3 location = GLKVector3Make(heightField.width * (arc4random() / (float)0x100000000) - heightField.width / 2,
                                              0,
                                              heightField.length * (arc4random() / (float)0x100000000) - heightField.length / 2);
+
+        // temp
+//        location = GLKVector3Make(0, 0, 0);
+        
+        
         float terrainHeight = [heightField heightAt:location];
         tree.position = SCNVector3Make(location.x, terrainHeight, location.z);
         

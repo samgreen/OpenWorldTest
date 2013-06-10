@@ -15,6 +15,5 @@
 @property (nonatomic, strong) SCNGeometry *geometry;
 
 - (void)addCylinderWithTransform:(GLKMatrix4)transform;
-- (void)finalize;
 
 @end
