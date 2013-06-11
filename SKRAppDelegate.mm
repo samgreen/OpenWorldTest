@@ -86,7 +86,7 @@
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
     [_view setRunning:NO];
-    [_view exitFullScreenModeWithOptions:@{}];
+//    [_view exitFullScreenModeWithOptions:@{}];
 }
 
 // SCNView delegate
