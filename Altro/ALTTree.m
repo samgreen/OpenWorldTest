@@ -16,7 +16,7 @@ SCNMaterial *branchMaterial;
 
 @interface ALTTransformStackNode : NSObject <NSCopying>
 
-@property (nonatomic) float xzScale;
+@property (nonatomic) float scale;
 @property (nonatomic) GLKMatrix4 transform;
 
 @end
@@ -27,7 +27,7 @@ SCNMaterial *branchMaterial;
 {
     ALTTransformStackNode *newNode = [[ALTTransformStackNode alloc] init];
     newNode.transform = self.transform;
-    newNode.xzScale = self.xzScale;
+    newNode.scale = self.scale;
     return newNode;
 }
 
@@ -49,16 +49,16 @@ static float trunkHeight = 1.0;
 
     ALTCylinders *cylinders = [[ALTCylinders alloc] init];
     ALTLSystem *lSystem = [[ALTLSystem alloc] initWithVariables:@[@"A", @"B"]
-                                                      constants:@[@"+", @"-", @"[", @"]"]
+                                                      constants:@[@"+", @"-", @"*", @"/", @"[", @"]"]
                                                           rules:@{
                            @"A": @"AA",
-                           @"B": @"A[+B]-B"
+                           @"B": @"A[+B][*B][/B]-B"
                            }];
     NSString *treeString = [lSystem process:@"B" numGenerations:6];
     
     ALTTransformStackNode *stackNode = [[ALTTransformStackNode alloc] init];
     stackNode.transform = GLKMatrix4Identity;
-    stackNode.xzScale = 1.0;
+    stackNode.scale = 1.0;
     NSMutableArray *transformStack = [NSMutableArray arrayWithObject:stackNode];
     generateTreeNodesRecursive(treeString, 0, transformStack, cylinders);
     
@@ -78,6 +78,11 @@ static void generateTreeNodesRecursive(NSString *treeString, int charIndex, NSMu
     
     ALTTransformStackNode *oldStackNode = [transformStack lastObject];
     ALTTransformStackNode *newStackNode;
+
+    GLKQuaternion plusRotation = GLKQuaternionMakeWithAngleAndAxis(M_PI / 4.0, 1, 0, 0);
+    GLKQuaternion minusRotation = GLKQuaternionMakeWithAngleAndAxis(-M_PI / 4.0, 1, 0, 0);
+    GLKQuaternion starRotation = GLKQuaternionMakeWithAngleAndAxis(M_PI / 4.0, 0, 0, 1);
+    GLKQuaternion slashRotation = GLKQuaternionMakeWithAngleAndAxis(-M_PI / 4.0, 0, 0, 1);
     
     char symbol = [treeString characterAtIndex:charIndex];
     switch (symbol) {
@@ -87,12 +92,22 @@ static void generateTreeNodesRecursive(NSString *treeString, int charIndex, NSMu
             [transformStack addObject:newStackNode];
             break;
         case '+':
-            newStackNode = rotate(oldStackNode, M_PI / 4.0);
+            newStackNode = rotate(oldStackNode, plusRotation);
             [transformStack removeLastObject];
             [transformStack addObject:newStackNode];
             break;
         case '-':
-            newStackNode = rotate(oldStackNode, -M_PI / 4.0);
+            newStackNode = rotate(oldStackNode, minusRotation);
+            [transformStack removeLastObject];
+            [transformStack addObject:newStackNode];
+            break;
+        case '*':
+            newStackNode = rotate(oldStackNode, starRotation);
+            [transformStack removeLastObject];
+            [transformStack addObject:newStackNode];
+            break;
+        case '/':
+            newStackNode = rotate(oldStackNode, slashRotation);
             [transformStack removeLastObject];
             [transformStack addObject:newStackNode];
             break;
@@ -111,19 +126,21 @@ static void generateTreeNodesRecursive(NSString *treeString, int charIndex, NSMu
 static ALTTransformStackNode *addBranch(ALTTransformStackNode *stackNode, ALTCylinders *cylinders)
 {
     [cylinders addCylinderWithTransform:GLKMatrix4Multiply(GLKMatrix4Multiply(stackNode.transform, GLKMatrix4MakeTranslation(0, trunkHeight / 2.0, 0)),
-                                                           GLKMatrix4MakeScale(stackNode.xzScale, 1, stackNode.xzScale))];
+                                                           GLKMatrix4MakeScale(stackNode.scale, 1, stackNode.scale))];
 
     ALTTransformStackNode *newStackNode = [stackNode copy];
-    newStackNode.xzScale = stackNode.xzScale * 0.97;
+    newStackNode.scale = stackNode.scale * 0.97;
     GLKMatrix4 translation = GLKMatrix4MakeTranslation(0, trunkHeight / 2.0, 0);
     newStackNode.transform = GLKMatrix4Multiply(stackNode.transform, translation);
     return newStackNode;
 }
 
-static ALTTransformStackNode *rotate(ALTTransformStackNode *stackNode, float angle)
+static ALTTransformStackNode *rotate(ALTTransformStackNode *stackNode, GLKQuaternion rotationQuat)
 {
     ALTTransformStackNode *newStackNode = [stackNode copy];
-    GLKMatrix4 rotation = GLKMatrix4MakeRotation(angle, 1, 0, 0);
+    GLKMatrix4 rotation = GLKMatrix4MakeWithQuaternion(rotationQuat);
+    
+    
     newStackNode.transform = GLKMatrix4Multiply(stackNode.transform, rotation);
     return newStackNode;
 }
