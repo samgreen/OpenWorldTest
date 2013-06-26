@@ -111,21 +111,25 @@ static void createCylinderIndices(int numSegments)
     {
         int baseIndex = i * numIndicesPerSegment;
         
+        // first outer segment triangle
         cylinderIndices[baseIndex] = i;
         cylinderIndices[baseIndex + 1] = numSegments + i;
         cylinderIndices[baseIndex + 2] = (i + 1) % numSegments;
 
+        // second outer segment triangle
         cylinderIndices[baseIndex + 3] = numSegments + i;
         cylinderIndices[baseIndex + 4] = numSegments + ((i + 1) % numSegments);
         cylinderIndices[baseIndex + 5] = (i + 1) % numSegments;
 
-        cylinderIndices[baseIndex + 6] = i;
+        // bottom segment triangle
+        cylinderIndices[baseIndex + 6] = numSegments * 2 + (i + 1) % numSegments;
         cylinderIndices[baseIndex + 7] = numCylinderVertices - 2;
-        cylinderIndices[baseIndex + 8] = (i + 1) % numSegments;
+        cylinderIndices[baseIndex + 8] = numSegments * 2 + i;
         
-        cylinderIndices[baseIndex + 9] = numSegments + i;
+        // top segment triangle
+        cylinderIndices[baseIndex + 9] = numSegments * 3 + i;
         cylinderIndices[baseIndex + 10] = numCylinderVertices - 1;
-        cylinderIndices[baseIndex + 11] = numSegments + ((i + 1) % numSegments);
+        cylinderIndices[baseIndex + 11] = numSegments * 3 + ((i + 1) % numSegments);
     }
 }
 
