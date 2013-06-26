@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>D3D36C48-89DE-4BC3-B061-F3E870FDB99A</string>
+	<key>IDESourceControlProjectName</key>
+	<string>OpenWorldTest</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>3F8E7DA4-1D9D-446D-8955-2468BE342D23</key>
+		<string>ssh://github.com/takataka/OpenWorldTest.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>OpenWorldTest.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>3F8E7DA4-1D9D-446D-8955-2468BE342D23</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/takataka/OpenWorldTest.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>3F8E7DA4-1D9D-446D-8955-2468BE342D23</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>3F8E7DA4-1D9D-446D-8955-2468BE342D23</string>
+			<key>IDESourceControlWCCName</key>
+			<string>OpenWorldTest</string>
+		</dict>
+	</array>
+</dict>
+</plist>
