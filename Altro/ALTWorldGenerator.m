@@ -81,7 +81,7 @@ static SCNNode *generateTerrainNode(ALTHeightField *heightField)
 
 static void generateHeightmap(int rows, int columns, float *heights)
 {
-    for (int i = 0; i < 200; i++)
+    for (int i = 0; i < 100; i++)
     {
         GLKVector2 normalizedPoint = GLKVector2Make((arc4random() / (float)0x100000000), (arc4random() / (float)0x100000000));
         float magnitude = 5.0 * (arc4random() / (float)0x100000000);

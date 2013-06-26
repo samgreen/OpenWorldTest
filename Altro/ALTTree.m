@@ -138,8 +138,16 @@ static ALTTransformStackNode *addBranch(ALTTransformStackNode *stackNode, ALTCyl
 static ALTTransformStackNode *rotate(ALTTransformStackNode *stackNode, GLKQuaternion rotationQuat)
 {
     ALTTransformStackNode *newStackNode = [stackNode copy];
-    GLKMatrix4 rotation = GLKMatrix4MakeWithQuaternion(rotationQuat);
     
+    float offsetScale = M_PI / 2.0;
+    float inverseScale = 1.0 - stackNode.scale;
+    GLKQuaternion offset = GLKQuaternionMakeWithAngleAndAxis(-offsetScale / 2.0 + offsetScale * inverseScale * (arc4random() / (float)0x100000000),
+                                                             offsetScale * inverseScale * (arc4random() / (float)0x100000000),
+                                                             offsetScale * inverseScale * (arc4random() / (float)0x100000000),
+                                                             offsetScale * inverseScale * (arc4random() / (float)0x100000000));
+    GLKQuaternion offsetRotationQuat = GLKQuaternionMultiply(rotationQuat, offset);
+    
+    GLKMatrix4 rotation = GLKMatrix4MakeWithQuaternion(offsetRotationQuat);
     
     newStackNode.transform = GLKMatrix4Multiply(stackNode.transform, rotation);
     return newStackNode;
