@@ -16,6 +16,7 @@ SCNMaterial *branchMaterial;
 
 @interface ALTTransformStackNode : NSObject <NSCopying>
 
+@property (nonatomic) float xzScale;
 @property (nonatomic) GLKMatrix4 transform;
 
 @end
@@ -26,6 +27,7 @@ SCNMaterial *branchMaterial;
 {
     ALTTransformStackNode *newNode = [[ALTTransformStackNode alloc] init];
     newNode.transform = self.transform;
+    newNode.xzScale = self.xzScale;
     return newNode;
 }
 
@@ -56,6 +58,7 @@ static float trunkHeight = 1.0;
     
     ALTTransformStackNode *stackNode = [[ALTTransformStackNode alloc] init];
     stackNode.transform = GLKMatrix4Identity;
+    stackNode.xzScale = 1.0;
     NSMutableArray *transformStack = [NSMutableArray arrayWithObject:stackNode];
     generateTreeNodesRecursive(treeString, 0, transformStack, cylinders);
     
@@ -73,26 +76,28 @@ static void generateTreeNodesRecursive(NSString *treeString, int charIndex, NSMu
         return;
     }
     
-    ALTTransformStackNode *stackNode = [transformStack lastObject];
-    GLKMatrix4 transform = stackNode.transform;
-    GLKMatrix4 newTransform = transform;
+    ALTTransformStackNode *oldStackNode = [transformStack lastObject];
+    ALTTransformStackNode *newStackNode;
     
     char symbol = [treeString characterAtIndex:charIndex];
     switch (symbol) {
         case 'A':
-            addBranch(transform, &newTransform, cylinders);
-            stackNode.transform = newTransform;
+            newStackNode = addBranch(oldStackNode, cylinders);
+            [transformStack removeLastObject];
+            [transformStack addObject:newStackNode];
             break;
         case '+':
-            rotate(M_PI / 4.0, transform, &newTransform);
-            stackNode.transform = newTransform;
+            newStackNode = rotate(oldStackNode, M_PI / 4.0);
+            [transformStack removeLastObject];
+            [transformStack addObject:newStackNode];
             break;
         case '-':
-            rotate(-M_PI / 4.0, transform, &newTransform);
-            stackNode.transform = newTransform;
+            newStackNode = rotate(oldStackNode, -M_PI / 4.0);
+            [transformStack removeLastObject];
+            [transformStack addObject:newStackNode];
             break;
         case '[':
-            [transformStack addObject:[stackNode copy]];
+            [transformStack addObject:[oldStackNode copy]];
             break;
         case ']':
             [transformStack removeLastObject];
@@ -103,19 +108,24 @@ static void generateTreeNodesRecursive(NSString *treeString, int charIndex, NSMu
     generateTreeNodesRecursive(treeString, charIndex + 1, transformStack, cylinders);
 }
 
-static void addBranch(GLKMatrix4 transform, GLKMatrix4 *outNewTransform, ALTCylinders *cylinders)
+static ALTTransformStackNode *addBranch(ALTTransformStackNode *stackNode, ALTCylinders *cylinders)
 {
-    [cylinders addCylinderWithTransform:GLKMatrix4Multiply(transform, GLKMatrix4MakeTranslation(0, trunkHeight / 2.0, 0))];
+    [cylinders addCylinderWithTransform:GLKMatrix4Multiply(GLKMatrix4Multiply(stackNode.transform, GLKMatrix4MakeTranslation(0, trunkHeight / 2.0, 0)),
+                                                           GLKMatrix4MakeScale(stackNode.xzScale, 1, stackNode.xzScale))];
+
+    ALTTransformStackNode *newStackNode = [stackNode copy];
+    newStackNode.xzScale = stackNode.xzScale * 0.97;
     GLKMatrix4 translation = GLKMatrix4MakeTranslation(0, trunkHeight / 2.0, 0);
-//    GLKMatrix4 scale = GLKMatrix4MakeScale(1.0, 1.1, 1.0);
-//    *outNewTransform = CATransform3DConcat(CATransform3DConcat(scale, translation), transform);
-    *outNewTransform = GLKMatrix4Multiply(transform, translation);
+    newStackNode.transform = GLKMatrix4Multiply(stackNode.transform, translation);
+    return newStackNode;
 }
 
-static void rotate(float angle, GLKMatrix4 transform, GLKMatrix4 *outNewTransform)
+static ALTTransformStackNode *rotate(ALTTransformStackNode *stackNode, float angle)
 {
+    ALTTransformStackNode *newStackNode = [stackNode copy];
     GLKMatrix4 rotation = GLKMatrix4MakeRotation(angle, 1, 0, 0);
-    *outNewTransform = GLKMatrix4Multiply(transform, rotation);
+    newStackNode.transform = GLKMatrix4Multiply(stackNode.transform, rotation);
+    return newStackNode;
 }
 
 @end
