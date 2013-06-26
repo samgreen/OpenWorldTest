@@ -105,7 +105,7 @@ static void generateTreeNodesRecursive(NSString *treeString, int charIndex, NSMu
 
 static void addBranch(GLKMatrix4 transform, GLKMatrix4 *outNewTransform, ALTCylinders *cylinders)
 {
-    [cylinders addCylinderWithTransform:transform];
+    [cylinders addCylinderWithTransform:GLKMatrix4Multiply(transform, GLKMatrix4MakeTranslation(0, trunkHeight / 2.0, 0))];
     GLKMatrix4 translation = GLKMatrix4MakeTranslation(0, trunkHeight / 2.0, 0);
 //    GLKMatrix4 scale = GLKMatrix4MakeScale(1.0, 1.1, 1.0);
 //    *outNewTransform = CATransform3DConcat(CATransform3DConcat(scale, translation), transform);
