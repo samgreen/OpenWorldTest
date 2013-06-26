@@ -13,7 +13,6 @@
 #import <GLKit/GLKit.h>
 
 SCNMaterial *branchMaterial;
-SCNTube *branchGeometry;
 
 @interface ALTTransformStackNode : NSObject <NSCopying>
 
@@ -42,10 +41,6 @@ static float trunkHeight = 1.0;
     dispatch_once(&onceToken, ^{
         branchMaterial = [SCNMaterial material];
         branchMaterial.diffuse.contents = [NSColor brownColor];
-        
-        branchGeometry = [SCNCylinder cylinderWithRadius:1.0 height:trunkHeight];
-        branchGeometry.radialSegmentCount = 8;
-        branchGeometry.materials = @[branchMaterial];
     });
 
     ALTTree *tree = (ALTTree *)[SCNNode node];
@@ -63,7 +58,6 @@ static float trunkHeight = 1.0;
     stackNode.transform = GLKMatrix4Identity;
     NSMutableArray *transformStack = [NSMutableArray arrayWithObject:stackNode];
     generateTreeNodesRecursive(treeString, 0, transformStack, cylinders);
-    
     
     SCNGeometry *treeGeometry = [cylinders geometry];
     treeGeometry.materials = @[branchMaterial];
