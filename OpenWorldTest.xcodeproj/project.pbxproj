@@ -73,14 +73,20 @@
 		D5C27817175B13F6007432E9 /* libddhid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B03D9A8E1686CD340013F526 /* libddhid.a */; };
 		D5C27818175B1401007432E9 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B03D9AA21686CDD90013F526 /* IOKit.framework */; };
 		D5C27819175B1408007432E9 /* SceneKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B02C450D1686B39E0050BD75 /* SceneKit.framework */; };
-		D5C2781A175B14E9007432E9 /* SKROculus.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC1174B353E00B57B8A /* SKROculus.mm */; };
+		D5C2781A175B14E9007432E9 /* SKROculus.mm in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC1174B353E00B57B8A /* SKROculus.mm */; settings = {COMPILER_FLAGS = "-fno-rtti"; }; };
 		D5C2781C175B151B007432E9 /* SKRHydra.mm in Sources */ = {isa = PBXBuildFile; fileRef = C296079D174DDDBB005ECCBE /* SKRHydra.mm */; };
-		D5C2781D175B152C007432E9 /* RenderTiny_GL_Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC3174B359000B57B8A /* RenderTiny_GL_Device.cpp */; };
-		D5C2781E175B1533007432E9 /* RenderTiny_Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC5174B359000B57B8A /* RenderTiny_Device.cpp */; };
+		D5C2781D175B152C007432E9 /* RenderTiny_GL_Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC3174B359000B57B8A /* RenderTiny_GL_Device.cpp */; settings = {COMPILER_FLAGS = "-fno-rtti"; }; };
+		D5C2781E175B1533007432E9 /* RenderTiny_Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2982EC5174B359000B57B8A /* RenderTiny_Device.cpp */; settings = {COMPILER_FLAGS = "-fno-rtti"; }; };
 		D5C2781F175B15B3007432E9 /* libsixense_x64.dylib in Resources */ = {isa = PBXBuildFile; fileRef = C29607A8174DF857005ECCBE /* libsixense_x64.dylib */; };
 		D5C27820175B15B7007432E9 /* libsixense_utils_x64.dylib in Resources */ = {isa = PBXBuildFile; fileRef = C29607A7174DF857005ECCBE /* libsixense_utils_x64.dylib */; };
 		D5C27823175B1C04007432E9 /* ALTWorldGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = D5C27822175B1C04007432E9 /* ALTWorldGenerator.m */; };
 		D5C27826175B463F007432E9 /* ALTHeightField.m in Sources */ = {isa = PBXBuildFile; fileRef = D5C27825175B463F007432E9 /* ALTHeightField.m */; };
+		D5CAAC4317892A7E00565906 /* ALTPointCloudMesh.mm in Sources */ = {isa = PBXBuildFile; fileRef = D5CAAC4217892A7E00565906 /* ALTPointCloudMesh.mm */; };
+		D5CAAC4917893CFC00565906 /* libpcl_common.1.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5CAAC4417893CFC00565906 /* libpcl_common.1.7.0.dylib */; };
+		D5CAAC4A17893CFC00565906 /* libpcl_features.1.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5CAAC4517893CFC00565906 /* libpcl_features.1.7.0.dylib */; };
+		D5CAAC4B17893CFC00565906 /* libpcl_kdtree.1.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5CAAC4617893CFC00565906 /* libpcl_kdtree.1.7.0.dylib */; };
+		D5CAAC4C17893CFC00565906 /* libpcl_search.1.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5CAAC4717893CFC00565906 /* libpcl_search.1.7.0.dylib */; };
+		D5CAAC4D17893CFC00565906 /* libpcl_surface.1.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5CAAC4817893CFC00565906 /* libpcl_surface.1.7.0.dylib */; };
 		D5DB3E0D175DA38000D7132D /* SKRPhysics.m in Sources */ = {isa = PBXBuildFile; fileRef = D5DB3E0C175DA38000D7132D /* SKRPhysics.m */; };
 		D5DB3E0E175DA38000D7132D /* SKRPhysics.m in Sources */ = {isa = PBXBuildFile; fileRef = D5DB3E0C175DA38000D7132D /* SKRPhysics.m */; };
 		D5DB3E13175DAD4D00D7132D /* SKRMath.m in Sources */ = {isa = PBXBuildFile; fileRef = D5DB3E12175DAD4D00D7132D /* SKRMath.m */; };
@@ -192,6 +198,13 @@
 		D5C27822175B1C04007432E9 /* ALTWorldGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALTWorldGenerator.m; sourceTree = "<group>"; };
 		D5C27824175B463F007432E9 /* ALTHeightField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALTHeightField.h; sourceTree = "<group>"; };
 		D5C27825175B463F007432E9 /* ALTHeightField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALTHeightField.m; sourceTree = "<group>"; };
+		D5CAAC4117892A7E00565906 /* ALTPointCloudMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALTPointCloudMesh.h; sourceTree = "<group>"; };
+		D5CAAC4217892A7E00565906 /* ALTPointCloudMesh.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ALTPointCloudMesh.mm; sourceTree = "<group>"; };
+		D5CAAC4417893CFC00565906 /* libpcl_common.1.7.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcl_common.1.7.0.dylib; path = ../../../../usr/local/lib/libpcl_common.1.7.0.dylib; sourceTree = "<group>"; };
+		D5CAAC4517893CFC00565906 /* libpcl_features.1.7.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcl_features.1.7.0.dylib; path = ../../../../usr/local/lib/libpcl_features.1.7.0.dylib; sourceTree = "<group>"; };
+		D5CAAC4617893CFC00565906 /* libpcl_kdtree.1.7.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcl_kdtree.1.7.0.dylib; path = ../../../../usr/local/lib/libpcl_kdtree.1.7.0.dylib; sourceTree = "<group>"; };
+		D5CAAC4717893CFC00565906 /* libpcl_search.1.7.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcl_search.1.7.0.dylib; path = ../../../../usr/local/lib/libpcl_search.1.7.0.dylib; sourceTree = "<group>"; };
+		D5CAAC4817893CFC00565906 /* libpcl_surface.1.7.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcl_surface.1.7.0.dylib; path = ../../../../usr/local/lib/libpcl_surface.1.7.0.dylib; sourceTree = "<group>"; };
 		D5DB3E0B175DA38000D7132D /* SKRPhysics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKRPhysics.h; sourceTree = "<group>"; };
 		D5DB3E0C175DA38000D7132D /* SKRPhysics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKRPhysics.m; sourceTree = "<group>"; };
 		D5DB3E12175DAD4D00D7132D /* SKRMath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKRMath.m; sourceTree = "<group>"; };
@@ -219,6 +232,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5CAAC4917893CFC00565906 /* libpcl_common.1.7.0.dylib in Frameworks */,
+				D5CAAC4A17893CFC00565906 /* libpcl_features.1.7.0.dylib in Frameworks */,
+				D5CAAC4B17893CFC00565906 /* libpcl_kdtree.1.7.0.dylib in Frameworks */,
+				D5CAAC4C17893CFC00565906 /* libpcl_search.1.7.0.dylib in Frameworks */,
+				D5CAAC4D17893CFC00565906 /* libpcl_surface.1.7.0.dylib in Frameworks */,
 				D5C27819175B1408007432E9 /* SceneKit.framework in Frameworks */,
 				D5C27818175B1401007432E9 /* IOKit.framework in Frameworks */,
 				D5C27813175B13B0007432E9 /* QuartzCore.framework in Frameworks */,
@@ -272,6 +290,11 @@
 		B02C44EF1686B37E0050BD75 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D5CAAC4417893CFC00565906 /* libpcl_common.1.7.0.dylib */,
+				D5CAAC4517893CFC00565906 /* libpcl_features.1.7.0.dylib */,
+				D5CAAC4617893CFC00565906 /* libpcl_kdtree.1.7.0.dylib */,
+				D5CAAC4717893CFC00565906 /* libpcl_search.1.7.0.dylib */,
+				D5CAAC4817893CFC00565906 /* libpcl_surface.1.7.0.dylib */,
 				C27C5F9D174B5D0700BEA5C1 /* GLKit.framework */,
 				B03D9AA21686CDD90013F526 /* IOKit.framework */,
 				B03D9A8B1686C4D60013F526 /* OpenGL.framework */,
@@ -418,6 +441,8 @@
 				D5B7ED2D17629F1B00108B55 /* ALTLSystem.m */,
 				D5B7ED2F17650D0800108B55 /* ALTCylinders.h */,
 				D5B7ED3017650D0800108B55 /* ALTCylinders.m */,
+				D5CAAC4117892A7E00565906 /* ALTPointCloudMesh.h */,
+				D5CAAC4217892A7E00565906 /* ALTPointCloudMesh.mm */,
 			);
 			path = Altro;
 			sourceTree = "<group>";
@@ -665,6 +690,7 @@
 				D5DB3E0E175DA38000D7132D /* SKRPhysics.m in Sources */,
 				D5DB3E14175DAD4D00D7132D /* SKRMath.m in Sources */,
 				D5B7ED2B1762809D00108B55 /* ALTTree.m in Sources */,
+				D5CAAC4317892A7E00565906 /* ALTPointCloudMesh.mm in Sources */,
 				D5B7ED2E17629F1B00108B55 /* ALTLSystem.m in Sources */,
 				D5B7ED3117650D0800108B55 /* ALTCylinders.m in Sources */,
 			);
@@ -764,7 +790,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_CPP_RTTI = YES;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -810,7 +836,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_CPP_RTTI = YES;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -868,7 +894,21 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Altro/Altro-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"LibOVR/**",
+					"SixenseSDK/include/**",
+					"/usr/local/include/pcl-1.7",
+					/usr/local/include,
+					/opt/local/include/eigen3/,
+				);
 				INFOPLIST_FILE = "Altro/Altro-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)/\"",
+					"\"$(SRCROOT)/LibOVR/Lib/MacOS/Debug\"",
+					"\"$(SRCROOT)/SixenseSDK\"",
+					/usr/local/lib,
+				);
+				OTHER_CFLAGS = "-D__ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES=0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -883,7 +923,21 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Altro/Altro-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"LibOVR/**",
+					"SixenseSDK/include/**",
+					"/usr/local/include/pcl-1.7",
+					/usr/local/include,
+					/opt/local/include/eigen3/,
+				);
 				INFOPLIST_FILE = "Altro/Altro-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)/\"",
+					"\"$(SRCROOT)/LibOVR/Lib/MacOS/Debug\"",
+					"\"$(SRCROOT)/SixenseSDK\"",
+					/usr/local/lib,
+				);
+				OTHER_CFLAGS = "-D__ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES=0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
