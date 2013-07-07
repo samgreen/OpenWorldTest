@@ -8,6 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface ALTPointCloudMesh : NSObject
+@class SCNGeometry;
 
-@end
+SCNGeometry *ALTPointCloudMeshCreateSphere();

@@ -12,6 +12,7 @@
 #import <GLKit/GLKMath.h>
 #import <SceneKit/SceneKit.h>
 #import "ALTTree.h"
+#import "ALTPointCloudMesh.h"
 
 @implementation ALTWorldGenerator
 {
@@ -104,7 +105,7 @@ static NSMutableArray *generateTrees(ALTHeightField *heightField)
 {
     NSMutableArray *trees = [NSMutableArray array];
     
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 10; i++)
     {
         ALTTree *tree = [ALTTree tree];
         GLKVector3 location = GLKVector3Make(heightField.width * (arc4random() / (float)0x100000000) - heightField.width / 2,
@@ -122,15 +123,15 @@ static NSMutableArray *generateTrees(ALTHeightField *heightField)
 - (void)updateAfterFirstAddedToParentNode
 {
     // This has to be after the node has been added to a parent node, which is dumb & I've reported it in bug ID 14096429
-    CAKeyframeAnimation *sunlightAnimation = [CAKeyframeAnimation animationWithKeyPath:@"rotation"];
-    sunlightAnimation.values = [NSArray arrayWithObjects:
-                                [NSValue valueWithSCNVector4:SKRVector4FromQuaternion(GLKQuaternionMakeWithAngleAndAxis(-M_PI_4, 1, 0, 0))],
-                                [NSValue valueWithSCNVector4:SKRVector4FromQuaternion(GLKQuaternionMakeWithAngleAndAxis(-3 * M_PI_4, 1, 0, 0))],
-                                nil];
-    sunlightAnimation.duration = 30.0f;
-    sunlightAnimation.repeatCount = HUGE_VALF;
-    sunlightAnimation.autoreverses = YES;
-    [_sunlightNode addAnimation:sunlightAnimation forKey:@"rotation"];
+//    CAKeyframeAnimation *sunlightAnimation = [CAKeyframeAnimation animationWithKeyPath:@"rotation"];
+//    sunlightAnimation.values = [NSArray arrayWithObjects:
+//                                [NSValue valueWithSCNVector4:SKRVector4FromQuaternion(GLKQuaternionMakeWithAngleAndAxis(-M_PI_4, 1, 0, 0))],
+//                                [NSValue valueWithSCNVector4:SKRVector4FromQuaternion(GLKQuaternionMakeWithAngleAndAxis(-3 * M_PI_4, 1, 0, 0))],
+//                                nil];
+//    sunlightAnimation.duration = 30.0f;
+//    sunlightAnimation.repeatCount = HUGE_VALF;
+//    sunlightAnimation.autoreverses = YES;
+//    [_sunlightNode addAnimation:sunlightAnimation forKey:@"rotation"];
 }
 
 - (id)init
@@ -150,6 +151,16 @@ static NSMutableArray *generateTrees(ALTHeightField *heightField)
             [terrainNode addChildNode:tree];
         }
 
+        SCNGeometry *meshGeometry = ALTPointCloudMeshCreateSphere();
+        SCNMaterial *meshMaterial = [SCNMaterial material];
+        meshMaterial.diffuse.contents = [NSColor redColor];
+        meshMaterial.lightingModelName = SCNLightingModelBlinn;
+        meshMaterial.doubleSided = YES;
+//        meshMaterial.litPerPixel = NO;
+        meshGeometry.firstMaterial = meshMaterial;
+        SCNNode *meshNode = [SCNNode nodeWithGeometry:meshGeometry];
+        [_worldNode addChildNode:meshNode];
+        
         [_worldNode addChildNode:terrainNode];
     }
     return self;

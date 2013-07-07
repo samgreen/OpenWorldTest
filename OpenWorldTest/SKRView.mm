@@ -388,7 +388,7 @@ CVTimeStamp lastChunkTick;
         return;
     }
     GLKVector3 gravity = [SKRPhysics sharedInstance].gravity;
-    float jumpMagnitude = GLKVector3Length(gravity) * 5.5;
+    float jumpMagnitude = GLKVector3Length(gravity) * 1.5;
     GLKVector3 normalizedUpVector = GLKVector3Negate(GLKVector3Normalize(gravity));
     GLKVector3 jumpVelocity = GLKVector3MultiplyScalar(normalizedUpVector, jumpMagnitude);
     playerNode.velocity = GLKVector3Add(playerNode.velocity, jumpVelocity);
