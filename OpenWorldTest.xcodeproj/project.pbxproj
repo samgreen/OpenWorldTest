@@ -81,12 +81,12 @@
 		D5C27820175B15B7007432E9 /* libsixense_utils_x64.dylib in Resources */ = {isa = PBXBuildFile; fileRef = C29607A7174DF857005ECCBE /* libsixense_utils_x64.dylib */; };
 		D5C27823175B1C04007432E9 /* ALTWorldGenerator.mm in Sources */ = {isa = PBXBuildFile; fileRef = D5C27822175B1C04007432E9 /* ALTWorldGenerator.mm */; };
 		D5C27826175B463F007432E9 /* ALTHeightField.m in Sources */ = {isa = PBXBuildFile; fileRef = D5C27825175B463F007432E9 /* ALTHeightField.m */; };
-		D5CAAC4317892A7E00565906 /* ALTPointCloudMesh.mm in Sources */ = {isa = PBXBuildFile; fileRef = D5CAAC4217892A7E00565906 /* ALTPointCloudMesh.mm */; };
 		D5CAAC4917893CFC00565906 /* libpcl_common.1.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5CAAC4417893CFC00565906 /* libpcl_common.1.7.0.dylib */; };
 		D5CAAC4A17893CFC00565906 /* libpcl_features.1.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5CAAC4517893CFC00565906 /* libpcl_features.1.7.0.dylib */; };
 		D5CAAC4B17893CFC00565906 /* libpcl_kdtree.1.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5CAAC4617893CFC00565906 /* libpcl_kdtree.1.7.0.dylib */; };
 		D5CAAC4C17893CFC00565906 /* libpcl_search.1.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5CAAC4717893CFC00565906 /* libpcl_search.1.7.0.dylib */; };
 		D5CAAC4D17893CFC00565906 /* libpcl_surface.1.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5CAAC4817893CFC00565906 /* libpcl_surface.1.7.0.dylib */; };
+		D5CAAC50178A27DA00565906 /* ALTPointCloudMeshCreation.mm in Sources */ = {isa = PBXBuildFile; fileRef = D5CAAC4F178A27DA00565906 /* ALTPointCloudMeshCreation.mm */; };
 		D5DB3E0D175DA38000D7132D /* SKRPhysics.m in Sources */ = {isa = PBXBuildFile; fileRef = D5DB3E0C175DA38000D7132D /* SKRPhysics.m */; };
 		D5DB3E0E175DA38000D7132D /* SKRPhysics.m in Sources */ = {isa = PBXBuildFile; fileRef = D5DB3E0C175DA38000D7132D /* SKRPhysics.m */; };
 		D5DB3E13175DAD4D00D7132D /* SKRMath.m in Sources */ = {isa = PBXBuildFile; fileRef = D5DB3E12175DAD4D00D7132D /* SKRMath.m */; };
@@ -198,13 +198,13 @@
 		D5C27822175B1C04007432E9 /* ALTWorldGenerator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ALTWorldGenerator.mm; sourceTree = "<group>"; };
 		D5C27824175B463F007432E9 /* ALTHeightField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALTHeightField.h; sourceTree = "<group>"; };
 		D5C27825175B463F007432E9 /* ALTHeightField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALTHeightField.m; sourceTree = "<group>"; };
-		D5CAAC4117892A7E00565906 /* ALTPointCloudMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALTPointCloudMesh.h; sourceTree = "<group>"; };
-		D5CAAC4217892A7E00565906 /* ALTPointCloudMesh.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ALTPointCloudMesh.mm; sourceTree = "<group>"; };
 		D5CAAC4417893CFC00565906 /* libpcl_common.1.7.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcl_common.1.7.0.dylib; path = ../../../../usr/local/lib/libpcl_common.1.7.0.dylib; sourceTree = "<group>"; };
 		D5CAAC4517893CFC00565906 /* libpcl_features.1.7.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcl_features.1.7.0.dylib; path = ../../../../usr/local/lib/libpcl_features.1.7.0.dylib; sourceTree = "<group>"; };
 		D5CAAC4617893CFC00565906 /* libpcl_kdtree.1.7.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcl_kdtree.1.7.0.dylib; path = ../../../../usr/local/lib/libpcl_kdtree.1.7.0.dylib; sourceTree = "<group>"; };
 		D5CAAC4717893CFC00565906 /* libpcl_search.1.7.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcl_search.1.7.0.dylib; path = ../../../../usr/local/lib/libpcl_search.1.7.0.dylib; sourceTree = "<group>"; };
 		D5CAAC4817893CFC00565906 /* libpcl_surface.1.7.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcl_surface.1.7.0.dylib; path = ../../../../usr/local/lib/libpcl_surface.1.7.0.dylib; sourceTree = "<group>"; };
+		D5CAAC4E178A27DA00565906 /* ALTPointCloudMeshCreation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALTPointCloudMeshCreation.h; sourceTree = "<group>"; };
+		D5CAAC4F178A27DA00565906 /* ALTPointCloudMeshCreation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ALTPointCloudMeshCreation.mm; sourceTree = "<group>"; };
 		D5DB3E0B175DA38000D7132D /* SKRPhysics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKRPhysics.h; sourceTree = "<group>"; };
 		D5DB3E0C175DA38000D7132D /* SKRPhysics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKRPhysics.m; sourceTree = "<group>"; };
 		D5DB3E12175DAD4D00D7132D /* SKRMath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKRMath.m; sourceTree = "<group>"; };
@@ -441,8 +441,8 @@
 				D5B7ED2D17629F1B00108B55 /* ALTLSystem.m */,
 				D5B7ED2F17650D0800108B55 /* ALTCylinders.h */,
 				D5B7ED3017650D0800108B55 /* ALTCylinders.m */,
-				D5CAAC4117892A7E00565906 /* ALTPointCloudMesh.h */,
-				D5CAAC4217892A7E00565906 /* ALTPointCloudMesh.mm */,
+				D5CAAC4E178A27DA00565906 /* ALTPointCloudMeshCreation.h */,
+				D5CAAC4F178A27DA00565906 /* ALTPointCloudMeshCreation.mm */,
 			);
 			path = Altro;
 			sourceTree = "<group>";
@@ -690,8 +690,8 @@
 				D5DB3E0E175DA38000D7132D /* SKRPhysics.m in Sources */,
 				D5DB3E14175DAD4D00D7132D /* SKRMath.m in Sources */,
 				D5B7ED2B1762809D00108B55 /* ALTTree.m in Sources */,
-				D5CAAC4317892A7E00565906 /* ALTPointCloudMesh.mm in Sources */,
 				D5B7ED2E17629F1B00108B55 /* ALTLSystem.m in Sources */,
+				D5CAAC50178A27DA00565906 /* ALTPointCloudMeshCreation.mm in Sources */,
 				D5B7ED3117650D0800108B55 /* ALTCylinders.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

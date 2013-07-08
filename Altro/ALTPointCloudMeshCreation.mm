@@ -1,18 +1,25 @@
 //
-//  ALTPointCloudMesh.m
+//  ALTPointCloudMeshCreation.m
 //  OpenWorldTest
 //
-//  Created by Mike Rotondo on 7/6/13.
+//  Created by Mike Rotondo on 7/7/13.
 //  Copyright (c) 2013 Taka Taka. All rights reserved.
 //
 
-#import "ALTPointCloudMesh.h"
+#import "ALTPointCloudMeshCreation.h"
 #include <pcl/point_types.h>
 #include <pcl/search/kdtree.h>
 #include <pcl/features/normal_3d.h>
 #include <pcl/surface/concave_hull.h>
-#import <GLKit/GLKMath.h>
 #import <SceneKit/SceneKit.h>
+
+@implementation ALTPointCloudMeshCreation
+{
+    pcl::PointCloud<pcl::PointXYZ>::Ptr _cloud;
+    SCNNode *_parentNode;
+    SCNNode *_node;
+    SCNMaterial *_material;
+}
 
 static void addSphereToCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float radius, float centerX, float centerY, float centerZ, int numPoints)
 {
@@ -28,16 +35,6 @@ static void addSphereToCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float ra
     }
 }
 
-static pcl::PointCloud<pcl::PointXYZ>::Ptr createCloud()
-{
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>);
-    
-    addSphereToCloud(cloud, 1.0, 0.0, 0.0, 0.0, 1000);
-    cloud->is_dense = true;
-    
-    return cloud;
-}
-
 static pcl::ConcaveHull<pcl::PointXYZ> generateHullFromCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
     // Create search tree*
@@ -46,13 +43,13 @@ static pcl::ConcaveHull<pcl::PointXYZ> generateHullFromCloud(pcl::PointCloud<pcl
     
     // CONCAVE HULL
     pcl::ConcaveHull<pcl::PointXYZ> hull;
-//    hull.setKeepInformation(true);
+    //    hull.setKeepInformation(true);
     hull.setAlpha (0.19);
     
     // Get result
     hull.setInputCloud (cloud);
     hull.setSearchMethod (tree);
-
+    
     return hull;
 }
 
@@ -60,12 +57,12 @@ SCNGeometry *generateGeometryFromHull(pcl::ConcaveHull<pcl::PointXYZ> hull)
 {
     pcl::PolygonMesh triangles;
     hull.reconstruct (triangles);
-
+    
     int numVertices = triangles.cloud.width;
-
+    
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>);
     pcl::fromROSMsg(triangles.cloud, *cloud);
-
+    
     // Normal estimation*
     pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> n;
     pcl::PointCloud<pcl::Normal>::Ptr cloudNormals (new pcl::PointCloud<pcl::Normal>);
@@ -75,7 +72,7 @@ SCNGeometry *generateGeometryFromHull(pcl::ConcaveHull<pcl::PointXYZ> hull)
     n.setSearchMethod (tree);
     n.setKSearch (20);
     n.compute (*cloudNormals);
-
+    
     pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
     pcl::concatenateFields (*cloud, *cloudNormals, *cloudWithNormals);
     
@@ -92,10 +89,10 @@ SCNGeometry *generateGeometryFromHull(pcl::ConcaveHull<pcl::PointXYZ> hull)
         normals[numVerticesAdded] = normal;
         ++numVerticesAdded;
         
-//        NSLog(@"Here's a vertex: %f, %f, %f", vertex.x, vertex.y, vertex.z);
-//        NSLog(@"Here's a normal: %f, %f, %f", normal.x, normal.y, normal.z);
+        //        NSLog(@"Here's a vertex: %f, %f, %f", vertex.x, vertex.y, vertex.z);
+        //        NSLog(@"Here's a normal: %f, %f, %f", normal.x, normal.y, normal.z);
     }
-
+    
     
     unsigned long numIndices = triangles.polygons.size() * 3;
     unsigned long indicesSize = numIndices * sizeof(uint32_t);
@@ -109,8 +106,8 @@ SCNGeometry *generateGeometryFromHull(pcl::ConcaveHull<pcl::PointXYZ> hull)
             uint32_t index = *index_it;
             indices[numIndicesAdded] = index;
             ++numIndicesAdded;
-
-//            NSLog(@"Got an index; %ud", index);
+            
+            //            NSLog(@"Got an index; %ud", index);
         }
     }
     
@@ -128,10 +125,32 @@ SCNGeometry *generateGeometryFromHull(pcl::ConcaveHull<pcl::PointXYZ> hull)
     return geometry;
 }
 
-SCNGeometry *ALTPointCloudMeshCreateSphere()
+- (id)initWithParentNode:(SCNNode *)parentNode
 {
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = createCloud();
-    pcl::ConcaveHull<pcl::PointXYZ> hull = generateHullFromCloud(cloud);
-    SCNGeometry *geometry = generateGeometryFromHull(hull);
-    return geometry;
+    self = [super init];
+    if (self) {
+        _cloud = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>);
+        _parentNode = parentNode;
+        _node = [SCNNode node];
+
+        _material = [SCNMaterial material];
+        _material.diffuse.contents = [NSColor redColor];
+        _material.lightingModelName = SCNLightingModelBlinn;
+        _material.doubleSided = YES;
+        //        _material.litPerPixel = NO;
+    }
+    return self;
 }
+
+- (void)addSphereAtPoint:(GLKVector3)point radius:(float)radius numPoints:(int)numPoints
+{
+    addSphereToCloud(_cloud, radius, point.x, point.y, point.z, numPoints);
+    pcl::ConcaveHull<pcl::PointXYZ> hull = generateHullFromCloud(_cloud);
+    SCNGeometry *geometry = generateGeometryFromHull(hull);
+    geometry.firstMaterial = _material;
+    [_node removeFromParentNode];
+    SCNNode *newNode = [SCNNode nodeWithGeometry:geometry];
+    [_parentNode addChildNode:newNode];
+}
+
+@end

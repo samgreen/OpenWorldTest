@@ -21,6 +21,7 @@
 #import "SKROculus.h"
 #import <GLKit/GLKMath.h>
 #import "SKRHydra.h"
+#import "ALTPointCloudMeshCreation.h"
 
 @interface SKRView () <SKRHydraDelegate>
 {
@@ -36,6 +37,10 @@
     SCNNode *_worldParentNode;
     
     GLKVector3 _keyboardMovementDirection;
+
+    NSMutableArray *_creations;
+    ALTPointCloudMeshCreation *_currentCreation;
+    BOOL _mouseButtonDown;
 
     float _rollDirection;
 }
@@ -166,6 +171,20 @@ CVTimeStamp lastChunkTick;
     GLKVector3 translation = GLKVector3MultiplyScalar(rotatedVector, speed);
     playerNode.velocity = GLKVector3Add(playerNode.velocity, translation);
 
+    if (_mouseButtonDown)
+    {
+        GLKQuaternion orientation = GLKQuaternionMakeWithAngleAndAxis(playerNode.rotation.w,
+                                                                      playerNode.rotation.x,
+                                                                      playerNode.rotation.y,
+                                                                      playerNode.rotation.z);
+        GLKVector3 forwardVector = GLKVector3Make(0, 0, -1);
+        GLKVector3 orientedForwardVector = GLKQuaternionRotateVector3(orientation, forwardVector);
+        GLKVector3 scaledOrientedForwardVector = GLKVector3MultiplyScalar(orientedForwardVector, 5.0);
+        
+        GLKVector3 pointInFrontOfPlayer = GLKVector3Add(SCNVector3ToGLKVector3(playerNode.position), scaledOrientedForwardVector);
+        [_currentCreation addSphereAtPoint:pointInFrontOfPlayer radius:0.2 numPoints:10];
+    }
+    
     // Update world
     if (time.hostTime-oldTime.hostTime < (NSEC_PER_MSEC))
 		return kCVReturnSuccess;
@@ -258,6 +277,8 @@ CVTimeStamp lastChunkTick;
     [self initFPSLabel];
     //	[self initCrosshairs];
     
+    _creations = [NSMutableArray array];
+    
 	[self becomeFirstResponder];
 	[self startWatchingJoysticks];
 	
@@ -279,6 +300,16 @@ CVTimeStamp lastChunkTick;
 
 - (void)mouseMoved:(NSEvent *)theEvent
 {
+    [self handleMouseMovement:theEvent];
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent
+{
+    [self handleMouseMovement:theEvent];
+}
+
+- (void)handleMouseMovement:(NSEvent *)theEvent
+{
     GLKQuaternion orientation = GLKQuaternionMakeWithAngleAndAxis(playerNode.rotation.w,
                                                                   playerNode.rotation.x,
                                                                   playerNode.rotation.y,
@@ -288,7 +319,21 @@ CVTimeStamp lastChunkTick;
     GLKQuaternion yMouseRotation = GLKQuaternionMakeWithAngleAndAxis(-theEvent.deltaY * sensitivity, 1, 0, 0);
     GLKQuaternion newOrientation = GLKQuaternionMultiply(GLKQuaternionMultiply(orientation, yMouseRotation), xMouseRotation);
     playerNode.rotation = SKRVector4FromQuaternion(newOrientation);
-    
+}
+
+- (void)mouseDown:(NSEvent *)theEvent
+{
+    _mouseButtonDown = YES;
+    ALTPointCloudMeshCreation *newCreation = [[ALTPointCloudMeshCreation alloc] initWithParentNode:_scene.rootNode];
+    [_creations addObject:newCreation];
+    _currentCreation = newCreation;
+    NSLog(@"Got a mouse down event: %ld", theEvent.buttonNumber);
+}
+
+- (void)mouseUp:(NSEvent *)theEvent
+{
+    _mouseButtonDown = NO;
+    NSLog(@"Got a mouse up event: %ld", (long)theEvent.buttonNumber);
 }
 
 -(void)keyDown:(NSEvent *)theEvent

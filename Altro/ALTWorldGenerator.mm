@@ -12,7 +12,6 @@
 #import <GLKit/GLKMath.h>
 #import <SceneKit/SceneKit.h>
 #import "ALTTree.h"
-#import "ALTPointCloudMesh.h"
 
 @implementation ALTWorldGenerator
 {
@@ -150,16 +149,6 @@ static NSMutableArray *generateTrees(ALTHeightField *heightField)
         for (ALTTree *tree in _trees) {
             [terrainNode addChildNode:tree];
         }
-
-        SCNGeometry *meshGeometry = ALTPointCloudMeshCreateSphere();
-        SCNMaterial *meshMaterial = [SCNMaterial material];
-        meshMaterial.diffuse.contents = [NSColor redColor];
-        meshMaterial.lightingModelName = SCNLightingModelBlinn;
-        meshMaterial.doubleSided = YES;
-//        meshMaterial.litPerPixel = NO;
-        meshGeometry.firstMaterial = meshMaterial;
-        SCNNode *meshNode = [SCNNode nodeWithGeometry:meshGeometry];
-        [_worldNode addChildNode:meshNode];
         
         [_worldNode addChildNode:terrainNode];
     }
