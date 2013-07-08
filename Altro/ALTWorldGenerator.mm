@@ -64,7 +64,7 @@ static ALTHeightField *generateHeightfield()
     int columns = 200;
     float *heights = (float *)malloc(rows * columns * sizeof(float));
     generateHeightmap(rows, columns, heights); // ALTHeightField takes ownership of heights pointer, so we don't free it here
-    return [[ALTHeightField alloc] initWithRows:rows columns:columns heights:heights xspace:1.0 zspace:1.0];
+    return [[ALTHeightField alloc] initWithRows:rows columns:columns heights:heights xspace:4.0 zspace:4.0];
 }
 
 static SCNNode *generateTerrainNode(ALTHeightField *heightField)
@@ -84,7 +84,7 @@ static void generateHeightmap(int rows, int columns, float *heights)
     for (int i = 0; i < 100; i++)
     {
         GLKVector2 normalizedPoint = GLKVector2Make((arc4random() / (float)0x100000000), (arc4random() / (float)0x100000000));
-        float magnitude = 5.0 * (arc4random() / (float)0x100000000);
+        float magnitude = 9.0 * (arc4random() / (float)0x100000000);
         float width = 0.05 + 0.05 * (arc4random() / (float)0x100000000);
         for (int z = 0; z < rows; z++)
         {
@@ -104,7 +104,7 @@ static NSMutableArray *generateTrees(ALTHeightField *heightField)
 {
     NSMutableArray *trees = [NSMutableArray array];
     
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 100; i++)
     {
         ALTTree *tree = [ALTTree tree];
         GLKVector3 location = GLKVector3Make(heightField.width * (arc4random() / (float)0x100000000) - heightField.width / 2,
