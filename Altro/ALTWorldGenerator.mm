@@ -64,7 +64,7 @@ static ALTHeightField *generateHeightfield()
     int columns = 200;
     float *heights = (float *)malloc(rows * columns * sizeof(float));
     generateHeightmap(rows, columns, heights); // ALTHeightField takes ownership of heights pointer, so we don't free it here
-    return [[ALTHeightField alloc] initWithRows:rows columns:columns heights:heights xspace:4.0 zspace:4.0];
+    return [[ALTHeightField alloc] initWithRows:rows columns:columns heights:heights xspace:2.0 zspace:2.0];
 }
 
 static SCNNode *generateTerrainNode(ALTHeightField *heightField)

@@ -22,8 +22,6 @@
     ALTWorldGenerator *worldGenerator = [[ALTWorldGenerator alloc] init];
     [SKRPhysics sharedInstance].friction = GLKVector3Make(0.8, 0.8, 0.8);
 
-    [SKRPhysics sharedInstance].gravity = GLKVector3Make(0.0, 0.0, 0.0);
-    
     _skrAppDelegate = [[SKRAppDelegate alloc] initWithWindow:_window skrView:(SKRView *)_view worldGenerator:worldGenerator];
 }
 
