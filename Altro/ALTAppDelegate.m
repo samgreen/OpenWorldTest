@@ -20,7 +20,7 @@
 -	 (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
     ALTWorldGenerator *worldGenerator = [[ALTWorldGenerator alloc] init];
-    [SKRPhysics sharedInstance].friction = GLKVector3Make(0.8, 0.8, 0.8);
+    [SKRPhysics sharedInstance].friction = GLKVector3Make(0.5, 0.5, 0.1);
 
     _skrAppDelegate = [[SKRAppDelegate alloc] initWithWindow:_window skrView:(SKRView *)_view worldGenerator:worldGenerator];
 }
