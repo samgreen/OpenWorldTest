@@ -30,7 +30,10 @@
     [SKRPhysics sharedInstance].gravity = GLKVector3Make(0, 0, -9.81);
     [SKRPhysics sharedInstance].friction = GLKVector3Make(0.9, 0.9, 0.0);
     OWTWorldGenerator *worldGenerator = [[OWTWorldGenerator alloc] init];
-    _skrAppDelegate = [[SKRAppDelegate alloc] initWithWindow:_window skrView:(SKRView *)_view worldGenerator:worldGenerator];
+    _skrAppDelegate = [[SKRAppDelegate alloc] initWithWindow:_window
+                                                     skrView:(SKRView *)_view
+                                              worldGenerator:worldGenerator
+                                                inputHandler:nil];
 }
 
 - (void)applicationWillBecomeActive:(NSNotification *)notification

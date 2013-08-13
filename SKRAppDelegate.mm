@@ -20,7 +20,10 @@
     NSTrackingArea *_trackingArea;
 }
 
-- (id)initWithWindow:(NSWindow *)window skrView:(SKRView *)view worldGenerator:(NSObject<SKRWorldGenerator>*)worldGenerator
+- (id)initWithWindow:(NSWindow *)window
+             skrView:(SKRView *)view
+      worldGenerator:(NSObject<SKRWorldGenerator> *)worldGenerator
+        inputHandler:(NSObject<SKRInputHandler> *)inputHandler
 {
     self = [self init];
     if (self)
@@ -32,6 +35,7 @@
         
         _view.leftEyeView.delegate = self;
         _view.rightEyeView.delegate = self;
+        _view.inputHandler = inputHandler;
         
         if ([_view.oculus deviceAvailable])
         {

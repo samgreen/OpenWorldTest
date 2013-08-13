@@ -10,6 +10,7 @@
 #import <SceneKit/SceneKit.h>
 #import <OpenGL/gl.h>
 #import "SKRWorldGenerator.h"
+#import "SKRInputHandler.h"
 
 typedef struct _SKRInput
 {
@@ -48,6 +49,7 @@ typedef struct _SKRInput
 @property (nonatomic, strong) SCNView *leftEyeView;
 @property (nonatomic, strong) SCNView *rightEyeView;
 @property (nonatomic, strong) SKROculus *oculus;
+@property (nonatomic, strong) NSObject<SKRInputHandler> *inputHandler;
 
 -(CVReturn)gameLoopAtTime:(CVTimeStamp)time;
 -(void)setRunning:(BOOL)running;

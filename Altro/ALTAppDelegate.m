@@ -10,19 +10,26 @@
 #import "SKRAppDelegate.h"
 #import "SKRPhysics.h"
 #import "ALTWorldGenerator.h"
+#import "ALTInputHandler.h"
+#import "SKRView.h"
 
 @implementation ALTAppDelegate
 {
 	IBOutlet NSView *_view;
     SKRAppDelegate *_skrAppDelegate;
+    ALTInputHandler *_inputHandler;
 }
 
--	 (void)applicationDidFinishLaunching:(NSNotification *)notification
+- (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
     ALTWorldGenerator *worldGenerator = [[ALTWorldGenerator alloc] init];
     [SKRPhysics sharedInstance].friction = GLKVector3Make(0.5, 0.5, 0.1);
 
-    _skrAppDelegate = [[SKRAppDelegate alloc] initWithWindow:_window skrView:(SKRView *)_view worldGenerator:worldGenerator];
+    _inputHandler = [[ALTInputHandler alloc] init];
+    _skrAppDelegate = [[SKRAppDelegate alloc] initWithWindow:_window
+                                                     skrView:(SKRView *)_view
+                                              worldGenerator:worldGenerator
+                                                inputHandler:_inputHandler];
 }
 
 - (void)applicationWillBecomeActive:(NSNotification *)notification
